@@ -11,6 +11,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      - name: Update Clang (macOS)
+        run: |
+          brew update
+          brew upgrade llvm
+        if: ${{ matrix.os }} == "macos-latest"
+      - name: Set environment (macOS)
+        run: export CXX="/usr/local/opt/llvm/bin/clang++"
+        if: ${{ matrix.os }} == "macos-latest"
       - name: Setup CMake
         uses: lukka/get-cmake@latest
       - name: Setup Conan
