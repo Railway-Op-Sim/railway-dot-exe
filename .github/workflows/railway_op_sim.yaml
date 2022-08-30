@@ -1,0 +1,38 @@
+name: Railway Operation Simulator
+on: [push]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: true
+    runs-on: ${{ matrix.os }}
+    name: Build Libraries (${{ matrix.os }})
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
+      - name: Setup Conan
+        uses: turtlebrowser/get-conan@main
+      - name: Configure Conan
+        run: |
+          conan profile new default --detect
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan install . --output-folder=build --build=missing --install-folder=build
+      - name: Configure CMake
+        run: |
+          cmake -Bbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+          mv build/compile_commands.json .
+      - name: Run Build
+        run: cmake --build build
+  linting:
+    runs-on: ubuntu-latest
+    name: C++ Linting
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run Linter
+        uses: ArtificialAmateur/cpp-linter-action@master
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
