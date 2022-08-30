@@ -17,7 +17,9 @@ jobs:
           brew upgrade llvm
         if: ${{ matrix.os  == 'macos-latest' }}
       - name: Set environment (macOS)
-        run: export CXX="/usr/local/opt/llvm/bin/clang++"
+        run: |
+          export CXX="/usr/local/opt/llvm/bin/clang++"
+          export CC="/usr/local/opt/llvm/bin/clang"
         if: ${{ matrix.os == 'macos-latest' }}
       - name: Setup CMake
         uses: lukka/get-cmake@latest
@@ -27,7 +29,14 @@ jobs:
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan install . --output-folder=build --build=missing --install-folder=build
+          conan install . --output-folder=build -s compiler=clang --build=missing --install-folder=build
+        if: ${{ matrix.os  == 'macos-latest' }}
+      - name: Configure Conan
+        run: |
+          conan profile new default --detect
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan install . --output-folder=build -s --build=missing --install-folder=build
+        if: ${{ matrix.os  != 'macos-latest' }}
       - name: Configure CMake
         run: |
           cmake -Bbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=1
