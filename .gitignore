@@ -1,0 +1,4 @@
+build/
+.cache/
+*.exe
+compile_commands.json
