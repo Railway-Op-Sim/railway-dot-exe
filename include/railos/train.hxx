@@ -91,10 +91,6 @@ private:
   ///< elements that the train occupies
   int train_id{0};
   ///< the train's identification number
-  std::shared_ptr<Actions::TrainDataEntry> train_data_entry;
-  ///< points to the current position in the timetable's TrainDataVector
-  std::shared_ptr<Actions::VectorEntry> action_vector_entry;
-  ///< points to the current position in the ActionVector (a member of the
   ///< TTrainDataEntry class)
   int skip_ptr_value{0};
   ///< stores the pointer increment from first action in ActionVector for
@@ -121,10 +117,6 @@ private:
   ///< as fully on two elements.  It only displays with the front character of
   ///< the headcode on the first half of an element when the halfway point of
   ///< the element has been passed.
-  bool joined_other_train_flag{false};
-  ///< true when the train has joined another train following an 'Fjo' timetable
-  ///< command or a signaller join (when set the train is removed from the
-  ///< display at the next clock tick)
   bool last_action_delay_flag{false};
   ///< used when trains join to ensure that there is a 30 second delay before
   ///< the actual join takes place after the two trains are adjacent to each
@@ -140,9 +132,6 @@ private:
   bool one_length_accel_decel{false};
   ///< set when a train can only move forwards one element before stopping but
   ///< needs to accelerate for the first half of the element
-  bool signaller_removed{false};
-  ///< set when removed under signaller control to force a removal from the
-  ///< display at the next clock tick
   bool signaller_stopping_flag{false};
   ///< set when the signaller stop command has been given
   bool station_stop_calculated{false};
@@ -308,6 +297,38 @@ private:
   ///< the current Straddle value of the train (see TStraddle above)
   std::string sel_skip_string;
   ///< the selected timetable string when skipping timetabled events
+
+  public:
+
+  int getID() const {return train_id;}
+
+  bool hasCrashed() const {return crashed;}
+
+  bool hasDerailed() const {return derailed;}
+
+  int getLagElement() const {return lag_element;}
+
+  int getMidElement() const {return mid_element;}
+
+  int getLeadElement() const {return lead_element;}
+
+  int getCumulativeDelayedRandMinsOneTrain() const {return cumulative_delayed_rand_mins_one_train;}
+
+  int getRepeatNumber() const {return repeat_number;}
+
+  std::string getHeadCode() const {return head_code;}
+
+  std::shared_ptr<Actions::TrainDataEntry> train_data_entry;
+  ///< points to the current position in the timetable's TrainDataVector
+  std::shared_ptr<Actions::VectorEntry> action_vector_entry;
+  ///< points to the current position in the ActionVector (a member of the
+  bool signaller_removed{false};
+  ///< set when removed under signaller control to force a removal from the
+  ///< display at the next clock tick
+  bool joined_other_train_flag{false};
+  ///< true when the train has joined another train following an 'Fjo' timetable
+  ///< command or a signaller join (when set the train is removed from the
+  ///< display at the next clock tick)
 
   // inline functions
   bool revisedStoppedAtLoc() const // added at v2.12.0
@@ -542,7 +563,7 @@ private:
   void saveOneSessionTrain(int caller, std::ofstream &out_stream);
   /// Missed actions (see NameInTimetableBeforeCDT above) sent to the
   /// performance log and performance file
-  void sendMissedActionLogs(int caller, int inc_num, std::unique_ptr<Actions::VectorEntry> ptr);
+  void sendMissedActionLogs(int caller, int inc_num, const std::shared_ptr<Actions::VectorEntry> ptr);
   /// Set the four HeadCodeGrPtr[4] pointers to the appropriate character
   /// graphics with the current backgroundcolour by calling SetOneGraphicCode
   /// four times.  This doesn't plot anything on screen, it just sets the

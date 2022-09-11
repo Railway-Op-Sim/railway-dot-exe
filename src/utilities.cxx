@@ -5,6 +5,8 @@
 #include <sstream>
 
 namespace RailOS::Utilities {
+  int cumulative_delayed_rand_mins_all_trains{0};
+  bool clock_2_stopped{false};
 auto getDateTimeStamp() -> std::string {
   auto null_time = std::time(nullptr);
   auto tm_now = *std::localtime(&null_time);

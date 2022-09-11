@@ -126,6 +126,8 @@ typedef std::vector<VectorEntry>Vector;
 typedef Vector::iterator VectorIterator;
 ///< iterator
 
+typedef std::vector<Actions::TrainDataEntry>TrainDataVector;
+
 /// contains status info for each train
 enum RunningEntry
 {
