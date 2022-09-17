@@ -132,8 +132,6 @@ private:
   bool one_length_accel_decel{false};
   ///< set when a train can only move forwards one element before stopping but
   ///< needs to accelerate for the first half of the element
-  bool signaller_stopping_flag{false};
-  ///< set when the signaller stop command has been given
   bool station_stop_calculated{false};
   ///< used in calculating DistanceToStationStop for trains running early before
   ///< they have reached the stop station
@@ -142,8 +140,6 @@ private:
   bool terminated_msg_sent{false};
   ///< set when a 'train terminated' message has been logged, to prevent its
   ///< being logged more than once
-  bool timetable_finished{false};
-  ///< set when there are no more timetable actions
   bool train_failed{false}; // added at v2.4.0
   ///< indicates failure
   bool treat_pass_as_time_loc_departure{false}; // added at v2.12.0
@@ -165,8 +161,6 @@ private:
   double timetable_max_running_speed{0};
   ///< the maximum train running speed when in timetable mode (see int
   ///< SignallerMaxSpeed for signaller control)
-  double max_running_speed{0};
-  ///< the current maximum train running speed
   double max_exit_speed{0};
   ///< the maximum speed that the train can exit the next element
   double max_brake_rate{0};
@@ -225,15 +219,9 @@ private:
   ///< location departure time and 'train ready to start' time (TRSTime is 10
   ///< seconds before the ReleaseTime). ActualArrivalTime added at v2.13.0 for
   ///< random delays
-  boost::posix_time::time_duration last_action_time{0, 0, 0, 0};
-  ///< time of the last timetabled event, used to ensure at least a 30 second
-  ///< delay before the next action
   Containers::HVShortPair exit_pair{-1, -1};
   ///< H & V coordinates of the exit element related to TimeToExit, new for
   ///< multiplayer
-  Mode train_mode{Mode::NoMode};
-  ///< mode of operation - either Timetable (running under timetable control) or
-  ///< Signaller (running under signaller control)
 
   // operating data
   std::string restore_timetable_location;
@@ -247,10 +235,6 @@ private:
   bool spad_flag{false};
   ///< set when running past a red signal without permission flags to indicate
   ///< relevant stop conditions or pending stop conditions
-  bool derailed{false}, derail_pending{false}, crashed{false}, stopped_at_buffers{false};
-  bool stopped_at_signal{false}, stopped_at_location{false}, signaller_stopped{false};
-  bool stopped_after_spad{false}, stopped_for_train_in_front{false};
-  bool stopped_without_power{false}, not_in_service{false};
 
   int h_offset[4]{0, 0, 0, 0}, v_offset[4]{0, 0, 0, 0};
   ///< each headcode character is an 8x8 pixel graphic and must be placed within
@@ -308,9 +292,17 @@ private:
 
   int getLagElement() const {return lag_element;}
 
+  int getRearStartElement() const {return rear_start_element;}
+
+  int getLeadEntryPosition() const {return lead_entry_pos;}
+
+  int getMidEntryPosition() const {return mid_entry_pos;}
+
   int getMidElement() const {return mid_element;}
 
   int getLeadElement() const {return lead_element;}
+
+  int getSignallerMaxSpeed() const {return signaller_max_speed;}
 
   int getCumulativeDelayedRandMinsOneTrain() const {return cumulative_delayed_rand_mins_one_train;}
 
@@ -325,6 +317,23 @@ private:
   bool signaller_removed{false};
   ///< set when removed under signaller control to force a removal from the
   ///< display at the next clock tick
+  boost::posix_time::time_duration last_action_time{0, 0, 0, 0};
+  ///< time of the last timetabled event, used to ensure at least a 30 second
+  ///< delay before the next action
+  double max_running_speed{0};
+  ///< the current maximum train running speed
+  bool timetable_finished{false};
+  ///< set when there are no more timetable actions
+  bool signaller_stopping_flag{false};
+  ///< set when the signaller stop command has been given
+  Mode train_mode{Mode::NoMode};
+  ///< mode of operation - either Timetable (running under timetable control) or
+  ///< Signaller (running under signaller control)
+
+  bool derailed{false}, derail_pending{false}, crashed{false}, stopped_at_buffers{false};
+  bool stopped_at_signal{false}, stopped_at_location{false}, signaller_stopped{false};
+  bool stopped_after_spad{false}, stopped_for_train_in_front{false};
+  bool stopped_without_power{false}, not_in_service{false};
   bool joined_other_train_flag{false};
   ///< true when the train has joined another train following an 'Fjo' timetable
   ///< command or a signaller join (when set the train is removed from the
@@ -619,7 +628,7 @@ public:
                                       // at v2.12.0
   }
   /// get LeadElement - used in RouteLockingRequired in TrackUnit.cpp
-  int GetLeadElement() { return lead_element; }
+  int getLeadElement() { return lead_element; }
   /// Added at v1.2.0: true if any part of train on specific link, false
   /// otherwise, including no link present & no TrackVectorNumber within Lead,
   /// Mid or Lag (public so Track->TrainOnLink can access it)

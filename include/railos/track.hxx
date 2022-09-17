@@ -35,7 +35,7 @@ public:
   bool operator()(const HVPair &lower, const HVPair &higher) const;
 };
 
-enum class TrackType
+enum class Type
 ///< describes the type of track element
 {
   Simple,
@@ -116,14 +116,14 @@ public: // everything uses these - should really have Gets & Sets but too many
   Configuration config[4]{NotSet, NotSet, NotSet, NotSet};
   ///< the type of link - see TConfiguration above
 
-  TrackType track_type;
+  Type track_type;
   ///< the type of track element
 
   /// Plot the element on the railway display at position h_loc_input & v_loc_input
   void plotFixedTrackElement(int caller, int h_loc_input,
                              int v_loc_input) const;
   /// Constructor for building TTrack.FixedTrackArray - see below
-  // FixedTrackPiece(int speed_tag, tracktype track_type, int lk_val[4],
+  // FixedTrackPiece(int speed_tag, Type track_type, int lk_val[4],
   // Configuration config[4], Graphics::TBitmap *GraphicPtrVal,
   //                  Graphics::TBitmap *SmallGraphicPtrVal);
 };
@@ -794,7 +794,7 @@ private:
     int link_hv_array[10][2]{{0, 0}, {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
 
     /*
-      Named Location Arrays:  Set out the adjacent positions and tracktypes that are accepted as valid connections for
+      Named Location Arrays:  Set out the adjacent positions and Types that are accepted as valid connections for
       a single location.  These are as follows:-
       Directly Adjacent = up, down, left or right - NOT diagonal.
       There are two separate groups, platforms, concourses & footcrossings (providing the crossing part touches or overlaps the other relevant
@@ -1705,13 +1705,13 @@ public:
     }
 
 /// Erase a single route element
-    void EraseRouteElementAt(std::shared_ptr<PrefDirElement> route_element_ptr)
+    void eraseRouteElementAt(std::vector<PrefDirElement>::iterator route_element_ptr)
     {
         pref_dir_vec.erase(route_element_ptr);
     }
 
 /// Store a single route element in the PrefDirVector
-    void StoreRouteElementInPrefDirVector(PrefDirElement load_ref_dir_element)
+    void storeRouteElementInPrefDirVector(PrefDirElement load_ref_dir_element)
     {
         load_ref_dir_element.is_a_route = true;
         pref_dir_vec.push_back(load_ref_dir_element);

@@ -27,9 +27,9 @@ public:
     boost::posix_time::time_duration ttb_start_time{0, 0, 0, 0};
 ///< the start time of the current timetable
     boost::posix_time::time_duration restart_time{0, 0, 0, 0};
-///< TTClockTime when operation pauses ( = timetable start time prior to operation) TTClockTime is calculated as follows:- TTClockTime = CurrentDateTime + RestartTime - BaseTime;
+///< when operation pauses ( = timetable start time prior to operation) it is calculated as follows:- restart_time = CurrentDateTime + RestartTime - BaseTime;
     boost::posix_time::time_duration session_save_ttb_clock_time{0, 0, 0, 0}; //added at v2.5.0
-///< TTClockTime when last session saved - to prevent display of warning message on exit session if < 5 minutes ago
+///< time when last session saved - to prevent display of warning message on exit session if < 5 minutes ago
 
 /// Turns signals back to green in stages after a train has exited an autosig route at a continuation
     class ContinuationAutoSigEntry

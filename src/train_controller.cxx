@@ -47,16 +47,16 @@ void TrainController::operate(int caller) {
   // clock tick after stops flashing
   if (!Track::track->route_flash_flag && !Track::track->point_flash_flag) {
     for (unsigned int x{0}; x < train_data.size(); x++) {
-      const Actions::TrainDataEntry &td_entry_{train_data.at(x)};
+      const std::shared_ptr<Actions::TrainDataEntry> td_entry_{&train_data.at(x)};
 
-      const Actions::VectorEntry &av_entry_0_ = td_entry_.actions.at(0);
+      const Actions::VectorEntry &av_entry_0_ = td_entry_->actions.at(0);
       const Actions::EventType evt_type_{Actions::EventType::NoEvent};
 
       if (av_entry_0_.command == "Snt") {
         // calc below only for Snt & Snt-sh entries rather than all entries to
         // save time
         const Actions::VectorEntry &av_entry_last_{
-            td_entry_.actions.at(td_entry_.actions.size() - 1)};
+            td_entry_->actions.at(td_entry_->actions.size() - 1)};
         int incremental_mins_{0};
         int incremental_digits_{0};
         if (av_entry_last_.format_type == Timetable::FormatType::Repeat) {
@@ -64,15 +64,16 @@ void TrainController::operate(int caller) {
           incremental_digits_ = av_entry_last_.front_start_or_repeat_digits;
         }
         if ((av_entry_last_.format_type == Timetable::FormatType::Repeat) &&
-            (td_entry_.n_trains < 2)) {
+            (td_entry_->n_trains < 2)) {
           throw std::runtime_error(
               "Repeat entry && less than two trains for Snt entry: " +
-              td_entry_.head_code);
+              td_entry_->head_code);
         }
         // see above note
 
-        for (int y = 0; y < td_entry_.n_trains; y++) {
-          Actions::TrainOperatingData ttod_{td_entry_.train_operating_data.at(y)};
+        for (int y = 0; y < td_entry_->n_trains; y++) {
+          Actions::TrainOperatingData ttod_{
+              td_entry_->train_operating_data.at(y)};
 
           if (ttod_.running_entry != Actions::RunningEntry::NotStarted)
             continue;
@@ -94,16 +95,16 @@ void TrainController::operate(int caller) {
           }
 
           const std::string train_head_code_ = getRepeatHeadCode(
-              22, td_entry_.head_code, y, incremental_digits_);
+              22, td_entry_->head_code, y, incremental_digits_);
 
           if (addTrain(2, av_entry_0_.rear_start_or_repeat_mins,
                        av_entry_0_.front_start_or_repeat_digits,
-                       train_head_code_, td_entry_.start_speed, td_entry_.mass,
-                       td_entry_.max_running_speed, td_entry_.max_brake_rate,
-                       td_entry_.power_at_rail, "Timetable",
-                       std::make_shared<Actions::TrainDataEntry>(td_entry_), y,
+                       train_head_code_, td_entry_->start_speed, td_entry_->mass,
+                       td_entry_->max_running_speed, td_entry_->max_brake_rate,
+                       td_entry_->power_at_rail, "Timetable",
+                       td_entry_, y,
                        incremental_digits_, incremental_digits_,
-                       td_entry_.signaller_speed,
+                       td_entry_->signaller_speed,
                        av_entry_0_.under_signaller_control,
                        std::make_shared<Actions::EventType>(evt_type_))) {
             ttod_.train_id = trains.back().getID();
@@ -120,7 +121,7 @@ void TrainController::operate(int caller) {
         // calc below only for Snt & Snt-sh entries rather than all entries to
         // save time
         const Actions::VectorEntry &av_entry_last_ =
-            td_entry_.actions.at(td_entry_.actions.size() - 1);
+            td_entry_->actions.at(td_entry_->actions.size() - 1);
         int incremental_mins{0};
         int incremental_digits{0};
         if (av_entry_last_.format_type == Timetable::FormatType::Repeat) {
@@ -128,24 +129,24 @@ void TrainController::operate(int caller) {
           incremental_digits = av_entry_last_.front_start_or_repeat_digits;
         }
         if ((av_entry_last_.format_type == Timetable::FormatType::Repeat) &&
-            (td_entry_.n_trains < 2)) {
+            (td_entry_->n_trains < 2)) {
           throw std::runtime_error("Repeat entry && less than two trains for "
                                    "Snt-sh entry: " +
-                                   td_entry_.head_code);
+                                   td_entry_->head_code);
         }
         // see above note
-        Actions::TrainOperatingData ttod_{td_entry_.train_operating_data.at(0)};
+        Actions::TrainOperatingData ttod_{td_entry_->train_operating_data.at(0)};
         if (ttod_.running_entry == Actions::RunningEntry::NotStarted) {
           if (av_entry_0_.event_time <= ttb_clock_time) {
             if (addTrain(3, av_entry_0_.rear_start_or_repeat_mins,
                          av_entry_0_.front_start_or_repeat_digits,
-                         td_entry_.head_code, td_entry_.start_speed,
-                         td_entry_.mass, td_entry_.max_running_speed,
-                         td_entry_.max_brake_rate, td_entry_.power_at_rail,
+                         td_entry_->head_code, td_entry_->start_speed,
+                         td_entry_->mass, td_entry_->max_running_speed,
+                         td_entry_->max_brake_rate, td_entry_->power_at_rail,
                          "Timetable",
-                         std::make_shared<Actions::TrainDataEntry>(td_entry_),
+                         td_entry_,
                          0, incremental_mins, incremental_digits,
-                         td_entry_.signaller_speed, false,
+                         td_entry_->signaller_speed, false,
                          std::make_shared<Actions::EventType>(evt_type_)))
             // false for SignallerControl
             {
@@ -173,8 +174,9 @@ void TrainController::operate(int caller) {
     // double Start, End;
     // AnsiString ElapsedTimeReport = "";
     // end elasped time segment
-    Track::all_routes->call_on_vector.clear(); // this will be rebuilt during the calls to
-                                     // UpdateTrain elapsed time  segment
+    Track::all_routes->call_on_vector
+        .clear(); // this will be rebuilt during the calls to
+                  // UpdateTrain elapsed time  segment
     // PerfLogForm->PerformanceLog(-1, "\n Train vector size: " +
     // AnsiString(TrainVector.size()) + '\n'); PerfLogForm->PerformanceLog(-1,
     // "Start time list"); end elapsed time  segment
@@ -227,17 +229,19 @@ void TrainController::operate(int caller) {
     signal_stop_warning = false;
     buffer_attention_warning = false;
     train_failed_warning = false;
-  
+
     for (int x{static_cast<int>(trains.size()) - 1}; x >= 0;
          x--) // reverse because of erase
     {
       Train &train_ = trainVectorAt(34, x);
       // if (Train.hasCrashed())
-      // // can't use background colours for crashed & derailed because same colour
+      // // can't use background colours for crashed & derailed because same
+      // colour
       // {
       //   crash_warning = true;
       // } else if (Train.hasDerailed())
-      // // can't use background colours for crashed & derailed because same colour
+      // // can't use background colours for crashed & derailed because same
+      // colour
       // {
       //   derail_warning = true;
       // } else if (Train.BackgroundColour == clSPADBackground)
@@ -269,18 +273,20 @@ void TrainController::operate(int caller) {
         } else if (train_.getMidElement() > -1) {
           te_ = Track::track->trackElementAt(779, train_.getMidElement());
           element_found_ = true;
-        } else if (train_.GetLeadElement() > -1) {
-          te_ = Track::track->trackElementAt(780, train_.GetLeadElement());
+        } else if (train_.getLeadElement() > -1) {
+          te_ = Track::track->trackElementAt(780, train_.getLeadElement());
           element_found_ = true;
         }
         if (element_found_) {
           if (te_.active_track_element_name != "") {
-            loc_ = te_.active_track_element_name + ", track element " + te_.element_id;
+            loc_ = te_.active_track_element_name + ", track element " +
+                   te_.element_id;
           } else {
             loc_ = "track element " + te_.element_id;
           }
         }
-        std::shared_ptr<Actions::VectorEntry> av_entry_ptr = train_.action_vector_entry;
+        std::shared_ptr<Actions::VectorEntry> av_entry_ptr =
+            train_.action_vector_entry;
         std::string other_headcode_;
         boost::posix_time::time_duration t_0_{0, 0, 0, 0};
         if ((train_.signaller_removed) || (train_.joined_other_train_flag))
@@ -290,7 +296,8 @@ void TrainController::operate(int caller) {
           // added at v1.3.0 to reset signals after train removed from an
           // autosigsroute
           if (signaller_train_removed_on_auto_sigs_route) {
-            Track::all_routes->siganller_removed_train_auto_route.setRouteSignals(9);
+            Track::all_routes->siganller_removed_train_auto_route
+                .setRouteSignals(9);
             signaller_train_removed_on_auto_sigs_route = false;
           }
           // end of addition
@@ -300,7 +307,8 @@ void TrainController::operate(int caller) {
         } else if (av_entry_ptr->command == "Fer") {
           bool correct_exit_{false};
           if (!av_entry_ptr->exit_list.empty()) {
-            for (Containers::NumListIterator elit_{av_entry_ptr->exit_list.begin()};
+            for (Containers::NumListIterator elit_{
+                     av_entry_ptr->exit_list.begin()};
                  elit_ != av_entry_ptr->exit_list.end(); elit_++) {
               if (*elit_ == train_.getLagElement()) {
                 correct_exit_ = true;
@@ -308,34 +316,40 @@ void TrainController::operate(int caller) {
             }
           }
           if (correct_exit_) {
-            train_.logAction(19, train_.getHeadCode(), other_headcode_, Actions::Type::Leave, loc_,
-                            av_entry_ptr->event_time, av_entry_ptr->trigger_warning_panel_alert);
+            train_.logAction(19, train_.getHeadCode(), other_headcode_,
+                             Actions::Type::Leave, loc_,
+                             av_entry_ptr->event_time,
+                             av_entry_ptr->trigger_warning_panel_alert);
           } else {
-            logActionError(38, train_.getHeadCode(), other_headcode_, Actions::EventType::FailIncorrectExit, loc_);
+            logActionError(38, train_.getHeadCode(), other_headcode_,
+                           Actions::EventType::FailIncorrectExit, loc_);
           }
         } else {
           if (!av_entry_ptr->under_signaller_control) {
-            logActionError(26, train_.getHeadCode(), other_headcode_, Actions::EventType::FailUnexpectedExitRailway,
-                           loc_);
+            logActionError(26, train_.getHeadCode(), other_headcode_,
+                           Actions::EventType::FailUnexpectedExitRailway, loc_);
             train_.sendMissedActionLogs(2, -2, av_entry_ptr);
             // -2 is marker for send messages for all remaining actions except
             // Fer if present
           } else {
-            train_.logAction(31, train_.getHeadCode(), other_headcode_, Actions::Type::SignallerLeave, loc_,
-                            t_0_, false); // false for Warning
+            train_.logAction(31, train_.getHeadCode(), other_headcode_,
+                             Actions::Type::SignallerLeave, loc_, t_0_,
+                             false); // false for Warning
           }
         }
         Utilities::cumulative_delayed_rand_mins_all_trains +=
-            train_.getCumulativeDelayedRandMinsOneTrain(); // added at v2.13.0 for
-                                                     // random delays
-        train_.train_data_entry->train_operating_data.at(train_.getRepeatNumber())
+            train_.getCumulativeDelayedRandMinsOneTrain(); // added at v2.13.0
+                                                           // for random delays
+        train_.train_data_entry->train_operating_data
+            .at(train_.getRepeatNumber())
             .running_entry = Actions::RunningEntry::Exited;
         train_.deleteTrain(1);
         trains.erase(trains.begin() + x);
         // replotTrains(1,
-        //              Display); // to reset ElementIDs for remaining trains when
-                               // have removed a train NB: won't plot any trains
-                               // with TrainGone flag set (changed at v2.11.1)
+        //              Display); // to reset ElementIDs for remaining trains
+        //              when
+        // have removed a train NB: won't plot any trains
+        // with TrainGone flag set (changed at v2.11.1)
         break; // added at v2.11.1 to ensure that only one train with TrainGone
                // set is dealt with in one clock cycle
       }
@@ -364,283 +378,368 @@ void TrainController::operate(int caller) {
   Logging::popCallLog(723);
 }
 
-bool TrainController::addTrain(int caller, int rear_position, int front_position, std::string head_code, int start_speed, int mass, double max_running_speed, double MaxBrakeRate,
-                  double power_at_rail, std::string mode_str, std::shared_ptr<Actions::TrainDataEntry> train_data, int repear_number, int incremental_mins, int incremental_digits,
-                  int signaller_speed, bool signaller_control, std::shared_ptr<Actions::EventType> event_type) {
+bool TrainController::addTrain(
+    int caller, int rear_position, int front_position, std::string head_code,
+    int start_speed, int mass, double max_running_speed, double max_brake_rate,
+    double power_at_rail, std::string mode_str,
+    std::shared_ptr<Actions::TrainDataEntry> train_data, int repeat_number,
+    int incremental_mins, int incremental_digits, int signaller_speed,
+    bool signaller_control, std::shared_ptr<Actions::EventType> event_type) {
 
-    logEvent(std::to_string(caller) + ",AddTrain," + std::to_string(rear_position) + "," + std::to_string(front_position) + "," + head_code + "," + std::to_string(start_speed) +
-             "," + std::to_string(mass) + "," + mode_str);
+  logEvent(std::to_string(caller) + ",AddTrain," +
+           std::to_string(rear_position) + "," +
+           std::to_string(front_position) + "," + head_code + "," +
+           std::to_string(start_speed) + "," + std::to_string(mass) + "," +
+           mode_str);
 
-    Logging::call_log.push_back(Utilities::getTimeStamp() + "," + std::to_string(caller) + ",AddTrain," + std::to_string(rear_position) + "," + std::to_string(front_position) +
-                                 "," + head_code + "," + std::to_string(start_speed) + "," + std::to_string(mass) + "," + mode_str); //at v2.11.1 dropped later headcode - was listed twice
+  Logging::call_log.push_back(
+      Utilities::getTimeStamp() + "," + std::to_string(caller) + ",AddTrain," +
+      std::to_string(rear_position) + "," + std::to_string(front_position) +
+      "," + head_code + "," + std::to_string(start_speed) + "," +
+      std::to_string(mass) + "," +
+      mode_str); // at v2.11.1 dropped later headcode - was listed twice
 
-    int rear_exit_pos_{-1};
+  int rear_exit_pos_{-1};
 
-    for(int x{0}; x < 4; x++)
-    {
-        if(Track->TrackElementAt(519, RearPosition).Conn[x] == FrontPosition)
-        {
-            RearExitPos = x;
-        }
+  for (int x{0}; x < 4; x++) {
+    if (Track::track->trackElementAt(519, rear_position).conn[x] ==
+        front_position) {
+      rear_exit_pos_ = x;
     }
-    if(RearExitPos == -1)
-    {
-        throw Exception("Error, RearExit == -1 in AddTrain");
-    }
-    bool ReportFlag = true;
+  }
+  if (rear_exit_pos_ == -1) {
+    throw std::runtime_error("Error, RearExit == -1 in AddTrain");
+  }
+  bool report_flag_ = true;
 
-    // used to stop repeated messages from CheckStartAllowable when split failed
-    if(TrainDataEntryPtr->TrainOperatingDataVector.at(RepeatNumber).EventReported != NoEvent)
-    {
-        ReportFlag = false;
-    }
-    if(!CheckStartAllowable(0, RearPosition, RearExitPos, HeadCode, ReportFlag, EventType))
-    {
-        // messages sent to performance log in CheckStartAllowable if ReportFlag true
-        TrainDataEntryPtr->TrainOperatingDataVector.at(RepeatNumber).EventReported = EventType;
-        Utilities->CallLogPop(938);
-        return(false);
-    }
-    TrainDataEntryPtr->TrainOperatingDataVector.at(RepeatNumber).EventReported = NoEvent;
-    TTrainMode TrainMode = NoMode;
+  // used to stop repeated messages from CheckStartAllowable when split failed
+  if (train_data->train_operating_data.at(repeat_number).event_reported !=
+      Actions::EventType::NoEvent) {
+    report_flag_ = false;
+  }
+  if (!checkStartAllowable(0, rear_position, rear_exit_pos_, head_code,
+                           report_flag_, event_type)) {
+    // messages sent to performance log in CheckStartAllowable if ReportFlag
+    // true
+    train_data->train_operating_data.at(repeat_number).event_reported =
+        *event_type;
+    Logging::popCallLog(938);
+    return false;
+  }
+  train_data->train_operating_data.at(repeat_number).event_reported =
+      Actions::EventType::NoEvent;
+  Mode train_mode_ = Mode::NoMode;
 
-    if(ModeStr == "Timetable")
-    {
-        TrainMode = Timetable;
-    }
-    // all else gives 'None', 'Signaller' set within program
+  if (mode_str == "Timetable") {
+    train_mode_ = Mode::Timetable;
+  }
+  // all else gives 'None', 'Signaller' set within program
 
-    if(MaxRunningSpeed < 10)
-    {
-        MaxRunningSpeed = 10; // added at v0.6 to avoid low max speeds
-    }
-    if(SignallerSpeed < 10)
-    {
-        SignallerSpeed = 10; // added at v0.6 to avoid low max speeds
-    }
-    TTrain *NewTrain = new TTrain(0, RearPosition, RearExitPos, HeadCode, StartSpeed, Mass, MaxRunningSpeed, MaxBrakeRate, PowerAtRail, TrainMode,
-                                  TrainDataEntryPtr, RepeatNumber, IncrementalMinutes, IncrementalDigits, SignallerSpeed);
+  if (max_running_speed < 10) {
+    max_running_speed = 10; // added at v0.6 to avoid low max speeds
+  }
+  if (signaller_speed < 10) {
+    signaller_speed = 10; // added at v0.6 to avoid low max speeds
+  }
+  std::shared_ptr<Train> new_train_ = std::shared_ptr<Train>(new Train(
+      0, rear_position, rear_exit_pos_, head_code, start_speed, mass,
+      max_running_speed, max_brake_rate, power_at_rail, train_mode_, train_data,
+      repeat_number, incremental_mins, incremental_digits, signaller_speed));
 
-    LogEvent("AddTrainSupplemental: Service Ref = " + TrainDataEntryPtr->ServiceReference + ", TrainID = " + AnsiString(NewTrain->TrainID)); //new at v2.11.1 so can relate headcode to ID
+  logEvent(
+      "AddTrainSupplemental: Service Ref = " + train_data->service_reference +
+      ", TrainID = " +
+      std::to_string(
+          new_train_->getID())); // new at v2.11.1 so can relate headcode to ID
 
-    NewTrain->ActionVectorEntryPtr = &(TrainDataEntryPtr->ActionVector.at(0));
-    // initialise here rather than in TTrain constructor as create trains
-    // with Null TrainDataEntryPtr when loading session trains
-    if(SignallerControl)
-    {
-        NewTrain->TimetableFinished = true;
-        NewTrain->SignallerStoppingFlag = false;
-        NewTrain->TrainMode = Signaller;
-        if(NewTrain->MaxRunningSpeed > NewTrain->SignallerMaxSpeed)
-        {
-            NewTrain->MaxRunningSpeed = NewTrain->SignallerMaxSpeed;
-        }
-        RailGraphics->ChangeForegroundColour(17, NewTrain->HeadCodePosition[0], NewTrain->FrontCodePtr, clFrontCodeSignaller, NewTrain->BackgroundColour);
-    }
-    // deal with starting conditions:-
-    // unlocated Snt: just report entry & advance pointer
-    // located Snt or Sfs: set station conditions as would if had reached stop point in Update(), & advance the ActionVectorEntryPtr
-    // Sns doesn't need a new train
-    if(NewTrain->ActionVectorEntryPtr->LocationName != "")
-    // covers all above located starts
-    // if location of Snt was a station (that is set as LocationName, i.e. not just any station) that isn't next departure station then
-    // wouldn't have accepted the timetable
-    {
-        // first check if LeadElement (can't access LeadElement directly yet as not set, use FrontPosition instead) is buffers, note that
-        // StoppedAtBuffers is set in UpdateTrain()
-        if(Track->TrackElementAt(520, FrontPosition).TrackType == Buffers)
-        // buffer end must be ahead of train or would have failed start position check
-        {
-            NewTrain->StoppedAtLocation = true;
-            NewTrain->PlotStartPosition(0);
-            NewTrain->PlotTrainWithNewBackgroundColour(13, clStationStopBackground, Display); // pale green
-            NewTrain->LogAction(20, NewTrain->HeadCode, "", Create, NewTrain->ActionVectorEntryPtr->LocationName, NewTrain->ActionVectorEntryPtr->EventTime,
-                                NewTrain->ActionVectorEntryPtr->Warning);
-            if(!SignallerControl) // don't advance if SignalControlEntry
-            {
-                NewTrain->ActionVectorEntryPtr++;
-                // should be a command, could be a location departure but if so can't depart so set 'Hold' anyway
-            }
-            NewTrain->LastActionTime = TTClockTime;
-        }
-        // else a through station stop
-        else
-        {
-            NewTrain->StoppedAtLocation = true;
-            NewTrain->PlotStartPosition(10);
-            NewTrain->PlotTrainWithNewBackgroundColour(18, clStationStopBackground, Display); // pale green
-            NewTrain->LogAction(21, NewTrain->HeadCode, "", Create, NewTrain->ActionVectorEntryPtr->LocationName, NewTrain->ActionVectorEntryPtr->EventTime,
-                                NewTrain->ActionVectorEntryPtr->Warning);
-            if(!SignallerControl) // don't advance if SignalControlEntry
-            {
-                NewTrain->ActionVectorEntryPtr++;
-            }
-            NewTrain->LastActionTime = TTClockTime;
-        }
-    }
-    else // unlocated entry (i.e. not a stop entry, but could still be at a named location)
-    {
-        NewTrain->PlotStartPosition(11);
-        TTrackElement TE = Track->TrackElementAt(530, NewTrain->RearStartElement);
-        AnsiString Loc = "";
-        if(TE.ActiveTrackElementName != "")
-        {
-            Loc = TE.ActiveTrackElementName + ", track element " + TE.ElementID;
-        }
-        else
-        {
-            Loc = "track element " + TE.ElementID;
-        }
-        if(TE.TrackType == Continuation)
-        {
-            NewTrain->LogAction(22, NewTrain->HeadCode, "", Enter, Loc, NewTrain->ActionVectorEntryPtr->EventTime, NewTrain->ActionVectorEntryPtr->Warning);
-        }
-        else
-        {
-            NewTrain->LogAction(23, NewTrain->HeadCode, "", Create, Loc, NewTrain->ActionVectorEntryPtr->EventTime, NewTrain->ActionVectorEntryPtr->Warning);
-        }
-        if(!SignallerControl) // don't advance if SignalControlEntry
-        {
-            NewTrain->ActionVectorEntryPtr++;
-        }
-        NewTrain->LastActionTime = TTClockTime;
-        // no need to set LastActionTime for an unlocated entry
-    }
-    // cancel a wrong-direction route if either element of train starts on one
-    if(NewTrain->LeadElement > -1)
-    {
-        NewTrain->CheckAndCancelRouteForWrongEndEntry(3, NewTrain->LeadElement, NewTrain->LeadEntryPos);
-    }
-    if(NewTrain->MidElement > -1)
-    {
-        NewTrain->CheckAndCancelRouteForWrongEndEntry(4, NewTrain->MidElement, NewTrain->MidEntryPos);
-    }
-    // set signals for a right-direction autosigs route for either element of train on one
-    // erase elements back to start for a non-autosigs route & check if an autosigs route immediately behind it, and if so set its signals
-    // note that all but autosigs routes become part of a single route, so there can only be an autosigs route behind the non-autosigs route
-    int RouteNumber = -1;
-    bool SignalsSet = false;
+  int av_loc_{0};
+  std::string other_headcode_("");
 
-    if(NewTrain->LeadElement > -1)
-    {
-        if(AllRoutes->GetRouteTypeAndNumber(13, NewTrain->LeadElement, NewTrain->LeadEntryPos, RouteNumber) == TAllRoutes::AutoSigsRoute)
-        {
-            // below added in place of SetRouteSignals in v2.4.0 as don't want to set signals from start of route for a new train addition
-            int RouteStartPosition;
-            TAllRoutes::TRouteElementPair FirstPair, SecondPair;
-            FirstPair = AllRoutes->GetRouteElementDataFromRoute2MultiMap(21, Track->TrackElementAt(955, FrontPosition).HLoc,
-                                                                         Track->TrackElementAt(956, FrontPosition).VLoc, SecondPair);
-            if(FirstPair.first == RouteNumber)
-            {
-                RouteStartPosition = FirstPair.second;
-            }
-            else if(SecondPair.first == RouteNumber)
-            {
-                RouteStartPosition = SecondPair.second;
-            }
-            else
-            {
-                throw Exception("Error, RouteNumber not found in Route2MultiMap in 1st of 2 calls to SetAllRearwardsSignals in AddTrain");
-            }
-            AllRoutes->SetAllRearwardsSignals(10, 0, RouteNumber, RouteStartPosition);
-            SignalsSet = true;
-            // AllRoutes->GetFixedRouteAt(, RouteNumber).SetRouteSignals();  above substituted in v2.4.0
-        }
-        else if(RouteNumber > -1) // non-autosigsroute
-        {
-            TPrefDirElement TempPDE = AllRoutes->GetFixedRouteAt(181, RouteNumber).GetFixedPrefDirElementAt(194, 0);
-            int FirstTVPos = TempPDE.GetTrackVectorPosition();
-            int FirstELinkPos = TempPDE.GetELinkPos();
-            while(TempPDE.GetTrackVectorPosition() != (unsigned int)(NewTrain->LeadElement))
-            {
-                AllRoutes->RemoveRouteElement(16, TempPDE.HLoc, TempPDE.VLoc, TempPDE.GetELink());
-                TempPDE = AllRoutes->GetFixedRouteAt(182, RouteNumber).GetFixedPrefDirElementAt(195, 0);
-            }
-            if(TempPDE.GetTrackVectorPosition() == (unsigned int)(NewTrain->LeadElement))
-            {
-                AllRoutes->RemoveRouteElement(17, TempPDE.HLoc, TempPDE.VLoc, TempPDE.GetELink());
-                // remove the last element under LeadElement
-            }
-            AllRoutes->RebuildRailwayFlag = true;
-            // to force ClearandRebuildRailway at next clock tick if not in zoom-out mode
-            // now deal with a rear linked autosigs route
-            if(Track->TrackElementAt(820, FirstTVPos).Conn[FirstELinkPos] > -1)
-            {
-                int LinkedRouteNumber = -1;
-                if(AllRoutes->GetRouteTypeAndNumber(17, Track->TrackElementAt(821, FirstTVPos).Conn[FirstELinkPos],
-                                                    Track->TrackElementAt(822, FirstTVPos).ConnLinkPos[FirstELinkPos], LinkedRouteNumber) == TAllRoutes::AutoSigsRoute)
-                {
-                    AllRoutes->GetFixedRouteAt(169, LinkedRouteNumber).SetRouteSignals(0);
-                    // this is ok as here we are setting signals from the start of the route
-                }
-            }
-            SignalsSet = true;
-        }
+  new_train_->action_vector_entry =
+      std::shared_ptr<Actions::VectorEntry>(&train_data->actions.at(av_loc_));
+
+  // initialise here rather than in TTrain constructor as create trains
+  // with Null TrainDataEntryPtr when loading session trains
+  if (signaller_control) {
+    new_train_->timetable_finished = true;
+    new_train_->signaller_stopping_flag = false;
+    new_train_->train_mode = Mode::Signaller;
+    if (new_train_->max_running_speed > new_train_->getSignallerMaxSpeed()) {
+      new_train_->max_running_speed = new_train_->getSignallerMaxSpeed();
     }
-    if(NewTrain->MidElement > -1)
-    // if entering at a continuation MidElement == -1
+    // RailGraphics->ChangeForegroundColour(
+    //     17, NewTrain->HeadCodePosition[0], NewTrain->FrontCodePtr,
+    //     clFrontCodeSignaller, NewTrain->BackgroundColour);
+  }
+  // deal with starting conditions:-
+  // unlocated Snt: just report entry & advance pointer
+  // located Snt or Sfs: set station conditions as would if had reached stop
+  // point in Update(), & advance the ActionVectorEntryPtr Sns doesn't need a
+  // new train
+  if (new_train_->action_vector_entry->location_name != "")
+  // covers all above located starts
+  // if location of Snt was a station (that is set as LocationName, i.e. not
+  // just any station) that isn't next departure station then wouldn't have
+  // accepted the timetable
+  {
+    // first check if LeadElement (can't access LeadElement directly yet as not
+    // set, use FrontPosition instead) is buffers, note that StoppedAtBuffers is
+    // set in UpdateTrain()
+    if (Track::track->trackElementAt(520, front_position).track_type ==
+        Track::Type::Buffers)
+    // buffer end must be ahead of train or would have failed start position
+    // check
     {
-        // this is included in case a train starts with LeadElement on no route and MidElement on a route
-        if(!SignalsSet)
-        {
-            RouteNumber = -1;
-            if(AllRoutes->GetRouteTypeAndNumber(14, NewTrain->MidElement, NewTrain->MidEntryPos, RouteNumber) == TAllRoutes::AutoSigsRoute)
-            {
-                // below added in place of SetRouteSignals in v2.4.0 as don't want to set signals from start of route for a new train addition
-                int RouteStartPosition;
-                TAllRoutes::TRouteElementPair FirstPair, SecondPair;
-                FirstPair = AllRoutes->GetRouteElementDataFromRoute2MultiMap(22, Track->TrackElementAt(957, RearPosition).HLoc,
-                                                                             Track->TrackElementAt(958, RearPosition).VLoc, SecondPair);
-                if(FirstPair.first == RouteNumber)
-                {
-                    RouteStartPosition = FirstPair.second;
-                }
-                else if(SecondPair.first == RouteNumber)
-                {
-                    RouteStartPosition = SecondPair.second;
-                }
-                else
-                {
-                    throw Exception("Error, RouteNumber not found in Route2MultiMap in 2nd of 2 calls to SetAllRearwardsSignals in AddTrain");
-                }
-                AllRoutes->SetAllRearwardsSignals(11, 0, RouteNumber, RouteStartPosition);
-                SignalsSet = true;
-                // AllRoutes->GetFixedRouteAt(, RouteNumber).SetRouteSignals();  above substituted in v2.4.0
-            }
-            else if(RouteNumber > -1) // non-autosigsroute
-            {
-                TPrefDirElement TempPDE = AllRoutes->GetFixedRouteAt(184, RouteNumber).GetFixedPrefDirElementAt(196, 0);
-                int FirstTVPos = TempPDE.GetTrackVectorPosition();
-                int FirstELinkPos = TempPDE.GetELinkPos();
-                while(TempPDE.GetTrackVectorPosition() != (unsigned int)(NewTrain->MidElement))
-                {
-                    AllRoutes->RemoveRouteElement(18, TempPDE.HLoc, TempPDE.VLoc, TempPDE.GetELink());
-                    TempPDE = AllRoutes->GetFixedRouteAt(185, RouteNumber).GetFixedPrefDirElementAt(197, 0);
-                }
-                if(TempPDE.GetTrackVectorPosition() == (unsigned int)(NewTrain->MidElement))
-                {
-                    AllRoutes->RemoveRouteElement(19, TempPDE.HLoc, TempPDE.VLoc, TempPDE.GetELink());
-                    // remove the last element under LeadElement
-                }
-                AllRoutes->RebuildRailwayFlag = true;
-                // to force ClearandRebuildRailway at next clock tick if not in zoom-out mode
-                // now deal with a rear linked autosigs route
-                if(Track->TrackElementAt(823, FirstTVPos).Conn[FirstELinkPos] > -1)
-                {
-                    int LinkedRouteNumber = -1;
-                    if(AllRoutes->GetRouteTypeAndNumber(19, Track->TrackElementAt(824, FirstTVPos).Conn[FirstELinkPos],
-                                                        Track->TrackElementAt(825, FirstTVPos).ConnLinkPos[FirstELinkPos], LinkedRouteNumber) == TAllRoutes::AutoSigsRoute)
-                    {
-                        AllRoutes->GetFixedRouteAt(170, LinkedRouteNumber).SetRouteSignals(1);
-                        // this is ok as now we are setting signals from the start of the route
-                    }
-                }
-            }
-        }
+      new_train_->stopped_at_location = true;
+
+      new_train_->plotStartPosition(0);
+
+      // new_train_->plotTrainWithNewBackgroundColour(13,
+      // clStationStopBackground,
+      //                                            Display); // pale green
+      new_train_->logAction(
+          20, new_train_->getHeadCode(), other_headcode_, Actions::Type::Create,
+          new_train_->action_vector_entry->location_name,
+          new_train_->action_vector_entry->event_time,
+          new_train_->action_vector_entry->trigger_warning_panel_alert);
+      if (!signaller_control) // don't advance if SignalControlEntry
+      {
+        av_loc_++;
+        new_train_->action_vector_entry = std::shared_ptr<Actions::VectorEntry>(
+            &train_data->actions.at(av_loc_));
+        // should be a command, could be a location departure but if so can't
+        // depart so set 'Hold' anyway
+      }
+      new_train_->last_action_time = ttb_clock_time;
     }
-    TrainVector.push_back(*NewTrain);
-    Utilities->CallLogPop(731);
-    return(true);
+    // else a through station stop
+    else {
+      new_train_->stopped_at_location = true;
+      new_train_->plotStartPosition(10);
+      // new_train_->plotTrainWithNewBackgroundColour(18,
+      // clStationStopBackground,
+      //                                            Display); // pale green
+      new_train_->logAction(
+          21, new_train_->getHeadCode(), other_headcode_, Actions::Type::Create,
+          new_train_->action_vector_entry->location_name,
+          new_train_->action_vector_entry->event_time,
+          new_train_->action_vector_entry->trigger_warning_panel_alert);
+      if (!signaller_control) // don't advance if SignalControlEntry
+      {
+        av_loc_++;
+        new_train_->action_vector_entry = std::shared_ptr<Actions::VectorEntry>(
+            &train_data->actions.at(av_loc_));
+      }
+      new_train_->last_action_time = ttb_clock_time;
+    }
+  } else // unlocated entry (i.e. not a stop entry, but could still be at a
+         // named location)
+  {
+    new_train_->plotStartPosition(11);
+    Track::TrackElement te_ =
+        Track::track->trackElementAt(530, new_train_->getRearStartElement());
+    std::string location_("");
+
+    if (te_.active_track_element_name != "") {
+      location_ =
+          te_.active_track_element_name + ", track element " + te_.element_id;
+    } else {
+      location_ = "track element " + te_.element_id;
+    }
+    if (te_.track_type == Track::Type::Continuation) {
+      new_train_->logAction(
+          22, new_train_->getHeadCode(), other_headcode_, Actions::Type::Create,
+          new_train_->action_vector_entry->location_name,
+          new_train_->action_vector_entry->event_time,
+          new_train_->action_vector_entry->trigger_warning_panel_alert);
+    } else {
+      new_train_->logAction(
+          23, new_train_->getHeadCode(), other_headcode_, Actions::Type::Create,
+          location_, new_train_->action_vector_entry->event_time,
+          new_train_->action_vector_entry->trigger_warning_panel_alert);
+    }
+    if (!signaller_control) // don't advance if SignalControlEntry
+    {
+      av_loc_++;
+      new_train_->action_vector_entry = std::shared_ptr<Actions::VectorEntry>(
+          &train_data->actions.at(av_loc_));
+    }
+    new_train_->last_action_time = ttb_clock_time;
+    // no need to set LastActionTime for an unlocated entry
+  }
+  // cancel a wrong-direction route if either element of train starts on one
+  if (new_train_->getLeadElement() > -1) {
+    new_train_->checkAndCancelRouteForWrongEndEntry(
+        3, new_train_->getLeadElement(), new_train_->getLeadEntryPosition());
+  }
+  if (new_train_->getMidElement() > -1) {
+    new_train_->checkAndCancelRouteForWrongEndEntry(
+        4, new_train_->getMidElement(), new_train_->getMidEntryPosition());
+  }
+  // set signals for a right-direction autosigs route for either element of
+  // train on one erase elements back to start for a non-autosigs route & check
+  // if an autosigs route immediately behind it, and if so set its signals note
+  // that all but autosigs routes become part of a single route, so there can
+  // only be an autosigs route behind the non-autosigs route
+  int route_number_{-1};
+  bool signals_set_{false};
+
+  if (new_train_->getLeadElement() > -1) {
+    if (Track::all_routes->getRouteTypeAndNumber(
+            13, new_train_->getLeadElement(),
+            new_train_->getLeadEntryPosition(),
+            route_number_) == Track::AllRoutes::RouteType::AutoSigsRoute) {
+      // below added in place of SetRouteSignals in v2.4.0 as don't want to set
+      // signals from start of route for a new train addition
+      int route_start_position_{-1};
+
+      Track::AllRoutes::RouteElementPair first_pair_, second_pair_;
+
+      first_pair_ = Track::all_routes->getRouteElementDataFromRoute2MultiMap(
+          21, Track::track->trackElementAt(955, front_position).h_loc,
+          Track::track->trackElementAt(956, front_position).v_loc,
+          second_pair_);
+      if (first_pair_.first == route_number_) {
+        route_start_position_ = first_pair_.second;
+      } else if (second_pair_.first == route_number_) {
+        route_start_position_ = second_pair_.second;
+      } else {
+        throw std::runtime_error(
+            "Error, RouteNumber not found in Route2MultiMap in 1st "
+            "of 2 calls to SetAllRearwardsSignals in AddTrain");
+      }
+      Track::all_routes->setAllRearwardsSignals(10, 0, route_number_,
+                                                route_start_position_);
+      signals_set_ = true;
+      // AllRoutes->GetFixedRouteAt(, RouteNumber).SetRouteSignals();  above
+      // substituted in v2.4.0
+    } else if (route_number_ > -1) // non-autosigsroute
+    {
+      Track::PrefDirElement temp_pde_{
+          Track::all_routes->getFixedRouteAt(181, route_number_)
+              .getFixedPrefDirElementAt(194, 0)};
+
+      int first_tv_pos_{static_cast<int>(temp_pde_.getTrackVectorPosition())};
+      int first_elink_pos_{temp_pde_.getELinkPos()};
+
+      while (temp_pde_.getTrackVectorPosition() !=
+             static_cast<unsigned int>(new_train_->getLeadElement())) {
+        Track::all_routes->removeRouteElement(
+            16, temp_pde_.h_loc, temp_pde_.v_loc, temp_pde_.getELink());
+        temp_pde_ = Track::all_routes->getFixedRouteAt(182, route_number_)
+                        .getFixedPrefDirElementAt(195, 0);
+      }
+      if (temp_pde_.getTrackVectorPosition() ==
+          static_cast<unsigned int>(new_train_->getLeadElement())) {
+        Track::all_routes->removeRouteElement(
+            17, temp_pde_.h_loc, temp_pde_.v_loc, temp_pde_.getELink());
+        // remove the last element under LeadElement
+      }
+      Track::all_routes->rebuild_railway_flag = true;
+      // to force ClearandRebuildRailway at next clock tick if not in zoom-out
+      // mode now deal with a rear linked autosigs route
+      if (Track::track->trackElementAt(820, first_tv_pos_)
+              .conn[first_elink_pos_] > -1) {
+        int linked_route_number_{-1};
+        if (Track::all_routes->getRouteTypeAndNumber(
+                17,
+                Track::track->trackElementAt(821, first_tv_pos_)
+                    .conn[first_elink_pos_],
+                Track::track->trackElementAt(822, first_tv_pos_)
+                    .con_link_pos[first_elink_pos_],
+                linked_route_number_) ==
+            Track::AllRoutes::RouteType::AutoSigsRoute) {
+          Track::all_routes->getFixedRouteAt(169, linked_route_number_)
+              .setRouteSignals(0);
+          // this is ok as here we are setting signals from the start of the
+          // route
+        }
+      }
+      signals_set_ = true;
+    }
+  }
+  if (new_train_->getMidElement() > -1)
+  // if entering at a continuation MidElement == -1
+  {
+    // this is included in case a train starts with LeadElement on no route and
+    // MidElement on a route
+    if (!signals_set_) {
+      route_number_ = -1;
+      if (Track::all_routes->getRouteTypeAndNumber(
+              14, new_train_->getMidElement(),
+              new_train_->getMidEntryPosition(),
+              route_number_) == Track::AllRoutes::RouteType::AutoSigsRoute) {
+        // below added in place of SetRouteSignals in v2.4.0 as don't want to
+        // set signals from start of route for a new train addition
+        int route_start_position_{-1};
+        Track::AllRoutes::RouteElementPair first_pair_, second_pair_;
+
+        first_pair_ = Track::all_routes->getRouteElementDataFromRoute2MultiMap(
+            22, Track::track->trackElementAt(957, rear_position).h_loc,
+            Track::track->trackElementAt(958, rear_position).v_loc,
+            second_pair_);
+        if (first_pair_.first == route_number_) {
+          route_start_position_ = first_pair_.second;
+        } else if (second_pair_.first == route_number_) {
+          route_start_position_ = second_pair_.second;
+        } else {
+          throw std::runtime_error(
+              "Error, RouteNumber not found in Route2MultiMap in 2nd of 2 "
+              "calls to SetAllRearwardsSignals in AddTrain");
+        }
+        Track::all_routes->setAllRearwardsSignals(11, 0, route_number_,
+                                                  route_start_position_);
+        signals_set_ = true;
+        // AllRoutes->GetFixedRouteAt(, RouteNumber).SetRouteSignals();  above
+        // substituted in v2.4.0
+      } else if (route_number_ > -1) // non-autosigsroute
+      {
+        Track::PrefDirElement temp_pde_{
+            Track::all_routes->getFixedRouteAt(184, route_number_)
+                .getFixedPrefDirElementAt(196, 0)};
+
+        int first_tv_pos_{static_cast<int>(temp_pde_.getTrackVectorPosition())};
+        int first_elink_pos_{temp_pde_.getELinkPos()};
+
+        while (temp_pde_.getTrackVectorPosition() !=
+               static_cast<unsigned int>(new_train_->getMidElement())) {
+          Track::all_routes->removeRouteElement(
+              18, temp_pde_.h_loc, temp_pde_.v_loc, temp_pde_.getELink());
+          temp_pde_ = Track::all_routes->getFixedRouteAt(185, route_number_)
+                          .getFixedPrefDirElementAt(197, 0);
+        }
+        if (temp_pde_.getTrackVectorPosition() ==
+            static_cast<unsigned int>(new_train_->getMidElement())) {
+          Track::all_routes->removeRouteElement(
+              19, temp_pde_.h_loc, temp_pde_.v_loc, temp_pde_.getELink());
+          // remove the last element under LeadElement
+        }
+        Track::all_routes->rebuild_railway_flag = true;
+        // to force ClearandRebuildRailway at next clock tick if not in zoom-out
+        // mode now deal with a rear linked autosigs route
+        if (Track::track->trackElementAt(823, first_tv_pos_)
+                .conn[first_elink_pos_] > -1) {
+          int linked_route_number_{-1};
+          if (Track::all_routes->getRouteTypeAndNumber(
+                  19,
+                  Track::track->trackElementAt(824, first_tv_pos_)
+                      .conn[first_elink_pos_],
+                  Track::track->trackElementAt(825, first_tv_pos_)
+                      .con_link_pos[first_elink_pos_],
+                  linked_route_number_) ==
+              Track::AllRoutes::RouteType::AutoSigsRoute) {
+            Track::all_routes->getFixedRouteAt(170, linked_route_number_)
+                .setRouteSignals(1);
+            // this is ok as now we are setting signals from the start of the
+            // route
+          }
+        }
+      }
+    }
+  }
+  trains.push_back(*new_train_);
+  Logging::popCallLog(731);
+  return true;
 }
 
 }; // namespace RailOS::Train

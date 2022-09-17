@@ -75,7 +75,7 @@ bool TrackElement::operator!=(TrackElement rh_element) {
 //     }
 //     Disp->PlotOutput(34, HLoc * 16, VLoc * 16, GraphicOutput);
 //     //deal with TSRs
-//     if((TrackType == Simple) && Failed) //added at v2.13.0
+//     if((Type == Simple) && Failed) //added at v2.13.0
 //     {
 //        Disp->GetImage()->Canvas->Draw((HLoc - Display->DisplayOffsetH) * 16, (VLoc - Display->DisplayOffsetV) * 16, RailGraphics->BlackOctagon); //indicates that it has failed
 //     }
@@ -93,7 +93,7 @@ TrackElement::TrackElement(FixedTrackPiece input) : FixedTrackPiece(input), attr
     train_id_on_element(-1), train_id_on_bridge_or_failed_point_orig_speed_limit_01(-1), train_id_on_bridge_or_failed_point_orig_speed_limit_23(-1), station_entry_stop_link_pos_1(-1), station_entry_stop_link_pos_2(-1),
     sig_aspect(FourAspect)
 {
-    if((track_type == TrackType::Points) || (track_type == TrackType::Crossover) || (track_type == TrackType::Bridge))
+    if((track_type == Type::Points) || (track_type == Type::Crossover) || (track_type == Type::Bridge))
     {
         length_23 = Utilities::default_track_length;
         speed_limit_23 = Utilities::default_track_speed_limit;
@@ -141,7 +141,7 @@ std::string PrefDirElement::logPrefDir() const
         std::to_string(train_id_on_bridge_or_failed_point_orig_speed_limit_23);
 }
 
-std::shared_ptr<Track> track = std::make_shared<Track>(new Track());
+std::shared_ptr<Track> track{new Track()};
 
 // ---------------------------------------------------------------------------
 
@@ -219,7 +219,7 @@ bool PrefDirElement::entryExitNumber() // true for valid number
        {2,8},{4,6},{2,8},{4,6}
 */
 
-    if(track_type == TrackType::Bridge)
+    if(track_type == Type::Bridge)
     {
         switch(ex_num_) {
             case 1:
@@ -389,7 +389,7 @@ void Track::plotAndAddTrackElement(int caller, int current_tag, int aspect, int 
     setElementID(1, temp_track_element_); // TempTrackElement is the one to be added
 // new at version 0.6 - set signal aspect depending on build mode
 
-    if(temp_track_element_.track_type == TrackType::SignalPost)
+    if(temp_track_element_.track_type == Type::SignalPost)
     {
 
         switch(aspect) {
@@ -435,15 +435,15 @@ void Track::plotAndAddTrackElement(int caller, int current_tag, int aspect, int 
 
     if(inactive_found_flag_) // check if a LocationName already there & if so disallow platform
     {
-        if(inactiveTrackElementAt(4, im_pair_.first).track_type == TrackType::NamedNonStationLocation)
+        if(inactiveTrackElementAt(4, im_pair_.first).track_type == Type::NamedNonStationLocation)
         {
             non_station_or_lc_present_ = true;
         }
-        if(inactiveTrackElementAt(117, im_pair_.first).track_type == TrackType::LevelCrossing)
+        if(inactiveTrackElementAt(117, im_pair_.first).track_type == Type::LevelCrossing)
         {
             non_station_or_lc_present_ = true;
         }
-        if(inactiveTrackElementAt(5, im_pair_.first).track_type == TrackType::Platform)
+        if(inactiveTrackElementAt(5, im_pair_.first).track_type == Type::Platform)
         {
             platform_present_ = true;
         }
@@ -452,7 +452,7 @@ void Track::plotAndAddTrackElement(int caller, int current_tag, int aspect, int 
         inactive_speed_tag_2_ = inactiveTrackElementAt(7, im_pair_.second).speed_tag; // note .first & .second will be same if only one present
     }
 // check platforms
-    if(temp_track_element_.track_type == TrackType::Platform)
+    if(temp_track_element_.track_type == Type::Platform)
     {
         if(found_flag_) // active track element already there
         {
@@ -509,7 +509,7 @@ void Track::plotAndAddTrackElement(int caller, int current_tag, int aspect, int 
     } // if platform
 
 // check if element is a LocationName - OK if placed on an allowable track element, or on a blank element
-    if(temp_track_element_.track_type == TrackType::NamedNonStationLocation)
+    if(temp_track_element_.track_type == Type::NamedNonStationLocation)
     {
         if((found_flag_ && (name_allowed.find(trackElementAt(1048, vec_pos_).speed_tag) != name_allowed.end()) && !platform_present_ && !inactive_found_flag_) ||
            (!found_flag_ && !inactive_found_flag_))
@@ -542,7 +542,7 @@ void Track::plotAndAddTrackElement(int caller, int current_tag, int aspect, int 
         }
     }
 // check if a level crossing - OK if placed on a plain straight track
-    if(temp_track_element_.track_type == TrackType::LevelCrossing)
+    if(temp_track_element_.track_type == Type::LevelCrossing)
     {
         if(found_flag_ && (level_crossing_allowed.find(trackElementAt(1049, vec_pos_).speed_tag) != level_crossing_allowed.end()) && !platform_present_ && !inactive_found_flag_)
         {
@@ -577,13 +577,13 @@ void Track::plotAndAddTrackElement(int caller, int current_tag, int aspect, int 
         searchForAndUpdateLocationName(3, temp_track_element_.h_loc, temp_track_element_.v_loc, temp_track_element_.speed_tag);
         // checks all adjacent locations and if any name found that one is used for all elements that are now linked to it
     }
-    else if(temp_track_element_.track_type == TrackType::Points)
+    else if(temp_track_element_.track_type == Type::Points)
     {
         trackPush(4, temp_track_element_);
         bool both_point_fillets_{true};
         //plotPoints(6, temp_track_element_, display, both_point_fillets_);
     }
-    else if(temp_track_element_.track_type == TrackType::SignalPost)
+    else if(temp_track_element_.track_type == Type::SignalPost)
     {
         trackPush(10, temp_track_element_);
         //PlotSignal(12, temp_track_element_, display);
@@ -593,7 +593,7 @@ void Track::plotAndAddTrackElement(int caller, int current_tag, int aspect, int 
         trackPush(5, temp_track_element_);
         //temp_track_element_.plotVariableTrackElement(1, Display); // all named locations already dealt with so no ambiguity between striped & non-striped
     }
-    if((temp_track_element_.track_type != TrackType::Concourse) && (temp_track_element_.track_type != TrackType::Parapet))
+    if((temp_track_element_.track_type != Type::Concourse) && (temp_track_element_.track_type != Type::Parapet))
     {
         track_linking_required_flag = true; // plats & NamedLocs aleady dealt with
     }
