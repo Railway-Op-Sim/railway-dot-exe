@@ -4,3 +4,7 @@
 #include "railos/timetable.hxx"
 #include "railos/utilities.hxx"
 #include "railos/train.hxx"
+#include "railos/globals.hxx"
+#include "railos/actions.hxx"
+#include "railos/logging.hxx"
+#include "railos/train_controller.hxx"
