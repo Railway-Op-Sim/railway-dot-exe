@@ -1231,22 +1231,22 @@ can't have a route set while changing; can't be opened while a route is set; and
         return gap_v_loc;
     }
 
-    int geth_locMax()
+    int getHLocMax()
     {
         return h_loc_max;
     }
 
-    int geth_locMin()
+    int getHLocMin()
     {
         return h_loc_min;
     }
 
-    int getv_locMax()
+    int getVLocMax()
     {
         return v_loc_max;
     }
 
-    int getv_locMin()
+    int getVLocMin()
     {
         return v_loc_min;
     }
@@ -1299,12 +1299,12 @@ can't have a route set while changing; can't be opened while a route is set; and
     }
 
 // set member values
-    void seth_locMax(int h_loc)
+    void setHLocMax(int h_loc)
     {
         h_loc_max = h_loc;
     }
 
-    void seth_locMin(int h_loc)
+    void setHLocMin(int h_loc)
     {
         h_loc_min = h_loc;
     }
@@ -1314,12 +1314,12 @@ can't have a route set while changing; can't be opened while a route is set; and
         track_finished = value;
     }
 
-    void setv_locMax(int v_loc)
+    void setVLocMax(int v_loc)
     {
         v_loc_max = v_loc;
     }
 
-    void setv_locMin(int v_loc)
+    void setVLocMin(int v_loc)
     {
         v_loc_min = v_loc;
     }

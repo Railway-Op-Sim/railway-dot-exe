@@ -3,8 +3,11 @@
 #include <memory>
 #include <vector>
 #include <fstream>
+#include <string>
 
 #include "railos/utilities.hxx"
+#include "railos/track.hxx"
+#include "railos/logging.hxx"
 
 namespace RailOS::Text {
     class TextItem {
@@ -25,7 +28,7 @@ namespace RailOS::Text {
             TextVector text_vector, select_text_vector;
 
             void setNewHPos(int caller, int text_item, int new_h_pos) {
-                textPtrAt(24, text_item)->h_pos_ = new_h_pos;
+                textPtrAt(24, text_item)->h_pos = new_h_pos;
             }
 
             std::shared_ptr<TextItem> textPtrAt(int caller, int at);
