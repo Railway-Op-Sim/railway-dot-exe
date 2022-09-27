@@ -47,6 +47,14 @@ jobs:
         run: |
           cmake -Bbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=1
           mv build/compile_commands.json .
+        if: ${{ matrix.os != 'windows-latest' }}
+      - uses: seanmiddleditch/gha-setup-ninja@master
+        if: ${{ matrix.os == 'windows-latest' }}
+      - name: Configure CMake
+        run: |
+          cmake -Bbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -G "Ninja"
+          mv build/compile_commands.json .
+        if: ${{ matrix.os == 'windows-latest' }}
       - name: Run Build
         run: cmake --build build
   linting:
