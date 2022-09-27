@@ -8,6 +8,7 @@ set( DATE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/date/include )
 
 project( RAILWAY_OPERATION_SIMULATOR VERSION 2022.08.29 LANGUAGES CXX )
 
+set( CONAN_DISABLE_CHECK_COMPILER ON )
 include( ${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake )
 conan_basic_setup()
 
