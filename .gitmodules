@@ -1,0 +1,6 @@
+[submodule "external/nana"]
+	path = external/nana
+	url = https://github.com/cnjinhao/nana.git
+[submodule "external/boost-cmake"]
+	path = external/boost-cmake
+	url = https://github.com/Orphis/boost-cmake.git
