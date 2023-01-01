@@ -16,7 +16,7 @@ jobs:
       - name: Update Clang (macOS)
         run: |
           brew update
-          brew upgrade llvm
+          brew install llvm
         if: ${{ matrix.os  == 'macos-latest' }}
       - name: Set environment (macOS)
         run: |
@@ -31,6 +31,10 @@ jobs:
         run: |
           cmake -Bbuild -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1
           mv build/compile_commands.json .
+        if: ${{ matrix.os  == 'ubuntu-latest' }}
+      - name: Configure CMake
+        run: cmake -Bbuild -G Ninja
+        if: ${{ matrix.os  != 'ubuntu-latest' }}
       - name: Run Build
         run: cmake --build build -j8
   linting:
