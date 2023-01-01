@@ -23,6 +23,9 @@ jobs:
           export CXX="/usr/local/opt/llvm/bin/clang++"
           export CC="/usr/local/opt/llvm/bin/clang"
         if: ${{ matrix.os == 'macos-latest' }}
+      - name: Install Prerequisites
+        run: sudo apt install libxcursor-dev -y
+        if: ${{ matrix.os  == 'ubuntu-latest' }}
       - name: Setup CMake
         uses: lukka/get-cmake@latest
       - name: Setup Ninja
