@@ -35,4 +35,8 @@ The recommendation however is to use Clang as a compiler, and Ninja as the gener
 CC=$(which clang) CXX=$(which clang++) cmake -Bbuild -G Ninja 
 ```
 
+then run the compilation:
 
+```sh
+cmake --build build
+```
