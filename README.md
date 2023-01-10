@@ -29,7 +29,7 @@ Run configuration for cmake:
 cmake -Bbuild
 ```
 
-The recommendation however is to use Clang as a compiler, and Ninja as the generator:
+The recommendation however is to use Clang as a compiler for macOS or Linux, GCC for Windows, and Ninja as the generator:
 
 ```sh
 CC=$(which clang) CXX=$(which clang++) cmake -Bbuild -G Ninja 

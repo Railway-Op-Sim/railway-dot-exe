@@ -1,15 +1,19 @@
 cmake_minimum_required( VERSION 3.21 )
 
+if(WIN32)
+    set(CMAKE_CXX_COMPILER g++ )
+endif()
+
 set( CMAKE_CXX_STANDARD 17 )
-set( CMAKE_CXX_STANDARD_REQUIRED True )
+set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set( RAILOS_THIRD_PARTY ${CMAKE_CURRENT_SOURCE_DIR}/external )
 string( TIMESTAMP RAILOS_VERSION "%Y.%m.%d" )
 
 set( RAILOS_LIBS "railos_core" )
 set( RAILOS_UI "railos_ui" )
-set( RAILOS_APPLICATION_NAME "Railway Operation Simulator" )
 set( RAILOS_BINARY_NAME "railos" )
+set( BOOST_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/boost-src )
 
 message( STATUS "Building ${RAILOS_APPLICATION_NAME} v${RAILOS_VERSION}" )
 
@@ -32,17 +36,21 @@ add_library( ${RAILOS_UI} ${RAILOS_UI_FILES} )
 
 target_include_directories( ${RAILOS_LIBS} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include )
 target_include_directories( ${RAILOS_UI} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include )
+target_include_directories( ${RAILOS_LIBS} PUBLIC ${BOOST_SOURCE} )
+message( ${BOOST_SOURCE} )
 
-set( CMAKE_CXX_FLAGS "-DRAILOS_GRAPHICS_ROOT='\"${CMAKE_CURRENT_SOURCE_DIR}/graphics\"'\
- -DRAILOS_APPLICATION_NAME='\"${RAILOS_APPLICATION_NAME}\"'\
- -DRAILOS_VERSION='\"${RAILOS_VERSION}\"'" 
-)
+target_compile_definitions( ${RAILOS_UI} PUBLIC RAILOS_GRAPHICS_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/graphics" )
+target_compile_definitions( ${RAILOS_UI} PUBLIC RAILOS_APPLICATION_NAME="Railway_Operation_Simulator" )
+target_compile_definitions( ${RAILOS_UI} PUBLIC RAILOS_VERSION="${RAILOS_VERSION}" )
 
 # --------- SETUP NANA ----------------- #
 target_compile_options( nana PUBLIC -w )
 set( NANA_CMAKE_ENABLE_JPEG ON )
 
 target_link_libraries( ${RAILOS_UI} nana )
+target_include_directories( nana PUBLIC ${PROJECT_THIRD_PARTY}/libpng )
+target_include_directories( nana PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/external/libpng )
+target_include_directories( nana PUBLIC ${PROJECT_THIRD_PARTY}/zlib )
 
 add_executable( ${RAILOS_BINARY_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/application.cxx )
 target_link_libraries( ${RAILOS_BINARY_NAME} ${RAILOS_LIBS} ${RAILOS_UI} )

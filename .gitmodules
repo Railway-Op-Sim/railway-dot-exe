@@ -4,3 +4,9 @@
 [submodule "external/boost-cmake"]
 	path = external/boost-cmake
 	url = https://github.com/Orphis/boost-cmake.git
+[submodule "external/libpng"]
+	path = external/libpng
+	url = https://github.com/glennrp/libpng.git
+[submodule "external/zlib"]
+	path = external/zlib
+	url = https://github.com/madler/zlib.git
