@@ -7528,7 +7528,6 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
         {
             AnsiButton = "mbRight";
         }
-        TrainController->LogEvent("MainScreenMouseDown2," + AnsiButton + "," + AnsiString(X) + "," + AnsiString(Y));
         Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",MainScreenMouseDown2," + AnsiButton + "," + AnsiString(X) +
                                      "," + AnsiString(Y));
         // unplot GapFlash graphics if plotted & cancel gap flashing if left mouse button pressed (so can move display with right mouse button)
@@ -7542,6 +7541,7 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
         }
         int HLoc, VLoc;
         Track->GetTrackLocsFromScreenPos(1, HLoc, VLoc, X, Y);
+        TrainController->LogEvent("MainScreenMouseDown2," + AnsiButton + "," + AnsiString(X) + "," + AnsiString(Y) + "," + AnsiString(HLoc) + "," + AnsiString(VLoc));
         int NoOffsetX, NoOffsetY;
         Track->GetTruePositionsFromScreenPos(0, NoOffsetX, NoOffsetY, X, Y);
         if(Button == mbRight) // track, PrefDir or text erase, PrefDir/route truncate, or take signaller control of train
@@ -14897,7 +14897,7 @@ void __fastcall TInterface::BecomeNewServiceMenuItemClick(TObject *Sender) //add
         TTrain &Train = TrainController->TrainVectorAtIdent(58, SelectedTrainID);
         TActionVectorEntry *NewServiceActionEntryPtr = Train.ActionVectorEntryPtr; //set initially to current position
         while((NewServiceActionEntryPtr->Command != "Fns") && (NewServiceActionEntryPtr->Command != "Fns-sh") && (NewServiceActionEntryPtr->Command != "F-nshs") &&
-            (NewServiceActionEntryPtr->Command != "Frh-sh"))  //last condition added after v2.23.0 because of error reported by andre (andrek1410) via discord ticket #86
+            (NewServiceActionEntryPtr->Command != "Frh-sh"))  //last condition added at v2.23.1 because of error reported by andre (andrek1410) via discord ticket #86
         {                                                     //error was that received the below message wrongly with plain shuttles without feeders
             NewServiceActionEntryPtr++;
             if(NewServiceActionEntryPtr > &Train.TrainDataEntryPtr->ActionVector.back()) //failed to find a new service
@@ -26315,6 +26315,7 @@ void TInterface::TestFunction()    //triggered by Ctrl Alt 4
 
 //test code here
 
+//throw Exception("test error");
 
 //end of test code
 

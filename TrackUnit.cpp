@@ -18982,11 +18982,11 @@ void TOneRoute::TruncateRoute(int Caller, int HLoc, int VLoc, bool PrefDirRoute,
         }
         else
         {
-            TPrefDirElement TempElement = PrefDirVector.at(TruncatePDElementPos + 1); //+1 will exist becaue of first condition
+            TPrefDirElement TempElement = PrefDirVector.at(TruncatePDElementPos + 1); //+1 will exist because of first condition
             if(TempElement.Config[TempElement.XLinkPos] == Signal)
             {
                 TruncateType = FrontTruncate;
-                AllRoutes->RouteTruncateFlag = true; //to set signals properly rearwards of truncate point //added after v2.23.0 because of Fly California/Silicon Airways
+                AllRoutes->RouteTruncateFlag = true; //to set signals properly rearwards of truncate point //added at v2.23.1 because of Fly California/Silicon Airways
             }             //bug report via discord (ticket #87) where front truncated segment of a green route following a blue route & blue route end signal stayed green
             else //here could be back or next signal truncate, next sig truncate if truncate pos is a signal and there's a signal after that isn't the end of the route
             {
