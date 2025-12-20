@@ -1,3 +1,6 @@
+Look for railway.exe in on-screen help & change to RailOS32/64.exe (at lease sections 3, 3.4 & 6.8. Can't search directly on railway.exe, so search on railos32 in the manual and check each in the help file
+
+
 Development History
 
 This is a very rough set of notes recorded practically from day 1 of C++ Builder development.  It was compiled for my own use as a diary of events, a to-do list, and a dumping ground for any other notes that I wished to keep.  I have added it to the development repository as there are things in it that need to be retained such as user requests and the full list of changes from version to version.
@@ -15,6 +18,38 @@ The structure is as follows:-
 -------------------------------------------------------------------------------
 
 1) Future change suggestions from users:
+
+#124 from Fly California/Silicon Airways via discord on 04/12/25 at 02:21
+[can be done using Notepad++ Find & Replace] a way in timetable creation to use whatever the start time of the timetable is for time references. This is useful if the start time needs to be changed during creation.
+
+BWJM — 04/12/25 at 02:32
+Do you mean that you want to be able to use relative times for events instead of absolute times?
+
+Qwertytops — 04/12/25 at 03:18
+I think he means having a keyword ‘start’ that refers to the start time
+
+Fly California/Silicon Airways — 04/12/25 at 03:53
+yes, that.
+
+Albert — 04/12/25 at 07:24
+Would you please explain in more detail what change you would like to see, what it would do and how it would be used? Thanks.
+
+Qwertytops — 04/12/25 at 08:22
+I'm also in favour of this request. I think the most obvious use would be creating trains at the beginning of the scenario.
+Say if you have 30 trains that are created in depots at 04:30 but you realise somewhere else a train will be entering at 04:25, so you want to change the start time to 04:20 but you still want all the depot trains to be there from the beginning.
+
+So instead of 
+04:30;Snt;...
+you could have 
+START;Snt;...
+where START is treated almost like a C macro
+Which would save heaps of work. I had a similar issue where I needed to change the start time twice but luckily in my case it was a simple find/replace
+But a find/replace wouldn't work if there are trains doing things other than being created at the old start time
+
+Albert — 04/12/25 at 08:35
+Right, I see what you mean.  It sounds simple but I suspect it might be difficult to code.  I'll add it to the wishlist for now and see if I can find a simple way to do it.
+
+Yes it can be done easily:  Load the timetable into Notepad++ (https://notepad-plus-plus.org/).  Select Find & Replace (CTRL+H), enter the start time in the 'find' box and the new start time in the 'Replace' box, make sure the cursor is a the start of the file then click 'Find next', and if this is to be replaced click 'Replace'.  This will replace the time and automatically jump to the next occurrence of the original start time.  Click 'Replace' again if that is to be replaced and continue until no more can be found.  Then save the new file (preferably with a new name until it's been validated).  I just tried it with Crewe which has 22 trains present at the start and it took just a few minutes.  If the new start time is earlier than the original there shouldn't be any validation problems, but if it's later then there might be services that start earlier than the later start time, and these will prevent validation until their start times are changed. 
 
 #123 from cte1_0387_alt via discord on 20/11/25 at 10:41
 Btw what about the idea that locations having the precise same name are counted as the same place? That would remove the need to always add a "physical" connection with red/blue tiles which sometimes can be quite disorienting/feel unnatural?
@@ -34,7 +69,7 @@ Albert — 20/11/25 at 08:53
 Do you mean that a footbridge/underpass could be placed anywhere on the track without the ends linking to anything else? If so I think a user graphic would probably do the job.
 
 #121 from Fly California/Silicon Airways via discord on 20/11/25 at 5:55
-a way to change track element overlays (stations/blue areas) without deleting the track element. maybe a single right click will clear any overlays, then a second will delete the track element?
+[Done in v2.23.3] a way to change track element overlays (stations/blue areas) without deleting the track element. maybe a single right click will clear any overlays, then a second will delete the track element?
 if I have a railway set up with distances and speed limits and i learn new stuff about operations while making the timetable, I should be able to update these areas more easily
 
 Albert — 20/11/25 at 08:48
@@ -3645,7 +3680,7 @@ On website (use Chrome - DiviBuilder seems to work better):
 1 Upload new release version zips for 32 & 64 bits to 'Media' + any other modified files - Manual, Quick Start, FileSpec etc.
 
 2 Go to All Products, select category 'Base Program & Documentation' & click 'Filter', edit product 'Railway Operation Simulator (RailOS)'
-	Check the full text of the page to see if any changes are needed, check particularly that the number of pages in the user manual is correct and that the important notes are in bold.
+	Check the full text of the page to see if any changes are needed, check particularly that the number of pages in the user manual is correct, that the important notes are in bold, and that the compiler version is correct.
 	Update short text if required  
 	Category should already be 'Base Program & Documentation'
 	Tag should already be 'Railway Operation Simulator'
