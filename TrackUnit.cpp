@@ -19003,7 +19003,7 @@ void TOneRoute::TruncateRoute(int Caller, int HLoc, int VLoc, bool PrefDirRoute,
                         {
                             TruncateType = NextSignalTruncate;
                             AllRoutes->RouteTruncateFlag = true; //to set signals properly rearwards of truncate point - relies on rearwards sig setting before re-instatement route sig setting
-                            break;                                   //re-instatement route sig setting
+                            break;                               //re-instatement route sig setting
                         }
                     }
                     if(b == int(PrefDirSize())) //i.e. haven't found a mid-route signal
