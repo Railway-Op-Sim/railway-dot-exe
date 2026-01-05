@@ -2004,12 +2004,14 @@ bool TTrack::NoActiveTrack(int Caller)
 
 void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePrefDir *TempEveryPrefDir, int &ErasedTrackVectorPosition, bool &TrackEraseSuccessfulFlag, bool InternalChecks)
 {
+//NB: IF RE-USE THIS FUNCTION AFTER V2.23.3 NOTE THAT ONLY FOR CALLER == 1 IS TRACK REONSTATEMENT APPLED.-NEED TO CHECK FOR NEW USE WHETHER NEED TO ADD ANOTHER CALLER VALUE
+
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",EraseTrackElement," + AnsiString(HLocInput) + "," +
                                  AnsiString(VLocInput) + "," + AnsiString((short)InternalChecks));
     TrackEraseSuccessfulFlag = false;
 // TrackEraseSuccessfulFlag used for any element erased, used to set TrackFinished to false if a track element erased (nneded even if track reinstated as otherwise all connections etc. lost)
 
-//After v2.23.2 if location has both active & inactive elements then the active element will be put back afterwards (so first erase just for inactives) but if a foot crossing
+//At v2.23.3 if location has both active & inactive elements then the active element will be put back afterwards (so first erase just for inactives) but if a foot crossing
 //replace active with just the corresponding track (because crossings are active)
     ErasedTrackVectorPosition = -1; // marker for no element erased
     AnsiString SName = "", ErrorString;
@@ -2153,15 +2155,19 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
             }
         }
     }
-    //here reinstate the track element if ActiveElementErased AND either (InactiveElementErased or FootCrossingErased)
+    //here at v2.23.3 reinstate the track element if ActiveElementErased AND either (InactiveElementErased or FootCrossingErased)
+    //BUT DON'T REINSTATE IF ERASE DURING CUTTING OR PASTING! found by Mohan after v2.23.3 released. Can use Caller to differentiate, only reinstate if caller == 1
     bool TrackPlottedFlag = false;
-    if(ActiveElementErased && InactiveElementErased) //reinstate the original element, set ErasedTrackVectorPosition to -1 so prefdirs not affected
+    if(ActiveElementErased && InactiveElementErased && (Caller == 1)) //reinstate the original element, set ErasedTrackVectorPosition to -1 so prefdirs not affected
+                                                                      //outside this function. Added Caller == 1 after v2.23.3 due to bug  - see above
     {
         if(!FootCrossingErased) //new element will be plotted below, without this the below plot won't work and CheckLocationNameMultiMap will fail
         {
             PlotAndAddTrackElement(4, TempTrackElement.SpeedTag, 0, HLocInput, VLocInput, TrackPlottedFlag, false, false);
             //0 for Aspect indicates adding and not pasting
             TTrackElement &TE = GetTrackElementFromTrackMap(9, HLocInput, VLocInput);
+            //need to change the PD TrackVectorPos to align with the new track element - Added after v2.23.3 because prefdirs out of line otherwise
+            TempEveryPrefDir->RebuildPrefDirVector(1); // from TrackMap, added after v2.23.3 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
             TE.SigAspect = TempTrackElement.SigAspect;
             TE.Length01 = TempTrackElement.Length01;
             TE.Length23 = TempTrackElement.Length23;
@@ -2171,8 +2177,9 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
         }
     }
 
-    if(ActiveElementErased && FootCrossingErased) //reinstate a basic horiz or vert element with all the same attributes [not else if... because can have a crossing and platform(s) at same location
-    {
+    //DON'T REINSTATE IF ERASE DURING CUTTING OR PASTING! found by Mohan after v2.23.3 released. Can use Caller to differentiate, only reinstate if caller == 1
+    if(ActiveElementErased && FootCrossingErased && (Caller == 1)) //reinstate a basic horiz or vert element with all the same attributes [not else if...
+    {                                                              //because can have a crossing and platform(s) at same location
         int NewSpeedTag = 1; //horizontal
         if((TempTrackElement.SpeedTag == 130) || (TempTrackElement.SpeedTag == 146))
         {
@@ -2181,6 +2188,7 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
         PlotAndAddTrackElement(5, NewSpeedTag, 0, HLocInput, VLocInput, TrackPlottedFlag, false, false);
         //0 for Aspect indicates adding and not pasting
         TTrackElement &TE = GetTrackElementFromTrackMap(10, HLocInput, VLocInput);
+        TempEveryPrefDir->RebuildPrefDirVector(2); // from TrackMap, added after v2.23.3 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
         TE.SigAspect = TempTrackElement.SigAspect;
         TE.Length01 = TempTrackElement.Length01;
         TE.Length23 = TempTrackElement.Length23;
@@ -14312,7 +14320,6 @@ void TOnePrefDir::CheckPrefDir4MultiMap(int Caller) // test
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",CheckPrefDir4MultiMap");
     bool FoundFlag = false;
     int PrefDir0, PrefDir1, PrefDir2, PrefDir3;
-
     for(unsigned int a = 0; a < PrefDirVector.size(); a++)
     {
         TPrefDirElement CheckElement = PrefDirVector.at(a);
@@ -14809,7 +14816,7 @@ int TOnePrefDir::GetOnePrefDirPosition(int Caller, int HLoc, int VLoc)
 /*
       Although there may be up to four entries at one H & V position this function gets just one. It is
       used in EraseFromPrefDirVectorAnd4MultiMap by being called as many times as there are PrefDir elements
-      at H & V.
+      at H & V. Returns -1 if nothing found
 */
 {
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",GetOnePrefDirPosition," + AnsiString(HLoc) + "," + AnsiString(VLoc));
@@ -14836,6 +14843,8 @@ int TOnePrefDir::GetOnePrefDirPosition(int Caller, int HLoc, int VLoc)
 
 void TOnePrefDir::RealignAfterTrackErase(int Caller, int ErasedTrackVectorPosition)
 {
+//After a track element is erased preferred direction elements will to be affected. This function erases any preferred direction elements that either correspond
+//to the erased track element, or were linked to it, and any that weren't erased have their TVPos value decremented if it was above that of the erased track element.
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",RealignAfterTrackErase," + AnsiString(ErasedTrackVectorPosition));
     bool ErasedFlag = false;
 

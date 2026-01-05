@@ -98,7 +98,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         // initial setup
         // MasterClock->Enabled = false;//keep this stopped until all set up (no effect here as form not yet created, made false in object insp)
         // Visible = false; //keep the Interface form invisible until all set up (no effect here as form not yet created, made false in object insp)
-        ProgramVersion = "RailOS32 " + GetVersion();
+        ProgramVersion = "RailOS32 v2.23.4 Beta"; //+ GetVersion();
         // use GNU Major/Minor/Patch version numbering system, change for each published modification, Dev x = interim internal
         // development stages (don't show on published versions)
 
@@ -10713,6 +10713,7 @@ pause or run and it cycled round the operate panel buttons
 //            AnsiString MouseStr = "RemX: " + AnsiString(ReminderX) + "; RemY: " + AnsiString(ReminderY);
             DevelopmentPanel->Caption = CurDir + " " + MouseStr + "; OffH " + OffH + ";OffV " + OffV;
             Track->GetTrackLocsFromScreenPos(7, HLoc, VLoc, ScreenX, ScreenY);
+            int PDTVecPos = EveryPrefDir->GetPDTVecPos(HLoc, VLoc); //-1 if no PDs  //added after v2.23.3 to compare with TVPos
 
             AnsiString InARoute = "No";    //added at v2.15.0 for diagnostics
             THVPair HVPair;
@@ -10745,7 +10746,7 @@ pause or run and it cycled round the operate panel buttons
                     + "; SPos3: " + AnsiString(TrackElement.StationEntryStopLinkPos3) + "; SPos4: " + AnsiString(TrackElement.StationEntryStopLinkPos4)
                     + "; TrID: " + AnsiString(TrackElement.TrainIDOnElement) + "; TrID01: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit01) +
                     "; TrID23: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit23) + "; Locname: " + TrackElement.LocationName + "; Activename: " +
-                    TrackElement.ActiveTrackElementName + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID + "; PDVecPos " + RoutePrefDirPos + " Links: " +
+                    TrackElement.ActiveTrackElementName + "; PDTVecPos = " + PDTVecPos + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID + "; RtPDPos " + RoutePrefDirPos + " Links: " +
                     TrackElement.Link[0] + "," + TrackElement.Link[1] + "," + TrackElement.Link[2] + "," + TrackElement.Link[3] + " CLPos " +
                     TrackElement.ConnLinkPos[0] + "," +TrackElement.ConnLinkPos[1] + "," +TrackElement.ConnLinkPos[2] + "," +TrackElement.ConnLinkPos[3];
                     // + "; OAHintCtr: " + TrainController->OpActionPanelHintDelayCounter;
@@ -19498,7 +19499,7 @@ void TInterface::SetLevel2TrackMode(int Caller)
             InfoPanel->Visible = true;
             InfoPanel->Caption = "PASTING: Please wait";
             InfoPanel->Update();
-    // erase track elements
+    // erase track elements that fall within region to be overwritten
             int LowSelectHLoc = SelectBitmapHLoc;
             int HighSelectHLoc = SelectBitmapHLoc + (SelectBitmap->Width / 16);
             int LowSelectVLoc = SelectBitmapVLoc;
@@ -19593,7 +19594,7 @@ void TInterface::SetLevel2TrackMode(int Caller)
                     }
                 }
                 bool InternalChecks = false;
-    // if(Track->PastingWithAttributes) //new at v2.2.0 to select the new funtion & skip multimap checks //drop in v2.4.0
+    // if(Track->PastingWithAttributes) //new at v2.2.0 to select the new funtion & skip multimap checks //drop at v2.4.0
     // {
                 Track->PlotPastedTrackElementWithAttributes(0, Track->SelectVectorAt(2, x), Track->SelectVectorAt(3, x).HLoc, Track->SelectVectorAt(4, x).VLoc,
                                                             TrackLinkingRequiredFlag, InternalChecks);

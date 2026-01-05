@@ -1,5 +1,13 @@
 Look for railway.exe in on-screen help & change to RailOS32/64.exe (at lease sections 3, 3.4 & 6.8. Can't search directly on railway.exe, so search on railos32 in the manual and check each in the help file
 
+Find out why no maximum lateness recorded in a recent logfile
+
+/ When max lateness is 1 min brackets are just () - corrected 29/12/25 in 32bit version (yet to compile 64bit version)
+
+/ Add Stafford & Edinburgh to UK map
+
+Add more event logs, for EraseTrackElement & others
+
 
 Development History
 
