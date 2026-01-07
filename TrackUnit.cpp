@@ -2004,7 +2004,7 @@ bool TTrack::NoActiveTrack(int Caller)
 
 void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePrefDir *TempEveryPrefDir, int &ErasedTrackVectorPosition, bool &TrackEraseSuccessfulFlag, bool InternalChecks)
 {
-//NB: IF RE-USE THIS FUNCTION AFTER V2.23.3 NOTE THAT ONLY FOR CALLER == 1 IS TRACK REONSTATEMENT APPLED.-NEED TO CHECK FOR NEW USE WHETHER NEED TO ADD ANOTHER CALLER VALUE
+//NB: IF RE-USE THIS FUNCTION NOTE THAT ONLY FOR CALLER == 1 IS TRACK REINSTATEMENT APPLED.-NEED TO CHECK FOR NEW USE WHETHER NEED TO ADD ANOTHER CALLER VALUE
 
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",EraseTrackElement," + AnsiString(HLocInput) + "," +
                                  AnsiString(VLocInput) + "," + AnsiString((short)InternalChecks));
@@ -2035,7 +2035,7 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
             int VecPos = GetVectorPositionFromTrackMap(37, HLocInput, VLocInput, FoundFlag);
             if(FoundFlag) // should find it as it's in the map
             {
-                TempTrackElement = TrackElementAt(1690, VecPos);
+                TempTrackElement = TrackElementAt(1690, VecPos);  // this is ok as TempTrackElement is a copy, not a reference, so when the element in the vector is erased this remains ok
                 if(TrackElementAt(629, VecPos).FixedNamedLocationElement) // footcrossings only
                 {
                     SName = TrackElementAt(1, VecPos).LocationName;  //need to erase this even if null
@@ -2048,7 +2048,7 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
                 }
                 TrackVector.erase(TrackVector.begin() + TrackMapPtr->second);
                 // ensure erase vector element before map element as iterator no longer valid after a map erase
-                TrackMap.erase(TrackMapPtr);
+                TrackMap.erase(TrackMapPtr);   //corresponding PDs erased by calling function (unless track put back - see below) - uses ErasedTrackVectorPosition to identify PDs
                 FixedTrackArray.FixedTrackPiece[0].PlotFixedTrackElement(2, HLocInput, VLocInput); // plot a blank element
                 // need to decrement all map element position values that lie above VecPos, since vector positions above this have all moved down one
                 DecrementValuesInGapsAndTrackAndNameMaps(0, VecPos);
@@ -2156,18 +2156,18 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
         }
     }
     //here at v2.23.3 reinstate the track element if ActiveElementErased AND either (InactiveElementErased or FootCrossingErased)
-    //BUT DON'T REINSTATE IF ERASE DURING CUTTING OR PASTING! found by Mohan after v2.23.3 released. Can use Caller to differentiate, only reinstate if caller == 1
+    //BUT DON'T REINSTATE IF ERASE DURING CUTTING OR PASTING! found by Mohan & Oxalin when v2.23.3 released. Can use Caller to differentiate, only reinstate if caller == 1
     bool TrackPlottedFlag = false;
     if(ActiveElementErased && InactiveElementErased && (Caller == 1)) //reinstate the original element, set ErasedTrackVectorPosition to -1 so prefdirs not affected
-                                                                      //outside this function. Added Caller == 1 after v2.23.3 due to bug  - see above
+                                                                      //outside this function. Added Caller == 1 at v2.23.4 due to bug  - see above
     {
         if(!FootCrossingErased) //new element will be plotted below, without this the below plot won't work and CheckLocationNameMultiMap will fail
         {
             PlotAndAddTrackElement(4, TempTrackElement.SpeedTag, 0, HLocInput, VLocInput, TrackPlottedFlag, false, false);
             //0 for Aspect indicates adding and not pasting
             TTrackElement &TE = GetTrackElementFromTrackMap(9, HLocInput, VLocInput);
-            //need to change the PD TrackVectorPos to align with the new track element - Added after v2.23.3 because prefdirs out of line otherwise
-            TempEveryPrefDir->RebuildPrefDirVector(1); // from TrackMap, added after v2.23.3 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
+            //need to change the PD TrackVectorPos to align with the new track element - Added at v2.23.4 because prefdirs out of line otherwise
+            TempEveryPrefDir->RebuildPrefDirVector(1); // from TrackMap, added at v2.23.4 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
             TE.SigAspect = TempTrackElement.SigAspect;
             TE.Length01 = TempTrackElement.Length01;
             TE.Length23 = TempTrackElement.Length23;
@@ -2177,7 +2177,7 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
         }
     }
 
-    //DON'T REINSTATE IF ERASE DURING CUTTING OR PASTING! found by Mohan after v2.23.3 released. Can use Caller to differentiate, only reinstate if caller == 1
+    //DON'T REINSTATE IF ERASE DURING CUTTING OR PASTING! found by Mohan at v2.23.3. Can use Caller to differentiate, only reinstate if caller == 1
     if(ActiveElementErased && FootCrossingErased && (Caller == 1)) //reinstate a basic horiz or vert element with all the same attributes [not else if...
     {                                                              //because can have a crossing and platform(s) at same location
         int NewSpeedTag = 1; //horizontal
@@ -2188,7 +2188,7 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
         PlotAndAddTrackElement(5, NewSpeedTag, 0, HLocInput, VLocInput, TrackPlottedFlag, false, false);
         //0 for Aspect indicates adding and not pasting
         TTrackElement &TE = GetTrackElementFromTrackMap(10, HLocInput, VLocInput);
-        TempEveryPrefDir->RebuildPrefDirVector(2); // from TrackMap, added after v2.23.3 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
+        TempEveryPrefDir->RebuildPrefDirVector(2); // from TrackMap, added at v2.23.4 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
         TE.SigAspect = TempTrackElement.SigAspect;
         TE.Length01 = TempTrackElement.Length01;
         TE.Length23 = TempTrackElement.Length23;
@@ -14165,11 +14165,15 @@ void TOnePrefDir::ConsolidatePrefDirs(int Caller, TOnePrefDir *InputPrefDir)
 
 void TOnePrefDir::RebuildPrefDirVector(int Caller)
 /*
-      Rebuild from Trackmap, doesn't affect PrefDir4MultiMap.
+      Rebuild from Trackmap, doesn't affect PrefDir4MultiMap (which has HLoc & VLoc as a key pair, and PrefDirVectorPosition as unsigned int, can be up to 4 values at any H&V)
+
       After a track build, but before the track is reconnected, all invalid PrefDir elements in TOnePrefDir
-      (i.e. in EveryPrefDir) are erased.  Hence at that stage all the PrefDir elements are valid and correspond to
-      the track elements at relevant H & V positions.  However, after the track is reconnected, the TrackVector
-      positions are likely to have changed, so this function is called to reset all the necessary connections and
+      (i.e. in EveryPrefDir) are erased. [<-this was dropped when blank elements no longer used for erased track elements]
+      So all PrefDir elements should remain valid and correspond to the track elements at relevant H & V positions, because when a track element
+      is erased the PD's are erased too.
+
+      But, after the track is reconnected, the TrackVector
+      positions are very likely to have changed, so this function is called to reset all the necessary connections and
       TrackVector positions.  To be on the safe side all the TrackElement values that are additional to
       TFixedTrackPiece (apart from TrainIDs, these only present during operation) are reset, though the others
       shouldn't have changed.

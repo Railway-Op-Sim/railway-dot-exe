@@ -98,7 +98,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         // initial setup
         // MasterClock->Enabled = false;//keep this stopped until all set up (no effect here as form not yet created, made false in object insp)
         // Visible = false; //keep the Interface form invisible until all set up (no effect here as form not yet created, made false in object insp)
-        ProgramVersion = "RailOS32 v2.23.4 Beta"; //+ GetVersion();
+        ProgramVersion = "RailOS32 " + GetVersion();
         // use GNU Major/Minor/Patch version numbering system, change for each published modification, Dev x = interim internal
         // development stages (don't show on published versions)
 
@@ -8627,7 +8627,7 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
 
         else if((Level1Mode == PrefDirMode) && (Level2PrefDirMode != PrefDirContinuing) && (Level2PrefDirMode != PrefDirSelecting))
         {
-            TrainController->LogEvent("mbLeft + != PrefDirContinuing + HLoc = " + AnsiString(HLoc) + " VLoc = " + AnsiString(VLoc)); //added H & VLoc after v2.23.3 as X&Y alone don't give true railway position
+            TrainController->LogEvent("mbLeft + != PrefDirContinuing + HLoc = " + AnsiString(HLoc) + " VLoc = " + AnsiString(VLoc)); //added H & VLoc at v2.23.4 as X&Y alone don't give true railway position
 // ResetChangedFileDataAndCaption(, false); //moved after 2.7.0 to later in case don't click on element
 // RlyFile = false; - don't alter this just for PrefDir changes
             if(ConstructPrefDir->GetPrefDirStartElement(1, HLoc, VLoc))
@@ -8643,7 +8643,7 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
 
         else if(Level2PrefDirMode == PrefDirContinuing)
         {
-            TrainController->LogEvent("mbLeft + PrefDirContinuing + HLoc = " + AnsiString(HLoc) + " VLoc = " + AnsiString(VLoc)); //added H & VLoc after v2.23.3 as X&Y alone don't give true railway position
+            TrainController->LogEvent("mbLeft + PrefDirContinuing + HLoc = " + AnsiString(HLoc) + " VLoc = " + AnsiString(VLoc)); //added H & VLoc at v2.23.4 as X&Y alone don't give true railway position
 // ResetChangedFileDataAndCaption(, false);  //moved after 2.7.0 to later in case don't click on element
 // RlyFile = false; - don't alter this just for PrefDir changes
             bool FinishElement;
@@ -10713,7 +10713,7 @@ pause or run and it cycled round the operate panel buttons
 //            AnsiString MouseStr = "RemX: " + AnsiString(ReminderX) + "; RemY: " + AnsiString(ReminderY);
             DevelopmentPanel->Caption = CurDir + " " + MouseStr + "; OffH " + OffH + ";OffV " + OffV;
             Track->GetTrackLocsFromScreenPos(7, HLoc, VLoc, ScreenX, ScreenY);
-            int PDTVecPos = EveryPrefDir->GetPDTVecPos(HLoc, VLoc); //-1 if no PDs  //added after v2.23.3 to compare with TVPos
+            int PDTVecPos = EveryPrefDir->GetPDTVecPos(HLoc, VLoc); //-1 if no PDs  //added at v2.23.4 to compare with TVPos
 
             AnsiString InARoute = "No";    //added at v2.15.0 for diagnostics
             THVPair HVPair;

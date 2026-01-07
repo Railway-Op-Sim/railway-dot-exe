@@ -1441,7 +1441,7 @@ public:
     int GetPDTVecPos(int HLoc, int VLoc)
     {
         int PDPos = GetOnePrefDirPosition(5, HLoc, VLoc); //5 is caller number.  Returns -1 if nothing found.
-                                                              // Used for development panel. Added after v2.23.3
+                                                              // Used for development panel. Added at v2.23.4
         if(PDPos > -1)
         {
             TPrefDirElement PDE = GetFixedPrefDirElementAt(271, PDPos);
@@ -1450,7 +1450,7 @@ public:
         return -1;
     }
 
-    int GetOnePDPos(int HLoc, int VLoc) //added after v2.23.3
+    int GetOnePDPos(int HLoc, int VLoc) //added at v2.23.4
     {
         int PDPos = GetOnePrefDirPosition(6, HLoc, VLoc); //6 is caller number.  Returns -1 if nothing found.
         return PDPos;
