@@ -4,9 +4,12 @@
 
 / Add Stafford & Edinburgh to UK map
 
+/ If fail in RebuildPrefDirVector give prefdir fail message & clear it instead of throwing an error
+
 Find out why no maximum lateness recorded in a recent logfile
 
 Add more event logs, for EraseTrackElement & others
+
 
 
 Development History

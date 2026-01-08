@@ -2166,8 +2166,10 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
             PlotAndAddTrackElement(4, TempTrackElement.SpeedTag, 0, HLocInput, VLocInput, TrackPlottedFlag, false, false);
             //0 for Aspect indicates adding and not pasting
             TTrackElement &TE = GetTrackElementFromTrackMap(9, HLocInput, VLocInput);
-            //need to change the PD TrackVectorPos to align with the new track element - Added at v2.23.4 because prefdirs out of line otherwise
-            TempEveryPrefDir->RebuildPrefDirVector(1); // from TrackMap, added at v2.23.4 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
+            TempEveryPrefDir->RebuildPrefDirVector(1); // from TrackMap, added at v2.23.4 & before ErasedTrackVectorPos reset to -1 to set PDs to the correct TrackVectorPos's
+            //BUT note that the track element is put back at the end of the vector, so the VecPos will be wrong for connecting track elements and therefore for connecting PDs too
+            //until the track is linked, which sets all the connections correctly and also the PD connections too by calling this function again at the end of TrackOKButtonClick
+
             TE.SigAspect = TempTrackElement.SigAspect;
             TE.Length01 = TempTrackElement.Length01;
             TE.Length23 = TempTrackElement.Length23;
@@ -2188,8 +2190,9 @@ void TTrack::EraseTrackElement(int Caller, int HLocInput, int VLocInput, TOnePre
         PlotAndAddTrackElement(5, NewSpeedTag, 0, HLocInput, VLocInput, TrackPlottedFlag, false, false);
         //0 for Aspect indicates adding and not pasting
         TTrackElement &TE = GetTrackElementFromTrackMap(10, HLocInput, VLocInput);
-        TempEveryPrefDir->RebuildPrefDirVector(2); // from TrackMap, added at v2.23.4 & before ErasedTrackVectorPos reset to -1 to avoid discrepancies in PD TVPos and TrackVector TVPos
-        TE.SigAspect = TempTrackElement.SigAspect;
+        TempEveryPrefDir->RebuildPrefDirVector(2); // from TrackMap, added at v2.23.4 & before ErasedTrackVectorPos reset to -1 to set PDs to the correct TrackVectorPos's
+            //BUT note that the track element is put back at the end of the vector, so the VecPos will be wrong for connecting track elements and therefore for connecting PDs too
+            //until the track is linked, which sets all the connections correctly and also the PD connections too by calling this function again at the end of TrackOKButtonClick        TE.SigAspect = TempTrackElement.SigAspect;
         TE.Length01 = TempTrackElement.Length01;
         TE.Length23 = TempTrackElement.Length23;
         TE.SpeedLimit01 = TempTrackElement.SpeedLimit01;
@@ -14177,6 +14180,13 @@ void TOnePrefDir::RebuildPrefDirVector(int Caller)
       TrackVector positions.  To be on the safe side all the TrackElement values that are additional to
       TFixedTrackPiece (apart from TrainIDs, these only present during operation) are reset, though the others
       shouldn't have changed.
+
+      At v2.23.3 had an error thrown (Mohan040126errorlog.err) after added back track elements that were on the same square as named locations but didn't realise that the
+      added track would be at the end of the vector (erased from original position). So if that happened some prefdirs (PDs) would have the wrong TrackVectorPos values
+      (still linked to real track elements but with wrong values). But, if subsequently areas were cut and pasted, track elements would be erased, and incorrect PDs
+      erased - those with or connected to erased TrackVectorPos values but not the true ones erased. Now that could well leave a PD with a TV value that was no longer valid
+      because of being erased, and as a result it wouldn't be found and an error thrown.  Although it shouldn't happen with the later mods an error is no longer thrown,
+      instead a message is given and all PDs cleared, similar to CheckPrefDirAgainstTrackVector but with a slightly different message so the functions can be distinguished.
 */
 {
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",RebuildPrefDirVector");
@@ -14199,7 +14209,9 @@ void TOnePrefDir::RebuildPrefDirVector(int Caller)
         }
         else
         {
-            throw Exception("Error in RebuildPrefDirVector - PrefDirVector is unsafe");
+//            throw Exception("Error in RebuildPrefDirVector - PrefDirVector is unsafe");   //dropped at v2.23.4 & replaced with the below
+            ShowMessage("Errors found in the preferred direction file, preferred directions will be cleared");
+            ClearPrefDir(); // also clears multimap
         }
     }
     Utilities->CallLogPop(179);

@@ -2655,6 +2655,11 @@ void __fastcall TInterface::LoadRailwayMenuItemClick(TObject* Sender)
             SetLevel1Mode(11); // calls Clearand... to plot the new railway
             Utilities->CallLogPop(31);
         }
+        else
+        {
+            Utilities->CallLogPop(2753); //added at v2.23.4 - needed in case 'cancel' clicked or otherwise returns false - else call log keeps building up
+            return;
+        }
 //        else ShowMessage("Load Safely Aborted"); //dropped at v2.20.0, not needed
     }
     catch (const Exception &e) //made a non-error catch at v2.14.0 following Albie Vowles error of 15/12/22
