@@ -119,7 +119,7 @@ digraph "TOnePrefDir::PrefDirSize"
   Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node53 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node166 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node166 [label="TOnePrefDir::RealignAfter\lTrackErase",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_t_one_pref_dir.html#ab5bb3791670fd04645faf4ab1f2a5781",tooltip="After a track element is erased the preferred direction elements are likely to be affected...."];
+  Node166 [label="TOnePrefDir::RealignAfter\lTrackErase",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_t_one_pref_dir.html#ab5bb3791670fd04645faf4ab1f2a5781",tooltip="After a track element is erased preferred direction elements will to be affected. This function erase..."];
   Node166 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node166 -> Node35 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node167 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];

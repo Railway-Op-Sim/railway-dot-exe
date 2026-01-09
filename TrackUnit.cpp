@@ -14182,10 +14182,10 @@ void TOnePrefDir::RebuildPrefDirVector(int Caller)
       shouldn't have changed.
 
       At v2.23.3 had an error thrown (Mohan040126errorlog.err) after added back track elements that were on the same square as named locations but didn't realise that the
-      added track would be at the end of the vector (erased from original position). So if that happened some prefdirs (PDs) would have the wrong TrackVectorPos values
-      (still linked to real track elements but with wrong values). But, if subsequently areas were cut and pasted, track elements would be erased, and incorrect PDs
-      erased - those with or connected to erased TrackVectorPos values but not the true ones erased. Now that could well leave a PD with a TV value that was no longer valid
-      because of being erased, and as a result it wouldn't be found and an error thrown.  Although it shouldn't happen with the later mods an error is no longer thrown,
+      added track would be at the end of the vector (erased from original position). So if that happened all prefdirs (PDs) with TVPos's at or higher than the erased track element
+      would have the wrong TrackVectorPos values (all TV pos's would have moved down one). So, if subsequently areas including wrong PDs were cut and pasted, track elements
+      would be erased, and incorrect PDs erased - those with or connected to erased TrackVectorPos values or higher. Now that could well leave a PD with a TV value that was no
+      longer valid because of being erased, and as a result it wouldn't be found and an error thrown.  Although it shouldn't happen with the later mods an error is no longer thrown,
       instead a message is given and all PDs cleared, similar to CheckPrefDirAgainstTrackVector but with a slightly different message so the functions can be distinguished.
 */
 {

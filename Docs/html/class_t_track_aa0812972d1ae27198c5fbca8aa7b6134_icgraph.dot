@@ -131,6 +131,7 @@ digraph "TTrack::GetVectorPositionFromTrackMap"
   Node140 [label="TOnePrefDir::PresetAutoRoute\lDiagonalFouledByTrack",height=0.2,width=0.4,color="red", fillcolor="white", style="filled",URL="$class_t_one_pref_dir.html#ae0e03d494164fe961da51b0be8492934",tooltip="Called by GetStartAndEndPrefDirElements..."];
   Node1 -> Node142 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node142 [label="TOnePrefDir::RebuildPref\lDirVector",height=0.2,width=0.4,color="red", fillcolor="white", style="filled",URL="$class_t_one_pref_dir.html#a1e62c2571d3629a067e1071086de72de",tooltip="Called after the track vector has been rebuilt following linking, to rebuild the preferred direction ..."];
+  Node142 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node33 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node35 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node36 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
