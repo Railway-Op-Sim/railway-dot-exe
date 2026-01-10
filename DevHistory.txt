@@ -1,11 +1,3 @@
-/ Look for railway.exe in on-screen help & change to RailOS32/64.exe (at least sections 3, 3.4 & 6.8. Can't search directly on railway.exe, so search on railos32 in the manual and check each in the help file
-
-/ When max lateness is 1 min brackets are just () - corrected 29/12/25 in 32bit version (yet to compile 64bit version)
-
-/ Add Stafford & Edinburgh to UK map
-
-/ If fail in RebuildPrefDirVector give prefdir fail message & clear it instead of throwing an error
-
 Find out why no maximum lateness recorded in a recent logfile
 
 Add more event logs, for EraseTrackElement & others
@@ -1085,6 +1077,15 @@ Multi-player facility over the internet.
 VERSION CHANGES AFTER v2.23.3 for v2.23.4
 
 This release corrects one bug that was created at the last release when named location elements were erased first when they shared a square with a track element.  I'm sure that several users will have noriced that when cutting and pasting, or deleting an area, track elements were left behind instead of being erased.  That was bad enough, but worse was that preferred directions were corrupted in the process.  This release, it is very much hoped, has corrected both of these effects, and not created any new bugs!
+
+Not for website:
+/ Look for railway.exe in on-screen help & change to RailOS32/64.exe (at least sections 3, 3.4 & 6.8. Can't search directly on railway.exe, so search on railos32 in the manual and check each in the help file
+
+/ When max lateness is 1 min brackets are just () - corrected 29/12/25 in 32bit version (yet to compile 64bit version)
+
+/ Add Stafford & Edinburgh to UK map
+
+/ If fail in RebuildPrefDirVector give prefdir fail message & clear it instead of throwing an error
 
 VERSION CHANGES AFTER v2.23.2 for v2.23.3
 
@@ -3676,11 +3677,11 @@ On GitHub:
 
 2 Update Doxygen files (& Doxyfile itself with new version number) & include graph legend link in pages.html (do a 'diff' from previous version & copy across), make sure flowcharts are in files folder & work ok.  Add all new doxy files to local repo.
 
------------to here 090126
-
 3 Make sure DevHistory.txt is up to date (include version change info [for web & internal] & drop any text before title)
 
 4 Update DevHistory.txt with relevant public information if not already done so & make read-only
+
+-----------to here 090126
 
 5 Leave source code as 32bit debug, commit current development branch locally & on remote, select TortoiseGit->Show Log, switch/checkout last master branch (make sure select switch to master, not switch to this, make sure branch is set to 'master' after the switch - shows as red), then click on latest development branch & select merge to master, and tag with release version. Delete the development branch.
 

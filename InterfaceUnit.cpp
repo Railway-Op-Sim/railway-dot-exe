@@ -10744,17 +10744,54 @@ pause or run and it cycled round the operate panel buttons
                 {
                     COS = "Yes";
                 }
+                int TECon0 = TrackElement.Conn[0]; //added at v2.23.4
+                int TECon1 = TrackElement.Conn[1];
+                int TECon2 = TrackElement.Conn[2];
+                int TECon3 = TrackElement.Conn[3];
+                int P0,P1,P2,P3; //interim PD positions
+                int Con0c0 = -1, Con0c1 = -1, Con0c2 = -1, Con0c3 = -1;
+                int Con1c0 = -1, Con1c1 = -1, Con1c2 = -1, Con1c3 = -1;
+                int Con2c0 = -1, Con2c1 = -1, Con2c2 = -1, Con2c3 = -1;
+                int Con3c0 = -1, Con3c1 = -1, Con3c2 = -1, Con3c3 = -1;
+                bool FoundFlag; //unused
+                EveryPrefDir->GetVectorPositionsFromPrefDir4MultiMap(7777, HLoc, VLoc, FoundFlag, P0, P1, P2, P3);
+                if(P0 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P0, Con0c0, Con0c1, Con0c2, Con0c3); //these are track vector positions, not PD vector positions
+                }
+                if(P1 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P1, Con1c0, Con1c1, Con1c2, Con1c3);
+                }
+                if(P2 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P2, Con2c0, Con2c1, Con2c2, Con2c3);
+                }
+                if(P3 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P3, Con3c0, Con3c1, Con3c2, Con3c3);
+                }
 
-                DevelopmentPanel->Caption = MouseStr + "; OffH " + OffH + ";OffV " + OffV + "; TVPos: " + AnsiString(Position) + "; H: " + AnsiString(HLoc) + "; V: " +
-                    AnsiString(VLoc) + "; SpTg: " + AnsiString(TrackElement.SpeedTag) + "; Type: " + Type[TrackElement.TrackType] + "; Att: " + AnsiString(TrackElement.Attribute)
-                    + "; COS: " + COS + "; SPos1: " + AnsiString(TrackElement.StationEntryStopLinkPos1) + "; SPos2: " + AnsiString(TrackElement.StationEntryStopLinkPos2)
-                    + "; SPos3: " + AnsiString(TrackElement.StationEntryStopLinkPos3) + "; SPos4: " + AnsiString(TrackElement.StationEntryStopLinkPos4)
-                    + "; TrID: " + AnsiString(TrackElement.TrainIDOnElement) + "; TrID01: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit01) +
-                    "; TrID23: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit23) + "; Locname: " + TrackElement.LocationName + "; Activename: " +
-                    TrackElement.ActiveTrackElementName + "; PDTVecPos = " + PDTVecPos + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID + "; RtPDPos " + RoutePrefDirPos + " Links: " +
-                    TrackElement.Link[0] + "," + TrackElement.Link[1] + "," + TrackElement.Link[2] + "," + TrackElement.Link[3] + " CLPos " +
-                    TrackElement.ConnLinkPos[0] + "," +TrackElement.ConnLinkPos[1] + "," +TrackElement.ConnLinkPos[2] + "," +TrackElement.ConnLinkPos[3];
+                DevelopmentPanel->Caption = MouseStr + "; OffH " + OffH + ";OffV " + OffV + "; TVPos: " + AnsiString(Position)
+                    + "; Conn0: " + TECon0 +"; Conn1: " + TECon1 +"; Conn2: " + TECon2 +"; Conn3: " + TECon3
+                    + "; H: " + AnsiString(HLoc) + "; V: " + AnsiString(VLoc)
+                    + "; SpTg: " + AnsiString(TrackElement.SpeedTag) + "; Type: " + Type[TrackElement.TrackType] + "; Att: " + AnsiString(TrackElement.Attribute)
+//                    + "; COS: " + COS + "; SPos1: " + AnsiString(TrackElement.StationEntryStopLinkPos1) + "; SPos2: " + AnsiString(TrackElement.StationEntryStopLinkPos2)
+//                    + "; SPos3: " + AnsiString(TrackElement.StationEntryStopLinkPos3) + "; SPos4: " + AnsiString(TrackElement.StationEntryStopLinkPos4)
+                    + "; TrID: " + AnsiString(TrackElement.TrainIDOnElement) + "; TrID01: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit01)
+                    + "; TrID23: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit23) + "; Locname: " + TrackElement.LocationName
+                    + "; Activename: " + TrackElement.ActiveTrackElementName
+                    + "; PDTVecPos = " + PDTVecPos
+//                    + "; Con0c0: " + Con0c0 + "; Con0c1: " + Con0c1 + "; Con0c2: " + Con0c2 + "; Con0c3: " + Con0c3
+//                    + "; Con1c0: " + Con1c0 + "; Con1c1: " + Con1c1 + "; Con1c2: " + Con1c2 + "; Con1c3: " + Con1c3
+//                    + "; Con2c0: " + Con2c0 + "; Con2c1: " + Con2c1 + "; Con2c2: " + Con2c2 + "; Con2c3: " + Con2c3
+//                    + "; Con3c0: " + Con3c0 + "; Con3c1: " + Con3c1 + "; Con3c2: " + Con3c2 + "; Con3c3: " + Con3c3
+                    + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID
+                    + "; RtPDPos " + RoutePrefDirPos + " Links: " + TrackElement.Link[0] + "," + TrackElement.Link[1] + "," + TrackElement.Link[2] + "," + TrackElement.Link[3]
+                    + "; CLPos " + TrackElement.ConnLinkPos[0] + "," +TrackElement.ConnLinkPos[1] + "," +TrackElement.ConnLinkPos[2] + "," +TrackElement.ConnLinkPos[3];
                     // + "; OAHintCtr: " + TrainController->OpActionPanelHintDelayCounter;
+
+                    ;
             }
             else
             {//below used in elapsed time investigations

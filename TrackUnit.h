@@ -1456,6 +1456,15 @@ public:
         return PDPos;
     }
 
+    void Get4TVConns(int PDPos, int &Con0, int &Con1, int &Con2, int &Con3) //added at v2.23.4 for dev't panel
+    {
+        TPrefDirElement PDE = GetFixedPrefDirElementAt(7777, PDPos);
+        Con0 = PDE.Conn[0];
+        Con1 = PDE.Conn[1];
+        Con2 = PDE.Conn[2];
+        Con3 = PDE.Conn[3];
+    }
+
     // functions defined in .cpp file
 
 /// Determines whether the preferred direction pointed to has another pref dir in the opposite direction set (returns true) or not

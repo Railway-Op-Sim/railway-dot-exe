@@ -14859,7 +14859,7 @@ int TOnePrefDir::GetOnePrefDirPosition(int Caller, int HLoc, int VLoc)
 
 void TOnePrefDir::RealignAfterTrackErase(int Caller, int ErasedTrackVectorPosition)
 {
-//After a track element is erased preferred direction elements will to be affected. This function erases any preferred direction elements that either correspond
+//After a track element is erased preferred direction elements will be affected. This function erases any preferred direction elements that either correspond
 //to the erased track element, or were linked to it, and any that weren't erased have their TVPos value decremented if it was above that of the erased track element.
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",RealignAfterTrackErase," + AnsiString(ErasedTrackVectorPosition));
     bool ErasedFlag = false;
