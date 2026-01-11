@@ -10778,17 +10778,17 @@ pause or run and it cycled round the operate panel buttons
                     + "; SpTg: " + AnsiString(TrackElement.SpeedTag) + "; Type: " + Type[TrackElement.TrackType] + "; Att: " + AnsiString(TrackElement.Attribute)
 //                    + "; COS: " + COS + "; SPos1: " + AnsiString(TrackElement.StationEntryStopLinkPos1) + "; SPos2: " + AnsiString(TrackElement.StationEntryStopLinkPos2)
 //                    + "; SPos3: " + AnsiString(TrackElement.StationEntryStopLinkPos3) + "; SPos4: " + AnsiString(TrackElement.StationEntryStopLinkPos4)
-                    + "; TrID: " + AnsiString(TrackElement.TrainIDOnElement) + "; TrID01: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit01)
-                    + "; TrID23: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit23) + "; Locname: " + TrackElement.LocationName
+//                    + "; TrID: " + AnsiString(TrackElement.TrainIDOnElement) + "; TrID01: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit01)
+//                    + "; TrID23: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit23) + "; Locname: " + TrackElement.LocationName
                     + "; Activename: " + TrackElement.ActiveTrackElementName
                     + "; PDTVecPos = " + PDTVecPos
-//                    + "; Con0c0: " + Con0c0 + "; Con0c1: " + Con0c1 + "; Con0c2: " + Con0c2 + "; Con0c3: " + Con0c3
-//                    + "; Con1c0: " + Con1c0 + "; Con1c1: " + Con1c1 + "; Con1c2: " + Con1c2 + "; Con1c3: " + Con1c3
-//                    + "; Con2c0: " + Con2c0 + "; Con2c1: " + Con2c1 + "; Con2c2: " + Con2c2 + "; Con2c3: " + Con2c3
-//                    + "; Con3c0: " + Con3c0 + "; Con3c1: " + Con3c1 + "; Con3c2: " + Con3c2 + "; Con3c3: " + Con3c3
-                    + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID
-                    + "; RtPDPos " + RoutePrefDirPos + " Links: " + TrackElement.Link[0] + "," + TrackElement.Link[1] + "," + TrackElement.Link[2] + "," + TrackElement.Link[3]
-                    + "; CLPos " + TrackElement.ConnLinkPos[0] + "," +TrackElement.ConnLinkPos[1] + "," +TrackElement.ConnLinkPos[2] + "," +TrackElement.ConnLinkPos[3];
+                    + "; Con0c0: " + Con0c0 + "; Con0c1: " + Con0c1 + "; Con0c2: " + Con0c2 + "; Con0c3: " + Con0c3
+                    + "; Con1c0: " + Con1c0 + "; Con1c1: " + Con1c1 + "; Con1c2: " + Con1c2 + "; Con1c3: " + Con1c3
+                    + "; Con2c0: " + Con2c0 + "; Con2c1: " + Con2c1 + "; Con2c2: " + Con2c2 + "; Con2c3: " + Con2c3
+                    + "; Con3c0: " + Con3c0 + "; Con3c1: " + Con3c1 + "; Con3c2: " + Con3c2 + "; Con3c3: " + Con3c3
+//                    + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID
+//                    + "; RtPDPos " + RoutePrefDirPos + " Links: " + TrackElement.Link[0] + "," + TrackElement.Link[1] + "," + TrackElement.Link[2] + "," + TrackElement.Link[3]
+//                    + "; CLPos " + TrackElement.ConnLinkPos[0] + "," +TrackElement.ConnLinkPos[1] + "," +TrackElement.ConnLinkPos[2] + "," +TrackElement.ConnLinkPos[3];
                     // + "; OAHintCtr: " + TrainController->OpActionPanelHintDelayCounter;
 
                     ;

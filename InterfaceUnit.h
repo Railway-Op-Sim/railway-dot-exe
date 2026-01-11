@@ -766,7 +766,7 @@ __published: // IDE-managed Components
     TLabel *ReminderLabel2;
     TButton *cmsButton;
     TMemo *TTInfoMemo;
-    TSpeedButton *SpeedButton17;
+//    TSpeedButton *SpeedButton17; unused, removed at v2.23.4
     TMenuItem *HeatmapsRedlowvaluesMenuItem;
     TMenuItem *N7;
     TMenuItem *TrainLongServRefInfoOnOffMenuItem;

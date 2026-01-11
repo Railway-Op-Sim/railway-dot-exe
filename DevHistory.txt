@@ -1087,6 +1087,8 @@ Not for website:
 
 / If fail in RebuildPrefDirVector give prefdir fail message & clear it instead of throwing an error
 
+/ Add credit for Angus Johnson for his Resource Hacker
+
 VERSION CHANGES AFTER v2.23.2 for v2.23.3
 
 This version makes three minor improvements and fixes one bug.
