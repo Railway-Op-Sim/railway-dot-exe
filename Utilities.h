@@ -28,8 +28,12 @@
 #include <deque>
 #include <vcl.h>
 #include <fstream>
+#include <string>
 #include <locale.h> //to check local decimal point character, added at v2.4.0
 #include <windows.h>            //needed for 64 bit compilation
+#include <Graphics.hpp>
+
+extern const std::string PREFIX;
 
 // ---------------------------------------------------------------------------
 
@@ -42,6 +46,18 @@ enum TFailureMode //added at v2.14.0.  Here so FailureMode retains value when Cl
 {
     FNil, FMinor, FModerate, FMajor
 };
+
+inline void loadResourceFromPrefix(Graphics::TBitmap* target, const std::string& name, const std::string& prefix = "") {
+
+	if(!prefix.empty()) {
+		try {
+			System::UnicodeString res_name_ = (prefix + "/" + name).c_str();
+			target->LoadFromResourceName(0, res_name_.c_str());
+			return;
+		} catch (const System::Sysutils::Exception &e) {}
+	}
+	target->LoadFromResourceName(0, name.c_str());
+}
 
 class TUtilities // single object incorporating general purpose data & functions for all units to access
 {

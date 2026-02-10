@@ -76,6 +76,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <vcl.h>
 #include <windows.h>            //needed for 64 bit compilation
+#include "Utilities.h"
 
 // ---------------------------------------------------------------------------
 

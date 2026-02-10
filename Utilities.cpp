@@ -46,6 +46,8 @@
 #pragma package(smart_init)
 TUtilities *Utilities;
 
+const std::string PREFIX = "DE001";
+
 // ---------------------------------------------------------------------------
 void TUtilities::CallLogPop(int Caller)
 // use this in case we have too many pops, in which case CallLog seems to be destroyed &
