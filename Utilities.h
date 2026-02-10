@@ -33,7 +33,7 @@
 #include <windows.h>            //needed for 64 bit compilation
 #include <Graphics.hpp>
 
-extern const std::string PREFIX;
+extern std::string RESOURCE_PREFIX;
 
 // ---------------------------------------------------------------------------
 

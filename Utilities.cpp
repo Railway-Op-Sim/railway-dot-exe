@@ -46,7 +46,7 @@
 #pragma package(smart_init)
 TUtilities *Utilities;
 
-const std::string PREFIX = "DE001";
+std::string RESOURCE_PREFIX = "";
 
 // ---------------------------------------------------------------------------
 void TUtilities::CallLogPop(int Caller)

@@ -4,10 +4,10 @@
 #pragma hdrstop
 #include <tchar.h>
 //---------------------------------------------------------------------------
-USEFORM("..\..\GitHub Current Version\railway-dot-exe\PerfLogUnit.cpp", PerfLogForm);
-USEFORM("..\..\GitHub Current Version\railway-dot-exe\ActionsDueUnit.cpp", ActionsDueForm);
-USEFORM("..\..\GitHub Current Version\railway-dot-exe\AboutUnit.cpp", AboutForm);
-USEFORM("..\..\GitHub Current Version\railway-dot-exe\InterfaceUnit.cpp", Interface);
+USEFORM(".\PerfLogUnit.cpp", PerfLogForm);
+USEFORM(".\ActionsDueUnit.cpp", ActionsDueForm);
+USEFORM(".\AboutUnit.cpp", AboutForm);
+USEFORM(".\InterfaceUnit.cpp", Interface);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

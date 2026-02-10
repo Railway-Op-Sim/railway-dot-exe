@@ -1038,6 +1038,8 @@ public: // AboutForm needs access to these
 ///< stores the ADForm position for re-use when made visible.
     int ADFLeft;
 ///< stores the ADForm position for re-use when made visible.
+	void loadIconSet();
+///< Loads an icon set using the given prefix
 
 
 private:
