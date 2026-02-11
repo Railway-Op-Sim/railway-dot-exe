@@ -51,27 +51,23 @@ std::optional<std::string> RuntimeModifier::get_current_graphics_directory() con
 	if (!graphics_library_.has_value()) {
 		 return std::nullopt;
 	}
-	return mods_directory_ + "\\" + graphics_library_.value();
+	return mods_directory_ + "\\Graphics\\" + graphics_library_.value();
 }
 
 void RuntimeModifier::load_graphic(TBitmap* target, const std::string& graphic) {
 	const std::optional<std::string> current_graphics_dir{get_current_graphics_directory()};
 
 	if(graphics_library_.has_value()) {
-		// Let's be safe, if the graphic fails to load revert
-		// back to the builtin variant
-		try {
-			const std::string res_file_ = (
-				mods_directory_ + "\\" + "Graphics" +
-				current_graphics_dir.value() + "\\" + graphic
-			);
+		std::string graphic_{graphic};
+		std::transform(graphic_.begin(), graphic_.end(), graphic_.begin(),
+		   [](unsigned char c){ return std::toupper(c); });
+		std::string res_file_ = (
+			current_graphics_dir.value() + "\\" + graphic_ + ".bmp"
+		);
 
-			if(std::filesystem::exists(res_file_)) {
-				target->LoadFromFile(res_file_.c_str());
-				return;
-			}
-		} catch (const System::Sysutils::Exception &e) {
-            std::cerr << "RuntimeModifier Error: " << e.Message.c_str() << "\n";
+		if(std::filesystem::exists(res_file_)) {
+			target->LoadFromFile(res_file_.c_str());
+			return;
 		}
 	}
 
