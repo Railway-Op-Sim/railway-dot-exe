@@ -76,7 +76,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <vcl.h>
 #include <windows.h>            //needed for 64 bit compilation
-#include "Utilities.h"
+#include "Modding.h"
 
 // ---------------------------------------------------------------------------
 
@@ -772,6 +772,9 @@ __published: // IDE-managed Components
     TMenuItem *N7;
     TMenuItem *TrainLongServRefInfoOnOffMenuItem;
     TMenuItem *TrainTTInfoOnOffMenuItem;
+	TMenuItem *N8;
+	TMenuItem *Modifications1;
+	TMenuItem *Graphics1;
 
 // menu item actions
     void __fastcall AboutMenuItemClick(TObject *Sender);
@@ -1038,8 +1041,8 @@ public: // AboutForm needs access to these
 ///< stores the ADForm position for re-use when made visible.
     int ADFLeft;
 ///< stores the ADForm position for re-use when made visible.
-	void loadIconSet();
-///< Loads an icon set using the given prefix
+	void loadGraphicsSet();
+///< Loads an graphic set
 
 
 private:

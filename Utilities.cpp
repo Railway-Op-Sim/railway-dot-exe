@@ -46,8 +46,6 @@
 #pragma package(smart_init)
 TUtilities *Utilities;
 
-std::string RESOURCE_PREFIX = "";
-
 // ---------------------------------------------------------------------------
 void TUtilities::CallLogPop(int Caller)
 // use this in case we have too many pops, in which case CallLog seems to be destroyed &
