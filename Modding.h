@@ -18,58 +18,40 @@ extern const std::string MODS_DIRECTORY;
 class RuntimeModifier {
 	private:
 		std::optional<std::string> graphics_library_{std::nullopt};
+
 		const std::string mods_directory_{"Mods"};
+        const std::string library_icon_default_{"Library"};
+
 		std::vector<std::function<void()>> callbacks_;
-		void triggerCallbacks_() const {
+
+		void trigger_callbacks_() const {
 			for(auto& callback : callbacks_) {
                 callback();
             }
-        }
-    public:
-
-		void attachCallback(std::function<void()> callback) {
-            // Call once for initial setup
-			callback();
-
-			// Now attach to tracked callbacks, these will be executed
-            // if the modifier is changed
-            callbacks_.push_back(std::move(callback));
 		}
 
-		void setGraphicsLibrary(const std::string& graphics_prefix) {
-			graphics_library_ = std::optional<std::string>{graphics_prefix};
-            triggerCallbacks_();
+		void create_directories_() const;
+	public:
+		RuntimeModifier() {
+            create_directories_();
+		}
+
+		std::optional<std::string> get_current_graphics_library() const {
+            return graphics_library_;
         }
+
+		void attach_callback(std::function<void()> callback);
+
+		std::vector<std::string> get_graphics_libraries() const;
+
+		void set_graphics_library(const std::optional<std::string>& graphics_prefix);
+
+		std::optional<std::string> get_library_icon_file(const std::string& library) const;
 
 		// Returns the current mod graphics directory, if applicable
-		std::optional<std::string> getCurrentGraphicsDirectory() const {
-			if (!graphics_library_.has_value()) {
-				 return std::nullopt;
-			}
-			return mods_directory_ + "\\" + graphics_library_.value();
-		}
+		std::optional<std::string> get_current_graphics_directory() const;
 
-		void loadGraphic(TBitmap* target, const std::string& graphic) {
-			const std::optional<std::string> current_graphics_dir{getCurrentGraphicsDirectory()};
-
-			if(graphics_library_.has_value()) {
-				// Let's be safe, if the graphic fails to load revert
-                // back to the builtin variant
-				try {
-					const std::string res_file_ = (
-						mods_directory_ + "\\" + "Graphics" +
-						current_graphics_dir.value() + "\\" + graphic
-					);
-
-					if(std::filesystem::exists(res_file_)) {
-						target->LoadFromFile(res_file_.c_str());
-						return;
-                    }
-				} catch (const System::Sysutils::Exception &e) {}
-			}
-
-			target->LoadFromResourceName(0, graphic.c_str());
-		}
+		void load_graphic(TBitmap* target, const std::string& graphic);
 };
 
 extern std::unique_ptr<RuntimeModifier> Modifier;

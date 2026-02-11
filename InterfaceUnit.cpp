@@ -84,223 +84,294 @@ const UnicodeString TInterface::USERGRAPHICS_DIR_NAME = "Graphics";
 // ---------------------------------------------------------------------------
 void TInterface::loadGraphicsSet() {
 
-	Modifier->loadGraphic(SpeedButton1->Glyph, "gl1");
-	Modifier->loadGraphic(SpeedButton2->Glyph, "gl2");
-	Modifier->loadGraphic(SpeedButton3->Glyph, "gl3");
-	Modifier->loadGraphic(SpeedButton4->Glyph, "gl4");
-	Modifier->loadGraphic(SpeedButton5->Glyph, "gl5");
-	Modifier->loadGraphic(SpeedButton6->Glyph, "gl6");
-	Modifier->loadGraphic(SpeedButton7->Glyph, "gl7");
-	Modifier->loadGraphic(SpeedButton8->Glyph, "gl8");
-	Modifier->loadGraphic(SpeedButton9->Glyph, "gl9");
-	Modifier->loadGraphic(SpeedButton10->Glyph, "gl10");
-	Modifier->loadGraphic(SpeedButton11->Glyph, "gl11");
-	Modifier->loadGraphic(SpeedButton12->Glyph, "gl12");
-	Modifier->loadGraphic(SpeedButton13->Glyph, "gl13");
-	Modifier->loadGraphic(SpeedButton14->Glyph, "gl14");
-	Modifier->loadGraphic(SpeedButton15->Glyph, "gl15");
-	Modifier->loadGraphic(SpeedButton16->Glyph, "gl16");
-	Modifier->loadGraphic(SpeedButton18->Glyph, "gl18");
-	Modifier->loadGraphic(SpeedButton19->Glyph, "gl19");
-	Modifier->loadGraphic(SpeedButton20->Glyph, "gl20");
-	Modifier->loadGraphic(SpeedButton21->Glyph, "gl21");
-	Modifier->loadGraphic(SpeedButton22->Glyph, "gl22");
-	Modifier->loadGraphic(SpeedButton23->Glyph, "gl23");
-	Modifier->loadGraphic(SpeedButton24->Glyph, "gl24");
-	Modifier->loadGraphic(SpeedButton25->Glyph, "gl25");
-	Modifier->loadGraphic(SpeedButton26->Glyph, "gl26");
-	Modifier->loadGraphic(SpeedButton27->Glyph, "gl27");
-	Modifier->loadGraphic(SpeedButton28->Glyph, "gl28");
-	Modifier->loadGraphic(SpeedButton29->Glyph, "gl29");
-	Modifier->loadGraphic(SpeedButton30->Glyph, "gl30");
-	Modifier->loadGraphic(SpeedButton31->Glyph, "gl31");
-	Modifier->loadGraphic(SpeedButton32->Glyph, "gl32");
-	Modifier->loadGraphic(SpeedButton33->Glyph, "gl33");
-	Modifier->loadGraphic(SpeedButton34->Glyph, "gl34");
-	Modifier->loadGraphic(SpeedButton35->Glyph, "gl35");
-	Modifier->loadGraphic(SpeedButton36->Glyph, "gl36");
-	Modifier->loadGraphic(SpeedButton37->Glyph, "gl37");
-	Modifier->loadGraphic(SpeedButton38->Glyph, "gl38");
-	Modifier->loadGraphic(SpeedButton39->Glyph, "gl39");
-	Modifier->loadGraphic(SpeedButton40->Glyph, "gl40");
-	Modifier->loadGraphic(SpeedButton41->Glyph, "gl41");
-	Modifier->loadGraphic(SpeedButton42->Glyph, "gl42");
-	Modifier->loadGraphic(SpeedButton43->Glyph, "gl43");
-	Modifier->loadGraphic(SpeedButton44->Glyph, "gl44");
-	Modifier->loadGraphic(SpeedButton45->Glyph, "gl45");
-	Modifier->loadGraphic(SpeedButton46->Glyph, "gl46");
-	Modifier->loadGraphic(SpeedButton47->Glyph, "gl47");
-	Modifier->loadGraphic(SpeedButton48->Glyph, "gl48");
-	Modifier->loadGraphic(SpeedButton49->Glyph, "gl49");
-	Modifier->loadGraphic(SpeedButton50->Glyph, "gl50");
-	Modifier->loadGraphic(SpeedButton51->Glyph, "gl51");
-	Modifier->loadGraphic(SpeedButton52->Glyph, "gl52");
-	Modifier->loadGraphic(SpeedButton53->Glyph, "gl53");
-	Modifier->loadGraphic(SpeedButton54->Glyph, "gl54");
-	Modifier->loadGraphic(SpeedButton55->Glyph, "gl55");
-	Modifier->loadGraphic(SpeedButton56->Glyph, "gl56");
-	Modifier->loadGraphic(SpeedButton57->Glyph, "gl57");
-	Modifier->loadGraphic(SpeedButton58->Glyph, "gl58");
-	Modifier->loadGraphic(SpeedButton59->Glyph, "gl59");
-	Modifier->loadGraphic(SpeedButton60->Glyph, "gl60");
-	Modifier->loadGraphic(SpeedButton61->Glyph, "gl61");
-	Modifier->loadGraphic(SpeedButton62->Glyph, "gl62");
-	Modifier->loadGraphic(SpeedButton63->Glyph, "gl63");
-	Modifier->loadGraphic(SpeedButton64->Glyph, "gl64");
-	Modifier->loadGraphic(SpeedButton65->Glyph, "gl65");
-	Modifier->loadGraphic(SpeedButton66->Glyph, "gl66");
-	Modifier->loadGraphic(SpeedButton67->Glyph, "gl67");
-	Modifier->loadGraphic(SpeedButton68->Glyph, "gl68");
-	Modifier->loadGraphic(SpeedButton69->Glyph, "gl69");
-	Modifier->loadGraphic(SpeedButton70->Glyph, "gl70");
-	Modifier->loadGraphic(SpeedButton71->Glyph, "gl71");
-	Modifier->loadGraphic(SpeedButton72->Glyph, "gl72");
-	Modifier->loadGraphic(SpeedButton73->Glyph, "gl73");
-	Modifier->loadGraphic(SpeedButton74->Glyph, "gl74");
-	Modifier->loadGraphic(SpeedButton75->Glyph, "gl75");
-	Modifier->loadGraphic(SpeedButton76->Glyph, "gl76");
-	Modifier->loadGraphic(SpeedButton77->Glyph, "gl77");
-	Modifier->loadGraphic(SpeedButton78->Glyph, "gl78");
-	Modifier->loadGraphic(SpeedButton79->Glyph, "gl79");
-	Modifier->loadGraphic(SpeedButton80->Glyph, "gl80");
-	Modifier->loadGraphic(SpeedButton81->Glyph, "gl81");
-	Modifier->loadGraphic(SpeedButton82->Glyph, "gl82");
-	Modifier->loadGraphic(SpeedButton83->Glyph, "gl83");
-	Modifier->loadGraphic(SpeedButton84->Glyph, "gl84");
-	Modifier->loadGraphic(SpeedButton85->Glyph, "gl85");
-	Modifier->loadGraphic(SpeedButton86->Glyph, "gl86");
-	Modifier->loadGraphic(SpeedButton87->Glyph, "gl87");
-	Modifier->loadGraphic(SpeedButton88->Glyph, "gl88set");
-	Modifier->loadGraphic(SpeedButton89->Glyph, "gl89set");
-	Modifier->loadGraphic(SpeedButton90->Glyph, "gl90set");
-	Modifier->loadGraphic(SpeedButton91->Glyph, "gl91set");
-	Modifier->loadGraphic(SpeedButton92->Glyph, "gl92set");
-	Modifier->loadGraphic(SpeedButton93->Glyph, "gl93set");
-	Modifier->loadGraphic(SpeedButton94->Glyph, "gl94set");
-	Modifier->loadGraphic(SpeedButton95->Glyph, "gl95set");
-	Modifier->loadGraphic(SpeedButton96->Glyph, "ConcourseGlyph");
-	Modifier->loadGraphic(SpeedButton97->Glyph, "gl97");
-	Modifier->loadGraphic(SpeedButton98->Glyph, "gl98");
-	Modifier->loadGraphic(SpeedButton99->Glyph, "gl99");
-	Modifier->loadGraphic(SpeedButton100->Glyph, "gl100");
-	Modifier->loadGraphic(SpeedButton101->Glyph, "gl101");
-	Modifier->loadGraphic(SpeedButton102->Glyph, "gl102");
-	Modifier->loadGraphic(SpeedButton103->Glyph, "gl103");
-	Modifier->loadGraphic(SpeedButton104->Glyph, "gl104");
-	Modifier->loadGraphic(SpeedButton105->Glyph, "gl105");
-	Modifier->loadGraphic(SpeedButton106->Glyph, "gl106");
-	Modifier->loadGraphic(SpeedButton107->Glyph, "gl107");
-	Modifier->loadGraphic(SpeedButton108->Glyph, "gl108");
-	Modifier->loadGraphic(SpeedButton109->Glyph, "gl109");
-	Modifier->loadGraphic(SpeedButton110->Glyph, "gl110");
-	Modifier->loadGraphic(SpeedButton111->Glyph, "gl111");
-	Modifier->loadGraphic(SpeedButton112->Glyph, "gl112");
-	Modifier->loadGraphic(SpeedButton113->Glyph, "gl113");
-	Modifier->loadGraphic(SpeedButton114->Glyph, "gl114");
-	Modifier->loadGraphic(SpeedButton115->Glyph, "gl115");
-	Modifier->loadGraphic(SpeedButton116->Glyph, "gl116");
-	Modifier->loadGraphic(SpeedButton117->Glyph, "gl117");
-	Modifier->loadGraphic(SpeedButton118->Glyph, "gl118");
-	Modifier->loadGraphic(SpeedButton119->Glyph, "gl119");
-	Modifier->loadGraphic(SpeedButton120->Glyph, "gl120");
-	Modifier->loadGraphic(SpeedButton121->Glyph, "gl121");
-	Modifier->loadGraphic(SpeedButton122->Glyph, "gl122");
-	Modifier->loadGraphic(SpeedButton123->Glyph, "gl123");
-	Modifier->loadGraphic(SpeedButton124->Glyph, "gl124");
-	Modifier->loadGraphic(SpeedButton125->Glyph, "gl125");
-	Modifier->loadGraphic(SpeedButton126->Glyph, "gl126");
-	Modifier->loadGraphic(SpeedButton127->Glyph, "gl127");
-	Modifier->loadGraphic(SpeedButton128->Glyph, "gl128");
-	Modifier->loadGraphic(SpeedButton129->Glyph, "gl129");
-	Modifier->loadGraphic(SpeedButton130->Glyph, "gl130");
-	Modifier->loadGraphic(SpeedButton131->Glyph, "gl131");
-	Modifier->loadGraphic(SpeedButton132->Glyph, "gl132");
-	Modifier->loadGraphic(SpeedButton133->Glyph, "gl133");
-	Modifier->loadGraphic(SpeedButton134->Glyph, "gl134");
-	Modifier->loadGraphic(SpeedButton135->Glyph, "gl135");
-	Modifier->loadGraphic(SpeedButton136->Glyph, "gl136");
-	Modifier->loadGraphic(SpeedButton137->Glyph, "gl137");
-	Modifier->loadGraphic(SpeedButton138->Glyph, "gl138");
-	Modifier->loadGraphic(SpeedButton139->Glyph, "gl139");
-	Modifier->loadGraphic(SpeedButton140->Glyph, "gl140");
-	Modifier->loadGraphic(SpeedButton141->Glyph, "gl141");
-	Modifier->loadGraphic(SpeedButton142->Glyph, "gl142");
-	Modifier->loadGraphic(SpeedButton143->Glyph, "gl143");
-	Modifier->loadGraphic(SpeedButton145->Glyph, "gl145");
-	Modifier->loadGraphic(SpeedButton146->Glyph, "gl146");
+	Modifier->load_graphic(SpeedButton1->Glyph, "gl1");
+	Modifier->load_graphic(SpeedButton2->Glyph, "gl2");
+	Modifier->load_graphic(SpeedButton3->Glyph, "gl3");
+	Modifier->load_graphic(SpeedButton4->Glyph, "gl4");
+	Modifier->load_graphic(SpeedButton5->Glyph, "gl5");
+	Modifier->load_graphic(SpeedButton6->Glyph, "gl6");
+	Modifier->load_graphic(SpeedButton7->Glyph, "gl7");
+	Modifier->load_graphic(SpeedButton8->Glyph, "gl8");
+	Modifier->load_graphic(SpeedButton9->Glyph, "gl9");
+	Modifier->load_graphic(SpeedButton10->Glyph, "gl10");
+	Modifier->load_graphic(SpeedButton11->Glyph, "gl11");
+	Modifier->load_graphic(SpeedButton12->Glyph, "gl12");
+	Modifier->load_graphic(SpeedButton13->Glyph, "gl13");
+	Modifier->load_graphic(SpeedButton14->Glyph, "gl14");
+	Modifier->load_graphic(SpeedButton15->Glyph, "gl15");
+	Modifier->load_graphic(SpeedButton16->Glyph, "gl16");
+	Modifier->load_graphic(SpeedButton18->Glyph, "gl18");
+	Modifier->load_graphic(SpeedButton19->Glyph, "gl19");
+	Modifier->load_graphic(SpeedButton20->Glyph, "gl20");
+	Modifier->load_graphic(SpeedButton21->Glyph, "gl21");
+	Modifier->load_graphic(SpeedButton22->Glyph, "gl22");
+	Modifier->load_graphic(SpeedButton23->Glyph, "gl23");
+	Modifier->load_graphic(SpeedButton24->Glyph, "gl24");
+	Modifier->load_graphic(SpeedButton25->Glyph, "gl25");
+	Modifier->load_graphic(SpeedButton26->Glyph, "gl26");
+	Modifier->load_graphic(SpeedButton27->Glyph, "gl27");
+	Modifier->load_graphic(SpeedButton28->Glyph, "gl28");
+	Modifier->load_graphic(SpeedButton29->Glyph, "gl29");
+	Modifier->load_graphic(SpeedButton30->Glyph, "gl30");
+	Modifier->load_graphic(SpeedButton31->Glyph, "gl31");
+	Modifier->load_graphic(SpeedButton32->Glyph, "gl32");
+	Modifier->load_graphic(SpeedButton33->Glyph, "gl33");
+	Modifier->load_graphic(SpeedButton34->Glyph, "gl34");
+	Modifier->load_graphic(SpeedButton35->Glyph, "gl35");
+	Modifier->load_graphic(SpeedButton36->Glyph, "gl36");
+	Modifier->load_graphic(SpeedButton37->Glyph, "gl37");
+	Modifier->load_graphic(SpeedButton38->Glyph, "gl38");
+	Modifier->load_graphic(SpeedButton39->Glyph, "gl39");
+	Modifier->load_graphic(SpeedButton40->Glyph, "gl40");
+	Modifier->load_graphic(SpeedButton41->Glyph, "gl41");
+	Modifier->load_graphic(SpeedButton42->Glyph, "gl42");
+	Modifier->load_graphic(SpeedButton43->Glyph, "gl43");
+	Modifier->load_graphic(SpeedButton44->Glyph, "gl44");
+	Modifier->load_graphic(SpeedButton45->Glyph, "gl45");
+	Modifier->load_graphic(SpeedButton46->Glyph, "gl46");
+	Modifier->load_graphic(SpeedButton47->Glyph, "gl47");
+	Modifier->load_graphic(SpeedButton48->Glyph, "gl48");
+	Modifier->load_graphic(SpeedButton49->Glyph, "gl49");
+	Modifier->load_graphic(SpeedButton50->Glyph, "gl50");
+	Modifier->load_graphic(SpeedButton51->Glyph, "gl51");
+	Modifier->load_graphic(SpeedButton52->Glyph, "gl52");
+	Modifier->load_graphic(SpeedButton53->Glyph, "gl53");
+	Modifier->load_graphic(SpeedButton54->Glyph, "gl54");
+	Modifier->load_graphic(SpeedButton55->Glyph, "gl55");
+	Modifier->load_graphic(SpeedButton56->Glyph, "gl56");
+	Modifier->load_graphic(SpeedButton57->Glyph, "gl57");
+	Modifier->load_graphic(SpeedButton58->Glyph, "gl58");
+	Modifier->load_graphic(SpeedButton59->Glyph, "gl59");
+	Modifier->load_graphic(SpeedButton60->Glyph, "gl60");
+	Modifier->load_graphic(SpeedButton61->Glyph, "gl61");
+	Modifier->load_graphic(SpeedButton62->Glyph, "gl62");
+	Modifier->load_graphic(SpeedButton63->Glyph, "gl63");
+	Modifier->load_graphic(SpeedButton64->Glyph, "gl64");
+	Modifier->load_graphic(SpeedButton65->Glyph, "gl65");
+	Modifier->load_graphic(SpeedButton66->Glyph, "gl66");
+	Modifier->load_graphic(SpeedButton67->Glyph, "gl67");
+	Modifier->load_graphic(SpeedButton68->Glyph, "gl68");
+	Modifier->load_graphic(SpeedButton69->Glyph, "gl69");
+	Modifier->load_graphic(SpeedButton70->Glyph, "gl70");
+	Modifier->load_graphic(SpeedButton71->Glyph, "gl71");
+	Modifier->load_graphic(SpeedButton72->Glyph, "gl72");
+	Modifier->load_graphic(SpeedButton73->Glyph, "gl73");
+	Modifier->load_graphic(SpeedButton74->Glyph, "gl74");
+	Modifier->load_graphic(SpeedButton75->Glyph, "gl75");
+	Modifier->load_graphic(SpeedButton76->Glyph, "gl76");
+	Modifier->load_graphic(SpeedButton77->Glyph, "gl77");
+	Modifier->load_graphic(SpeedButton78->Glyph, "gl78");
+	Modifier->load_graphic(SpeedButton79->Glyph, "gl79");
+	Modifier->load_graphic(SpeedButton80->Glyph, "gl80");
+	Modifier->load_graphic(SpeedButton81->Glyph, "gl81");
+	Modifier->load_graphic(SpeedButton82->Glyph, "gl82");
+	Modifier->load_graphic(SpeedButton83->Glyph, "gl83");
+	Modifier->load_graphic(SpeedButton84->Glyph, "gl84");
+	Modifier->load_graphic(SpeedButton85->Glyph, "gl85");
+	Modifier->load_graphic(SpeedButton86->Glyph, "gl86");
+	Modifier->load_graphic(SpeedButton87->Glyph, "gl87");
+	Modifier->load_graphic(SpeedButton88->Glyph, "gl88set");
+	Modifier->load_graphic(SpeedButton89->Glyph, "gl89set");
+	Modifier->load_graphic(SpeedButton90->Glyph, "gl90set");
+	Modifier->load_graphic(SpeedButton91->Glyph, "gl91set");
+	Modifier->load_graphic(SpeedButton92->Glyph, "gl92set");
+	Modifier->load_graphic(SpeedButton93->Glyph, "gl93set");
+	Modifier->load_graphic(SpeedButton94->Glyph, "gl94set");
+	Modifier->load_graphic(SpeedButton95->Glyph, "gl95set");
+	Modifier->load_graphic(SpeedButton96->Glyph, "ConcourseGlyph");
+	Modifier->load_graphic(SpeedButton97->Glyph, "gl97");
+	Modifier->load_graphic(SpeedButton98->Glyph, "gl98");
+	Modifier->load_graphic(SpeedButton99->Glyph, "gl99");
+	Modifier->load_graphic(SpeedButton100->Glyph, "gl100");
+	Modifier->load_graphic(SpeedButton101->Glyph, "gl101");
+	Modifier->load_graphic(SpeedButton102->Glyph, "gl102");
+	Modifier->load_graphic(SpeedButton103->Glyph, "gl103");
+	Modifier->load_graphic(SpeedButton104->Glyph, "gl104");
+	Modifier->load_graphic(SpeedButton105->Glyph, "gl105");
+	Modifier->load_graphic(SpeedButton106->Glyph, "gl106");
+	Modifier->load_graphic(SpeedButton107->Glyph, "gl107");
+	Modifier->load_graphic(SpeedButton108->Glyph, "gl108");
+	Modifier->load_graphic(SpeedButton109->Glyph, "gl109");
+	Modifier->load_graphic(SpeedButton110->Glyph, "gl110");
+	Modifier->load_graphic(SpeedButton111->Glyph, "gl111");
+	Modifier->load_graphic(SpeedButton112->Glyph, "gl112");
+	Modifier->load_graphic(SpeedButton113->Glyph, "gl113");
+	Modifier->load_graphic(SpeedButton114->Glyph, "gl114");
+	Modifier->load_graphic(SpeedButton115->Glyph, "gl115");
+	Modifier->load_graphic(SpeedButton116->Glyph, "gl116");
+	Modifier->load_graphic(SpeedButton117->Glyph, "gl117");
+	Modifier->load_graphic(SpeedButton118->Glyph, "gl118");
+	Modifier->load_graphic(SpeedButton119->Glyph, "gl119");
+	Modifier->load_graphic(SpeedButton120->Glyph, "gl120");
+	Modifier->load_graphic(SpeedButton121->Glyph, "gl121");
+	Modifier->load_graphic(SpeedButton122->Glyph, "gl122");
+	Modifier->load_graphic(SpeedButton123->Glyph, "gl123");
+	Modifier->load_graphic(SpeedButton124->Glyph, "gl124");
+	Modifier->load_graphic(SpeedButton125->Glyph, "gl125");
+	Modifier->load_graphic(SpeedButton126->Glyph, "gl126");
+	Modifier->load_graphic(SpeedButton127->Glyph, "gl127");
+	Modifier->load_graphic(SpeedButton128->Glyph, "gl128");
+	Modifier->load_graphic(SpeedButton129->Glyph, "gl129");
+	Modifier->load_graphic(SpeedButton130->Glyph, "gl130");
+	Modifier->load_graphic(SpeedButton131->Glyph, "gl131");
+	Modifier->load_graphic(SpeedButton132->Glyph, "gl132");
+	Modifier->load_graphic(SpeedButton133->Glyph, "gl133");
+	Modifier->load_graphic(SpeedButton134->Glyph, "gl134");
+	Modifier->load_graphic(SpeedButton135->Glyph, "gl135");
+	Modifier->load_graphic(SpeedButton136->Glyph, "gl136");
+	Modifier->load_graphic(SpeedButton137->Glyph, "gl137");
+	Modifier->load_graphic(SpeedButton138->Glyph, "gl138");
+	Modifier->load_graphic(SpeedButton139->Glyph, "gl139");
+	Modifier->load_graphic(SpeedButton140->Glyph, "gl140");
+	Modifier->load_graphic(SpeedButton141->Glyph, "gl141");
+	Modifier->load_graphic(SpeedButton142->Glyph, "gl142");
+	Modifier->load_graphic(SpeedButton143->Glyph, "gl143");
+	Modifier->load_graphic(SpeedButton145->Glyph, "gl145");
+	Modifier->load_graphic(SpeedButton146->Glyph, "gl146");
 	// below not in RailGraphics
-	Modifier->loadGraphic(SpeedButton144->Glyph, "LCGlyph");
+	Modifier->load_graphic(SpeedButton144->Glyph, "LCGlyph");
 
-	Modifier->loadGraphic(AddPrefDirButton->Glyph, "AddPrefDir");
-	Modifier->loadGraphic(AddTextButton->Glyph, "AddText");
-	Modifier->loadGraphic(AddTrackButton->Glyph, "AddTrack");
-	Modifier->loadGraphic(AutoSigsButton->Glyph, "AutoTop");
-	Modifier->loadGraphic(SigAutoNonConsecButton->Glyph, "AutoBottom");
-	Modifier->loadGraphic(CallingOnButton->Glyph, "CallingOn");
-	Modifier->loadGraphic(DeleteAllPrefDirButton->Glyph, "ClearAllPrefDir");
-	Modifier->loadGraphic(DeleteOnePrefDirButton->Glyph, "ClearOnePrefDir");
-	Modifier->loadGraphic(ExitOperationButton->Glyph, "Exit");
-	Modifier->loadGraphic(ExitPrefDirButton->Glyph, "Exit");
-	Modifier->loadGraphic(ExitTrackButton->Glyph, "Exit");
-	Modifier->loadGraphic(ExitTTModeButton->Glyph, "Exit");
-	Modifier->loadGraphic(FlashControlButton->Glyph, "NoFlash");   //added at v2.15.0
-	Modifier->loadGraphic(FontButton->Glyph, "FontGraphic");
-	Modifier->loadGraphic(HomeButton->Glyph, "Home");
-	Modifier->loadGraphic(LocationNameButton->Glyph, "NameLocs");
-	Modifier->loadGraphic(MoveTextOrGraphicButton->Glyph, "MoveTextOrGraphic");
-	Modifier->loadGraphic(NewHomeButton->Glyph, "NewHome");
-	Modifier->loadGraphic(UnrestrictedButton->Glyph, "NonSig");
-	Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
-	Modifier->loadGraphic(OperatorActionButton->Glyph, "ShowOpActionPanel");
-	Modifier->loadGraphic(PerformanceLogButton->Glyph, "ShowLog");
-	Modifier->loadGraphic(PresetAutoSigRoutesButton->Glyph, "PresetAutoSigRoutes");
-	Modifier->loadGraphic(RouteCancelButton->Glyph, "RouteCancel");
-	Modifier->loadGraphic(SaveRailwayPDPButton->Glyph, "SaveRailway"); // PrefDirPanel
-	Modifier->loadGraphic(SaveRailwayBaseModeButton->Glyph, "SaveRailway"); // OperatingPanel
-	Modifier->loadGraphic(SaveRailwayTBPButton->Glyph, "SaveRailway"); // TrackBuildPanel
-	Modifier->loadGraphic(SaveSessionButton->Glyph, "SaveSession");
-	Modifier->loadGraphic(ScreenDownButton->Glyph, "BlackArrowDown");
-	Modifier->loadGraphic(ScreenGridButton->Glyph, "ScreenGrid");
-	Modifier->loadGraphic(ScreenLeftButton->Glyph, "BlackArrowLeft");
-	Modifier->loadGraphic(ScreenRightButton->Glyph, "BlackArrowRight");
-	Modifier->loadGraphic(ScreenUpButton->Glyph, "BlackArrowUp");
-	Modifier->loadGraphic(SetGapsButton->Glyph, "ConnectGaps");
-	Modifier->loadGraphic(SetLengthsButton->Glyph, "SetDists");
-	Modifier->loadGraphic(ShowHideTTButton->Glyph, "Hide");
-	Modifier->loadGraphic(SigAspectButton->Glyph, "FourAspect"); // new at version 0.6
-	Modifier->loadGraphic(SigPrefConsecButton->Glyph, "PrefTop");
-	Modifier->loadGraphic(SigPrefNonConsecButton->Glyph, "PrefBottom");
-	Modifier->loadGraphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision1");
-	Modifier->loadGraphic(TrackOKButton->Glyph, "Validate");
-	Modifier->loadGraphic(TTClockAdjButton->Glyph, "TTClock");
-	Modifier->loadGraphic(UserGraphicButton->Glyph, "PictureImage");
+	Modifier->load_graphic(AddPrefDirButton->Glyph, "AddPrefDir");
+	Modifier->load_graphic(AddTextButton->Glyph, "AddText");
+	Modifier->load_graphic(AddTrackButton->Glyph, "AddTrack");
+	Modifier->load_graphic(AutoSigsButton->Glyph, "AutoTop");
+	Modifier->load_graphic(SigAutoNonConsecButton->Glyph, "AutoBottom");
+	Modifier->load_graphic(CallingOnButton->Glyph, "CallingOn");
+	Modifier->load_graphic(DeleteAllPrefDirButton->Glyph, "ClearAllPrefDir");
+	Modifier->load_graphic(DeleteOnePrefDirButton->Glyph, "ClearOnePrefDir");
+	Modifier->load_graphic(ExitOperationButton->Glyph, "Exit");
+	Modifier->load_graphic(ExitPrefDirButton->Glyph, "Exit");
+	Modifier->load_graphic(ExitTrackButton->Glyph, "Exit");
+	Modifier->load_graphic(ExitTTModeButton->Glyph, "Exit");
+	Modifier->load_graphic(FlashControlButton->Glyph, "NoFlash");   //added at v2.15.0
+	Modifier->load_graphic(FontButton->Glyph, "FontGraphic");
+	Modifier->load_graphic(HomeButton->Glyph, "Home");
+	Modifier->load_graphic(LocationNameButton->Glyph, "NameLocs");
+	Modifier->load_graphic(MoveTextOrGraphicButton->Glyph, "MoveTextOrGraphic");
+	Modifier->load_graphic(NewHomeButton->Glyph, "NewHome");
+	Modifier->load_graphic(UnrestrictedButton->Glyph, "NonSig");
+	Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
+	Modifier->load_graphic(OperatorActionButton->Glyph, "ShowOpActionPanel");
+	Modifier->load_graphic(PerformanceLogButton->Glyph, "ShowLog");
+	Modifier->load_graphic(PresetAutoSigRoutesButton->Glyph, "PresetAutoSigRoutes");
+	Modifier->load_graphic(RouteCancelButton->Glyph, "RouteCancel");
+	Modifier->load_graphic(SaveRailwayPDPButton->Glyph, "SaveRailway"); // PrefDirPanel
+	Modifier->load_graphic(SaveRailwayBaseModeButton->Glyph, "SaveRailway"); // OperatingPanel
+	Modifier->load_graphic(SaveRailwayTBPButton->Glyph, "SaveRailway"); // TrackBuildPanel
+	Modifier->load_graphic(SaveSessionButton->Glyph, "SaveSession");
+	Modifier->load_graphic(ScreenDownButton->Glyph, "BlackArrowDown");
+	Modifier->load_graphic(ScreenGridButton->Glyph, "ScreenGrid");
+	Modifier->load_graphic(ScreenLeftButton->Glyph, "BlackArrowLeft");
+	Modifier->load_graphic(ScreenRightButton->Glyph, "BlackArrowRight");
+	Modifier->load_graphic(ScreenUpButton->Glyph, "BlackArrowUp");
+	Modifier->load_graphic(SetGapsButton->Glyph, "ConnectGaps");
+	Modifier->load_graphic(SetLengthsButton->Glyph, "SetDists");
+	Modifier->load_graphic(ShowHideTTButton->Glyph, "Hide");
+	Modifier->load_graphic(SigAspectButton->Glyph, "FourAspect"); // new at version 0.6
+	Modifier->load_graphic(SigPrefConsecButton->Glyph, "PrefTop");
+	Modifier->load_graphic(SigPrefNonConsecButton->Glyph, "PrefBottom");
+	Modifier->load_graphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision1");
+	Modifier->load_graphic(TrackOKButton->Glyph, "Validate");
+	Modifier->load_graphic(TTClockAdjButton->Glyph, "TTClock");
+	Modifier->load_graphic(UserGraphicButton->Glyph, "PictureImage");
 
-	Modifier->loadGraphic(BufferAttentionImage->Picture->Bitmap, "BufferWarning");
-	Modifier->loadGraphic(CallOnImage->Picture->Bitmap, "CallingOn");
-	Modifier->loadGraphic(CrashImage->Picture->Bitmap, "CrashWarning");
-	Modifier->loadGraphic(DerailImage->Picture->Bitmap, "DerailWarning");
-	Modifier->loadGraphic(SignalStopImage->Picture->Bitmap, "SignalStopWarning");
-	Modifier->loadGraphic(SPADImage->Picture->Bitmap, "SPADWarning");
-	Modifier->loadGraphic(TrainFailedImage->Picture->Bitmap, "TrainFailedWarning"); // new at v2.4.0
-	Modifier->loadGraphic(ManualLCDownImage->Picture->Bitmap, "ManualLCDownImage"); // new at v2.9.0
+	Modifier->load_graphic(BufferAttentionImage->Picture->Bitmap, "BufferWarning");
+	Modifier->load_graphic(CallOnImage->Picture->Bitmap, "CallingOn");
+	Modifier->load_graphic(CrashImage->Picture->Bitmap, "CrashWarning");
+	Modifier->load_graphic(DerailImage->Picture->Bitmap, "DerailWarning");
+	Modifier->load_graphic(SignalStopImage->Picture->Bitmap, "SignalStopWarning");
+	Modifier->load_graphic(SPADImage->Picture->Bitmap, "SPADWarning");
+	Modifier->load_graphic(TrainFailedImage->Picture->Bitmap, "TrainFailedWarning"); // new at v2.4.0
+	Modifier->load_graphic(ManualLCDownImage->Picture->Bitmap, "ManualLCDownImage"); // new at v2.9.0
 
-	Modifier->loadGraphic(DistanceKey->Picture->Bitmap, "DistanceKey");
-	Modifier->loadGraphic(LengthHeatMapImageRedLow->Picture->Bitmap, "LengthHeatMapImageRedLow");
-	Modifier->loadGraphic(LengthHeatMapImageRedHigh->Picture->Bitmap, "LengthHeatMapImageRedHigh");
-	Modifier->loadGraphic(SpeedHeatMapImageRedLow->Picture->Bitmap, "SpeedHeatMapImageRedLow");
-	Modifier->loadGraphic(SpeedHeatMapImageRedHigh->Picture->Bitmap, "SpeedHeatMapImageRedHigh");
-	Modifier->loadGraphic(PrefDirKey->Picture->Bitmap, "PrefDirKey");
+	Modifier->load_graphic(DistanceKey->Picture->Bitmap, "DistanceKey");
+	Modifier->load_graphic(LengthHeatMapImageRedLow->Picture->Bitmap, "LengthHeatMapImageRedLow");
+	Modifier->load_graphic(LengthHeatMapImageRedHigh->Picture->Bitmap, "LengthHeatMapImageRedHigh");
+	Modifier->load_graphic(SpeedHeatMapImageRedLow->Picture->Bitmap, "SpeedHeatMapImageRedLow");
+	Modifier->load_graphic(SpeedHeatMapImageRedHigh->Picture->Bitmap, "SpeedHeatMapImageRedHigh");
+	Modifier->load_graphic(PrefDirKey->Picture->Bitmap, "PrefDirKey");
 
-	Modifier->loadGraphic(TrackLinkedImage->Picture->Bitmap, "TrackLinkedGraphic");
-	Modifier->loadGraphic(TrackNotLinkedImage->Picture->Bitmap, "TrackNotLinkedGraphic");
-	Modifier->loadGraphic(GapsNotSetImage->Picture->Bitmap, "GapsNotSetGraphic");
-	Modifier->loadGraphic(GapsSetImage->Picture->Bitmap, "GapsSetGraphic");
-	Modifier->loadGraphic(LocationNamesNotSetImage->Picture->Bitmap, "LocNamesNotSetGraphic");
-	Modifier->loadGraphic(LocationNamesSetImage->Picture->Bitmap, "LocNamesSetGraphic");
+	Modifier->load_graphic(TrackLinkedImage->Picture->Bitmap, "TrackLinkedGraphic");
+	Modifier->load_graphic(TrackNotLinkedImage->Picture->Bitmap, "TrackNotLinkedGraphic");
+	Modifier->load_graphic(GapsNotSetImage->Picture->Bitmap, "GapsNotSetGraphic");
+	Modifier->load_graphic(GapsSetImage->Picture->Bitmap, "GapsSetGraphic");
+	Modifier->load_graphic(LocationNamesNotSetImage->Picture->Bitmap, "LocNamesNotSetGraphic");
+	Modifier->load_graphic(LocationNamesSetImage->Picture->Bitmap, "LocNamesSetGraphic");
 
-	Modifier->loadGraphic(SkipListExitImage->Picture->Bitmap, "Exit"); //new at v2.11.0
-	Modifier->loadGraphic(ReminderExitImage->Picture->Bitmap, "Exit"); //new at v2.19.0
+	Modifier->load_graphic(SkipListExitImage->Picture->Bitmap, "Exit"); //new at v2.11.0
+	Modifier->load_graphic(ReminderExitImage->Picture->Bitmap, "Exit"); //new at v2.19.0
 
+}
+
+void TInterface::loadModdedContent() {
+	const std::vector<std::string> graphics_libraries_ = Modifier->get_graphics_libraries();
+
+    // Do not bother creating a new menu of there is no new content
+	if(graphics_libraries_.empty()) return;
+
+
+	TMenuItem* mod_menu_ = new TMenuItem(ModeMenu);
+	mod_menu_->Caption = "Customisation";
+	TMenuItem* graphics_menu_ = new TMenuItem(ModeMenu);
+	graphics_menu_->Caption = "Graphics";
+	TImageList* img_list_ = new TImageList(this);
+    int library_counter_{img_list_->Count};
+
+	for(const std::string& graphics_library : graphics_libraries_) {
+		TMenuItem* child_ = new TMenuItem(ModeMenu);
+		std::optional<std::string> icon_file_ = Modifier->get_library_icon_file(graphics_library);
+
+		if(icon_file_.has_value()) {
+		   TBitmap* bmp_ = new TBitmap();
+		   bmp_->PixelFormat = pf32bit;
+		   bmp_-> LoadFromFile(icon_file_.value().c_str());
+		   const int index = img_list_->Add(bmp_, nullptr);
+		   child_->ImageIndex = index;
+		}
+
+		child_->Caption = graphics_library.c_str();
+		child_->Tag = reinterpret_cast<intptr_t>(Modifier.get());
+		child_->OnClick = &ModGraphicsMenuClick;
+		graphics_menu_->Add(child_);
+
+	}
+
+	TMenuItem* child_sep_ =new TMenuItem(ModeMenu);
+	child_sep_->Caption = "-";
+	graphics_menu_->Add(child_sep_);
+
+	TMenuItem* child_ = new TMenuItem(ModeMenu);
+    child_->Caption = "Clear";
+	child_->Tag = reinterpret_cast<intptr_t>(Modifier.get());
+	child_->OnClick = &ModGraphicsMenuClick;
+	graphics_menu_->Add(child_);
+
+	mod_menu_->Add(graphics_menu_);
+	TMenuItem* separator_ = new TMenuItem(ModeMenu);
+	separator_->Caption = "-";
+	ModeMenu->Add(separator_);
+	ModeMenu->Add(mod_menu_);
+    graphics_menu_->SubMenuImages = img_list_;
+}
+
+void __fastcall TInterface::ModGraphicsMenuClick(TObject* Sender) {
+   TMenuItem* clicked = dynamic_cast<TMenuItem*>(Sender);
+	if (!clicked) return;
+	RuntimeModifier* mod = reinterpret_cast<RuntimeModifier*>(clicked->Tag);
+	if(!mod) return;
+	const std::string caption_{std::string(UTF8String(clicked->Caption.c_str()))};
+	mod->set_graphics_library((caption_ == "Clear") ? std::nullopt : std::optional<std::string>(caption_));
+
+    // Tick whatever has been selected
+    TMenuItem* parent = clicked->Parent;
+    if (parent) {
+		for (int i = 0; i < parent->Count; ++i) {
+        	TMenuItem* item = parent->Items[i];
+			if (item->Caption == "Clear") continue;
+			item->Enabled = true;
+        }
+	}
+	if(clicked->Caption != "Clear")	clicked->Enabled = false;
 }
 
 // ---------------------------------------------------------------------------
@@ -492,7 +563,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         NoDelaysMenuItem->Enabled = false;
         NoFailuresMenuItem->Enabled = false;
 
-        /* ======================= ROS Dummy API ===============================
+		/* ======================= RailOS Dummy API ============================
                     Connect API to track variables of interest, added at v2.10.0
         */
         session_api_ = new API(CurDir + "\\session.ini");
@@ -502,6 +573,14 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         session_api_->add_metadata_int("main_mode", &api_main_mode_);
         session_api_->add_metadata_int("operation_mode", &api_oper_mode_);
         session_api_->write_string("program_version", GetVersion()); // API v1.2
+
+		// =====================================================================
+
+		/* ======================= RailOS modding menu =========================
+				Populate the avalailable options for mod application
+		*/
+
+		loadModdedContent();
 
         // =====================================================================
 
@@ -522,14 +601,14 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         InfoPanel->Color = clB4G5R5;
 
         Utilities->RHSignalFlag = false; // new at v2.3.0 for RH signals, always left hand on startup
-        Modifier->loadGraphic(SigsOnLeftImage1->Picture->Bitmap, "SigsOnLeft");
-        Modifier->loadGraphic(SigsOnLeftImage2->Picture->Bitmap, "SigsOnLeft");
+        Modifier->load_graphic(SigsOnLeftImage1->Picture->Bitmap, "SigsOnLeft");
+        Modifier->load_graphic(SigsOnLeftImage2->Picture->Bitmap, "SigsOnLeft");
         SigsOnLeftImage1->Transparent = true;
         SigsOnLeftImage2->Transparent = true;
         SigsOnLeftImage1->Picture->Bitmap->TransparentColor = clB5G5R5;
         SigsOnLeftImage2->Picture->Bitmap->TransparentColor = clB5G5R5;
-        Modifier->loadGraphic(SigsOnRightImage1->Picture->Bitmap, "SigsOnRight");
-        Modifier->loadGraphic(SigsOnRightImage2->Picture->Bitmap, "SigsOnRight");
+        Modifier->load_graphic(SigsOnRightImage1->Picture->Bitmap, "SigsOnRight");
+        Modifier->load_graphic(SigsOnRightImage2->Picture->Bitmap, "SigsOnRight");
         SigsOnRightImage1->Transparent = true;
         SigsOnRightImage2->Transparent = true;
         SigsOnRightImage1->Picture->Bitmap->TransparentColor = clB5G5R5;
@@ -550,7 +629,8 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
             SaveConfigFile(0);  //added at v2.13.1 so always have a config file
 		}
 
-        Modifier->attachCallback([this](){this->loadGraphicsSet();});
+		Modifier->attach_callback([this](){this->loadGraphicsSet();});
+        Modifier->attach_callback([this](){this->SaveConfigFile(0);});
 
 
 /* Don't need this - load icon directly into both Interface form & Application (via Project - Options - Application - Load Icon)
@@ -1970,27 +2050,27 @@ void __fastcall TInterface::TextOrUserGraphicGridButtonClick(TObject *Sender)
         if(TextOrUserGraphicGridVal == 1)
         {
             TextOrUserGraphicGridVal = 2;
-            Modifier->loadGraphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision2");
+            Modifier->load_graphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision2");
         }
         else if(TextOrUserGraphicGridVal == 2)
         {
             TextOrUserGraphicGridVal = 4;
-            Modifier->loadGraphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision4");
+            Modifier->load_graphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision4");
         }
         else if(TextOrUserGraphicGridVal == 4)
         {
             TextOrUserGraphicGridVal = 8;
-            Modifier->loadGraphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision8");
+            Modifier->load_graphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision8");
         }
         else if(TextOrUserGraphicGridVal == 8)
         {
             TextOrUserGraphicGridVal = 16;
-            Modifier->loadGraphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision16");
+            Modifier->load_graphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision16");
         }
         else
         {
             TextOrUserGraphicGridVal = 1;
-            Modifier->loadGraphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision1");
+            Modifier->load_graphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision1");
         }
         Utilities->CallLogPop(1171);
     }
@@ -2010,24 +2090,24 @@ void __fastcall TInterface::SigAspectButtonClick(TObject *Sender)
         if(Track->SignalAspectBuildMode == TTrack::FourAspectBuild)
         {
             Track->SignalAspectBuildMode = TTrack::ThreeAspectBuild;
-            Modifier->loadGraphic(SigAspectButton->Glyph, "ThreeAspect");
+            Modifier->load_graphic(SigAspectButton->Glyph, "ThreeAspect");
         }
         else if(Track->SignalAspectBuildMode == TTrack::ThreeAspectBuild)
         {
             Track->SignalAspectBuildMode = TTrack::TwoAspectBuild;
-            Modifier->loadGraphic(SigAspectButton->Glyph, "TwoAspect");
+            Modifier->load_graphic(SigAspectButton->Glyph, "TwoAspect");
         }
         else if(Track->SignalAspectBuildMode == TTrack::TwoAspectBuild)
         {
             Track->SignalAspectBuildMode = TTrack::GroundSignalBuild;
-            Modifier->loadGraphic(SigAspectButton->Glyph, "GroundSig");
+            Modifier->load_graphic(SigAspectButton->Glyph, "GroundSig");
 // set all signal glyphs to ground signals
             LoadGroundSignalGlyphs(0);
         }
         else
         {
             Track->SignalAspectBuildMode = TTrack::FourAspectBuild;
-            Modifier->loadGraphic(SigAspectButton->Glyph, "FourAspect");
+            Modifier->load_graphic(SigAspectButton->Glyph, "FourAspect");
 // set all signal glyphs to normal signals
             LoadNormalSignalGlyphs(0);
         }
@@ -2516,14 +2596,14 @@ void __fastcall TInterface::PerformanceLogButtonClick(TObject *Sender)
                 PerfLogForm->Left = 0;
                 FirstPerfLogFormDisplay = false;
             }
-            Modifier->loadGraphic(PerformanceLogButton->Glyph, "HideLog");
+            Modifier->load_graphic(PerformanceLogButton->Glyph, "HideLog");
 
         }
         else
         {
             ShowPerfLogForm = false;
             PerfLogForm->Visible = false;
-            Modifier->loadGraphic(PerformanceLogButton->Glyph, "ShowLog");
+            Modifier->load_graphic(PerformanceLogButton->Glyph, "ShowLog");
         }
         Utilities->CallLogPop(1177);
     }
@@ -2556,14 +2636,14 @@ void __fastcall TInterface::OperatorActionButtonClick(TObject *Sender)
             }
             ActionsDueForm->Visible = true;
             TrainController->OpActionPanelVisible = true;
-            Modifier->loadGraphic(OperatorActionButton->Glyph, "HideOpActionPanel");
+            Modifier->load_graphic(OperatorActionButton->Glyph, "HideOpActionPanel");
         }
         else
         {
             ShowActionsDueForm = false;
             ActionsDueForm->Visible = false;
             TrainController->OpActionPanelVisible = false;
-            Modifier->loadGraphic(OperatorActionButton->Glyph, "ShowOpActionPanel");
+            Modifier->load_graphic(OperatorActionButton->Glyph, "ShowOpActionPanel");
         }
         Utilities->CallLogPop(2073);
     }
@@ -2608,9 +2688,9 @@ void __fastcall TInterface::ExitOperationButtonClick(TObject *Sender)
         ConsecSignalsRoute = true; // default starting conditions
         AllRoutes->AllRoutesClear();
         ShowPerfLogForm = false;
-        Modifier->loadGraphic(PerformanceLogButton->Glyph, "ShowLog");
+        Modifier->load_graphic(PerformanceLogButton->Glyph, "ShowLog");
         ShowActionsDueForm = false; // new at v2.2.0
-        Modifier->loadGraphic(OperatorActionButton->Glyph, "ShowOpActionPanel"); // new v2.2.0
+        Modifier->load_graphic(OperatorActionButton->Glyph, "ShowOpActionPanel"); // new v2.2.0
         PerfLogForm->PerformanceLogBox->Lines->Clear();
         PerfLogForm->Visible = false;
 		// TipButton->Glyph, "ShowLog"); //'Trains in play' new at v2.2.0
@@ -3446,7 +3526,7 @@ void __fastcall TInterface::CreateTimetableMenuItemClick(TObject *Sender)
         HighlightPanel->Visible = false;
         TimetablePanel->Visible = true;
         TimetablePanel->BringToFront(); // in case SaveRailway button visible, want it hidden else obscures the panel text
-        Modifier->loadGraphic(ShowHideTTButton->Glyph, "Hide");
+        Modifier->load_graphic(ShowHideTTButton->Glyph, "Hide");
         OneEntryTimetableMemo->Clear();
         AllEntriesTTListBox->Clear();
         TTStartTimeBox->Text = "";
@@ -3560,7 +3640,7 @@ void __fastcall TInterface::EditTimetableMenuItemClick(TObject *Sender)
         HighlightPanel->Visible = false;
         TimetablePanel->Visible = true;
         TimetablePanel->BringToFront(); // in case SaveRailway button visible, want it hidden else obscures the panel text
-        Modifier->loadGraphic(ShowHideTTButton->Glyph, "Hide");
+        Modifier->load_graphic(ShowHideTTButton->Glyph, "Hide");
         OneEntryTimetableMemo->Clear();
         AllEntriesTTListBox->Clear();
         TTStartTimeBox->Text = "";
@@ -3742,7 +3822,7 @@ void __fastcall TInterface::ShowHideTTButtonClick(TObject *Sender)
         TrainController->LogEvent("ShowHideTTButtonClick");
         if(TimetableEditPanel->Visible)
         {
-            Modifier->loadGraphic(ShowHideTTButton->Glyph, "Show");
+            Modifier->load_graphic(ShowHideTTButton->Glyph, "Show");
             TimetableEditPanel->Visible = false;
             TrainController->TTEditPanelVisible = false; // added at v2.6.0 for two location message
             ShowHideTTButton->Hint = "Show the timetable editor          Shift S";
@@ -3751,7 +3831,7 @@ void __fastcall TInterface::ShowHideTTButtonClick(TObject *Sender)
         }
         else
         {
-            Modifier->loadGraphic(ShowHideTTButton->Glyph, "Hide");
+            Modifier->load_graphic(ShowHideTTButton->Glyph, "Hide");
             TimetableEditPanel->Visible = true;
             TrainController->TTEditPanelVisible = true; // added at v2.6.0 for two location message
             ShowHideTTButton->Hint = "Hide the timetable editor to see the railway          Shift H";
@@ -9426,14 +9506,14 @@ void TInterface::MainScreenMouseDown3(int Caller, TMouseButton Button, TShiftSta
             else if(TempLevel2OperMode == Operating) // similar to SetLevel2OperMode but without resetting BaseTime
             {
                 OperateButton->Enabled = true;
-                Modifier->loadGraphic(OperateButton->Glyph, "PauseGraphic");
+                Modifier->load_graphic(OperateButton->Glyph, "PauseGraphic");
                 ExitOperationButton->Enabled = true;
                 SetRouteButtonsInfoCaptionAndRouteNotStarted(0);
             }
             else if(TempLevel2OperMode == Paused) // similar to SetLevel2OperMode but without resetting RestartTime
             {
                 OperateButton->Enabled = true;
-                Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
+                Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
                 ExitOperationButton->Enabled = true;
                 TTClockAdjButton->Enabled = true;
                 SetRouteButtonsInfoCaptionAndRouteNotStarted(6);
@@ -9442,7 +9522,7 @@ void TInterface::MainScreenMouseDown3(int Caller, TMouseButton Button, TShiftSta
             else if(TempLevel2OperMode == PreStart)
             {
                 OperateButton->Enabled = true;
-                Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
+                Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
                 ExitOperationButton->Enabled = true;
                 TTClockAdjButton->Enabled = true;
                 SetRouteButtonsInfoCaptionAndRouteNotStarted(8);
@@ -11545,14 +11625,14 @@ void __fastcall TInterface::ZoomButtonClick(TObject *Sender)
             else if(Level2OperMode == Operating) // similar to SetLevel2OperMode but without resetting BaseTime
             {
                 OperateButton->Enabled = true;
-                Modifier->loadGraphic(OperateButton->Glyph, "PauseGraphic");
+                Modifier->load_graphic(OperateButton->Glyph, "PauseGraphic");
                 ExitOperationButton->Enabled = true;
                 SetRouteButtonsInfoCaptionAndRouteNotStarted(1);
             }
             else if(Level2OperMode == Paused) // similar to SetLevel2OperMode but without resetting RestartTime
             {
                 OperateButton->Enabled = true;
-                Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
+                Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
                 ExitOperationButton->Enabled = true;
                 TTClockAdjButton->Enabled = true;
                 SetRouteButtonsInfoCaptionAndRouteNotStarted(5);
@@ -11561,7 +11641,7 @@ void __fastcall TInterface::ZoomButtonClick(TObject *Sender)
             else if(Level2OperMode == PreStart)
             {
                 OperateButton->Enabled = true;
-                Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
+                Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
                 ExitOperationButton->Enabled = true;
                 TTClockAdjButton->Enabled = true;
                 SetRouteButtonsInfoCaptionAndRouteNotStarted(9);
@@ -11634,7 +11714,7 @@ void __fastcall TInterface::ZoomButtonClick(TObject *Sender)
             {
                 Track->PlotSmallRedGap(4);
             }
-            Modifier->loadGraphic(ZoomButton->Glyph, "ZoomIn");
+            Modifier->load_graphic(ZoomButton->Glyph, "ZoomIn");
         }
         Screen->Cursor = TCursor(-2); // Arrow
         ZoomButton->Enabled = true; // restore, see above
@@ -17652,7 +17732,7 @@ void TInterface::LoadConfigFile(int Caller, bool FirstLoad, bool &NoConfigFile) 
 						{
 							ConfigValue = ConfigValue.SubString(2, ConfigValue.Length() - 1);
 						}
-						Modifier->setGraphicsLibrary(std::string(ConfigValue));
+						Modifier->set_graphics_library(std::optional<std::string>(std::string(ConfigValue)));
                     }
 					if((ConfigStr.SubString(1, 8) == "Signals=") && FirstLoad)
 					{
@@ -17893,8 +17973,16 @@ void TInterface::SaveConfigFile(int Caller)
         }
         ConfigFile << AnsiString("#This file contains a list of parameters that are saved after each use of the program and reloaded for the "
                                  "next use.  Track element length and speed limit values after the = sign may be changed and the configuration file reloaded "
-                                 "during play, but please do not change anything else.  Comments begin with '#' and are ignored by the program.\n\n");
-        ConfigFile << AnsiString("Signals=") << SignalStr << '\n';
+								 "during play, but please do not change anything else.  Comments begin with '#' and are ignored by the program.\n\n");
+
+		const std::optional<std::string> graphics_library_ = Modifier->get_current_graphics_library();
+
+		if(graphics_library_.has_value()) {
+			ConfigFile << AnsiString("GraphicsSet=");
+            ConfigFile << AnsiString(graphics_library_.value().c_str()) << '\n';
+		}
+
+		ConfigFile << AnsiString("Signals=") << SignalStr << '\n';
         ConfigFile << AnsiString("BgndCol=") << ColourStr << '\n';
         ConfigFile << AnsiString("RLYLocn=") << AnsiString(LoadRailwayDialog->InitialDir) << '\n';
         ConfigFile << AnsiString("TTBLocn=") << AnsiString(TimetableDialog->InitialDir) << '\n';
@@ -18193,7 +18281,7 @@ void TInterface::ClearandRebuildRailway(int Caller) // now uses HiddenScreen to 
         TrainController->ReplotTrains(0, HiddenDisplay);
     }
     Display->ZoomOutFlag = false;
-    Modifier->loadGraphic(ZoomButton->Glyph, "ZoomOut");
+    Modifier->load_graphic(ZoomButton->Glyph, "ZoomOut");
     MainScreen->Picture->Bitmap->Assign(HiddenScreen->Picture->Bitmap);
     Display->Update(); // resurrected when Update() dropped from PlotOutput etc
     Utilities->Clock2Stopped = ClockState;
@@ -18553,7 +18641,7 @@ void TInterface::SetLevel1Mode(int Caller)
         DelayMenu->Enabled = false;
         FailureMenu->Visible = false;  //added at v2.14.0
         FailureMenu->Enabled = false;
-        Modifier->loadGraphic(FlashControlButton->Glyph, "NoFlash"); //added at v2.18.0 so reloads with normal flashing
+        Modifier->load_graphic(FlashControlButton->Glyph, "NoFlash"); //added at v2.18.0 so reloads with normal flashing
         FlashControlButton->Visible = false; //added at v2.15.0
         StopFlashFlag = false;
         if(Track->IsTrackFinished())
@@ -18883,13 +18971,13 @@ void TInterface::SetLevel1Mode(int Caller)
             PreferredRoute = false;
         }
         OperateButton->Enabled = true;
-        Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
+        Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
         ExitOperationButton->Enabled = true;
         TTClockAdjButton->Enabled = true;
         ShowPerfLogForm = false;
-        Modifier->loadGraphic(PerformanceLogButton->Glyph, "ShowLog");
+        Modifier->load_graphic(PerformanceLogButton->Glyph, "ShowLog");
         ShowActionsDueForm = false; // new at v2.2.0
-        Modifier->loadGraphic(OperatorActionButton->Glyph, "ShowOpActionPanel"); // new v2.2.0
+        Modifier->load_graphic(OperatorActionButton->Glyph, "ShowOpActionPanel"); // new v2.2.0
 
         SetRouteButtonsInfoCaptionAndRouteNotStarted(2);
 
@@ -19059,11 +19147,11 @@ void TInterface::SetLevel1Mode(int Caller)
         }
         SaveOperatingImageMenuItem->Enabled = true;
 
-        Modifier->loadGraphic(FlashControlButton->Glyph, "NoFlash"); //these added at v2.17.0 so reloads with normal flashing
+        Modifier->load_graphic(FlashControlButton->Glyph, "NoFlash"); //these added at v2.17.0 so reloads with normal flashing
         StopFlashFlag = false;
 
         OperateButton->Enabled = true;
-        Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
+        Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
         ExitOperationButton->Enabled = true;
         TTClockAdjButton->Enabled = true;
         SetRouteButtonsInfoCaptionAndRouteNotStarted(3);
@@ -19977,7 +20065,7 @@ void TInterface::SetLevel2OperMode(int Caller)
     {
         // have to use braces as otherwise the default case bypasses the initialisation of local variables
         OperateButton->Enabled = true;
-        Modifier->loadGraphic(OperateButton->Glyph, "PauseGraphic");
+        Modifier->load_graphic(OperateButton->Glyph, "PauseGraphic");
         ExitOperationButton->Enabled = true;
         TTClockAdjButton->Enabled = false;
         if(TTClockSpeed == 2)
@@ -20108,7 +20196,7 @@ void TInterface::SetLevel2OperMode(int Caller)
 
     case Paused:
         OperateButton->Enabled = true;
-        Modifier->loadGraphic(OperateButton->Glyph, "RunGraphic");
+        Modifier->load_graphic(OperateButton->Glyph, "RunGraphic");
         ExitOperationButton->Enabled = true;
         TTClockAdjButton->Enabled = true;
         SetRouteButtonsInfoCaptionAndRouteNotStarted(7);
@@ -22145,9 +22233,9 @@ void TInterface::ResetAll(int Caller)
     StartY = 0;
     mbLeftDown = false;
     TextOrUserGraphicGridVal = 1;
-    Modifier->loadGraphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision1");
+    Modifier->load_graphic(TextOrUserGraphicGridButton->Glyph, "PixelPrecision1");
     Track->SignalAspectBuildMode = TTrack::FourAspectBuild;
-    Modifier->loadGraphic(SigAspectButton->Glyph, "FourAspect");
+    Modifier->load_graphic(SigAspectButton->Glyph, "FourAspect");
     LoadNormalSignalGlyphs(4);
     WarningFlashCount = 0;
 
@@ -27136,12 +27224,12 @@ void __fastcall TInterface::FlashControlButtonClick(TObject *Sender) //added at 
     if(StopFlashFlag)
     {
         StopFlashFlag = false;
-        Modifier->loadGraphic(FlashControlButton->Glyph, "NoFlash");
+        Modifier->load_graphic(FlashControlButton->Glyph, "NoFlash");
     }
     else
     {
         StopFlashFlag = true;
-        Modifier->loadGraphic(FlashControlButton->Glyph, "Flash");
+		Modifier->load_graphic(FlashControlButton->Glyph, "Flash");
     }
 }
 

@@ -74,6 +74,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <list>
 #include <fstream>
 #include <vector>
+#include <optional>
 #include <vcl.h>
 #include <windows.h>            //needed for 64 bit compilation
 #include "Modding.h"
@@ -772,9 +773,6 @@ __published: // IDE-managed Components
     TMenuItem *N7;
     TMenuItem *TrainLongServRefInfoOnOffMenuItem;
     TMenuItem *TrainTTInfoOnOffMenuItem;
-	TMenuItem *N8;
-	TMenuItem *Modifications1;
-	TMenuItem *Graphics1;
 
 // menu item actions
     void __fastcall AboutMenuItemClick(TObject *Sender);
@@ -825,7 +823,8 @@ __published: // IDE-managed Components
     void __fastcall SignallerControlStopMenuItemClick(TObject *Sender);
     void __fastcall StepForwardMenuItemClick(TObject *Sender);
     void __fastcall TakeSignallerControlMenuItemClick(TObject *Sender);
-    void __fastcall TimetableControlMenuItemClick(TObject *Sender);
+	void __fastcall TimetableControlMenuItemClick(TObject *Sender);
+    void __fastcall ModGraphicsMenuClick(TObject* Sender);
 
 // mouse actions
     void __fastcall AllEntriesTTListBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
@@ -1729,7 +1728,9 @@ is loaded fillowed by AvHoursIntValue then all failed trains if any. */
 /// Controls the floating window function, called during the ClockTimer2 function
     void TrackTrainFloat(int Caller);
 /// Called every 5 secs to update the panel (if visible)
-    void UpdateActionsDuePanel(int Caller);
+	void UpdateActionsDuePanel(int Caller);
+/// Loads available mod content
+	void loadModdedContent();
 };
 
 // ---------------------------------------------------------------------------
