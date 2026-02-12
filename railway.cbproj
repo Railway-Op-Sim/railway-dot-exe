@@ -231,6 +231,10 @@
             <DependentOn>InterfaceUnit.h</DependentOn>
             <BuildOrder>6</BuildOrder>
         </CppCompile>
+        <CppCompile Include="Modding.cpp">
+            <DependentOn>Modding.h</DependentOn>
+            <BuildOrder>15</BuildOrder>
+        </CppCompile>
         <CppCompile Include="PerfLogUnit.cpp">
             <Form>PerfLogForm</Form>
             <FormType>dfm</FormType>
@@ -477,6 +481,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName=".\Win64\Debug\railway.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\Win64\Debug\railway.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>railway.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName=".\Win64\Release\railway.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName=".\Win64\Release\railway.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
@@ -487,6 +497,12 @@
                 <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -507,6 +523,12 @@
                 <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>

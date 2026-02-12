@@ -577,7 +577,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 		// =====================================================================
 
 		/* ======================= RailOS modding menu =========================
-				Populate the avalailable options for mod application
+				Populate the available options for mod application
 		*/
 
 		loadModdedContent();
@@ -691,7 +691,8 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         TTLabel13->Caption = TTLabelStr13;
         TTLabel15->Caption = TTLabelStr15;
 
-        SelectBitmap->TransparentColor = Utilities->clTransparent;
+		SelectBitmap->TransparentColor = Utilities->clTransparent;
+
         RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, clB5G5R5); // original colour is as loaded at this stage - white
         RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
 
