@@ -34,6 +34,10 @@
 
 // ---------------------------------------------------------------------------
 
+extern struct SessionCache {
+	TColor previous_color = clWhite;  // original colour is as loaded at start white
+} Cache;
+
 enum TDelayMode //added at v2.13.0.  Here so DelayMode retains value when ClearEverything called
 {
     Nil, Minor, Moderate, Major
@@ -123,7 +127,8 @@ public:
     AnsiString TimeStamp();
     ///< creates a string of the form 'hh:mm:ss' for use in call & event logging
     TColor clTransparent;
-    ///< the display background colour, can be white, black or dark blue
+	///< the display background colour, can be white, black or dark blue
+
     TDelayMode DelayMode;
     ///< specifies whether no delays or minor, moderate or major random delays are to be applied (added at v2.13.0)
     TFailureMode FailureMode;

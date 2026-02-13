@@ -24,6 +24,7 @@ enum class Transparency {
     Undefined
 };
 
+
 class RuntimeModifier {
 	private:
 		std::optional<std::string> graphics_library_{std::nullopt};

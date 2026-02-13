@@ -693,8 +693,8 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 
 		SelectBitmap->TransparentColor = Utilities->clTransparent;
 
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, clB5G5R5); // original colour is as loaded at this stage - white
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+        RailGraphics->ChangeAllTransparentColours();
+        RailGraphics->SetUpAllDerivativeGraphics();
 
         TextBox->Color = clB3G3R3;
         MainScreen->Canvas->Brush->Color = Utilities->clTransparent;
@@ -16410,11 +16410,11 @@ void __fastcall TInterface::BlackBgndMenuItemClick(TObject *Sender)
     {
         TrainController->LogEvent("BlackBgndMenuItemClick");
         Utilities->CallLog.push_back(Utilities->TimeStamp() + ",BlackBgndMenuItemClick");
-        TColor OldTransparentColour = Utilities->clTransparent;
+        Cache.previous_color = Utilities->clTransparent;
         Utilities->clTransparent = TColor(0);
         SelectBitmap->TransparentColor = Utilities->clTransparent;
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, OldTransparentColour);
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+        RailGraphics->ChangeAllTransparentColours();
+        RailGraphics->SetUpAllDerivativeGraphics();
 
         MainScreen->Canvas->Brush->Color = Utilities->clTransparent;
         MainScreen->Canvas->FillRect(MainScreen->ClientRect);
@@ -16436,11 +16436,11 @@ void __fastcall TInterface::WhiteBgndMenuItemClick(TObject *Sender)
     {
         TrainController->LogEvent("WhiteBgndMenuItemClick");
         Utilities->CallLog.push_back(Utilities->TimeStamp() + ",WhiteBgndMenuItemClick");
-        TColor OldTransparentColour = Utilities->clTransparent;
+        Cache.previous_color = Utilities->clTransparent;
         Utilities->clTransparent = TColor(0xFFFFFF);
         SelectBitmap->TransparentColor = Utilities->clTransparent;
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, OldTransparentColour);
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+        RailGraphics->ChangeAllTransparentColours();
+        RailGraphics->SetUpAllDerivativeGraphics();
 
         MainScreen->Canvas->Brush->Color = Utilities->clTransparent;
         MainScreen->Canvas->FillRect(MainScreen->ClientRect);
@@ -16462,11 +16462,11 @@ void __fastcall TInterface::BlueBgndMenuItemClick(TObject *Sender)
     {
         TrainController->LogEvent("BlueBgndMenuItemClick");
         Utilities->CallLog.push_back(Utilities->TimeStamp() + ",BlueBgndMenuItemClick");
-        TColor OldTransparentColour = Utilities->clTransparent;
+        Cache.previous_color = Utilities->clTransparent;
         Utilities->clTransparent = TColor(0x330000);    //clB1G0R0
         SelectBitmap->TransparentColor = Utilities->clTransparent;
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, OldTransparentColour);
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+        RailGraphics->ChangeAllTransparentColours();
+		RailGraphics->SetUpAllDerivativeGraphics();
 
         MainScreen->Canvas->Brush->Color = Utilities->clTransparent;
         MainScreen->Canvas->FillRect(MainScreen->ClientRect);
