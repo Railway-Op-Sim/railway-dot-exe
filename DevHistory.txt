@@ -16,6 +16,41 @@ The structure is as follows:-
 
 1) Future change suggestions from users:
 
+#125 from Krizar via discord 11/01/26
+Have a timetable command that stops the simulation at a specific time, e.g. END 22:00'.  This would be useful when continuing the simulation would have (say) several shuttles piling up at a terminal station that didn't have the capacity for them.
+
+#124 [can be done using Notepad++ Find & Replace] from Fly California/Silicon Airways via discord on 04/12/25 at 02:21
+ a way in timetable creation to use whatever the start time of the timetable is for time references. This is useful if the start time needs to be changed during creation.
+
+BWJM — 04/12/25 at 02:32
+Do you mean that you want to be able to use relative times for events instead of absolute times?
+
+Qwertytops — 04/12/25 at 03:18
+I think he means having a keyword ‘start’ that refers to the start time
+
+Fly California/Silicon Airways — 04/12/25 at 03:53
+yes, that.
+
+Albert — 04/12/25 at 07:24
+Would you please explain in more detail what change you would like to see, what it would do and how it would be used? Thanks.
+
+Qwertytops — 04/12/25 at 08:22
+I'm also in favour of this request. I think the most obvious use would be creating trains at the beginning of the scenario.
+Say if you have 30 trains that are created in depots at 04:30 but you realise somewhere else a train will be entering at 04:25, so you want to change the start time to 04:20 but you still want all the depot trains to be there from the beginning.
+
+So instead of 
+04:30;Snt;...
+you could have 
+START;Snt;...
+where START is treated almost like a C macro
+Which would save heaps of work. I had a similar issue where I needed to change the start time twice but luckily in my case it was a simple find/replace
+But a find/replace wouldn't work if there are trains doing things other than being created at the old start time
+
+Albert — 04/12/25 at 08:35
+Right, I see what you mean.  It sounds simple but I suspect it might be difficult to code.  I'll add it to the wishlist for now and see if I can find a simple way to do it.
+
+Yes it can be done easily:  Load the timetable into Notepad++ (https://notepad-plus-plus.org/).  Select Find & Replace (CTRL+H), enter the start time in the 'find' box and the new start time in the 'Replace' box, make sure the cursor is a the start of the file then click 'Find next', and if this is to be replaced click 'Replace'.  This will replace the time and automatically jump to the next occurrence of the original start time.  Click 'Replace' again if that is to be replaced and continue until no more can be found.  Then save the new file (preferably with a new name until it's been validated).  I just tried it with Crewe which has 22 trains present at the start and it took just a few minutes.  If the new start time is earlier than the original there shouldn't be any validation problems, but if it's later then there might be services that start earlier than the later start time, and these will prevent validation until their start times are changed. 
+
 #123 from cte1_0387_alt via discord on 20/11/25 at 10:41
 Btw what about the idea that locations having the precise same name are counted as the same place? That would remove the need to always add a "physical" connection with red/blue tiles which sometimes can be quite disorienting/feel unnatural?
 Maybe one could get a pop-up asking something along the lines of "Do you want to connect this location to the existing one with the same name" with yes -> link them or no -> cancel renaming it instead of the current error message?
@@ -34,7 +69,7 @@ Albert — 20/11/25 at 08:53
 Do you mean that a footbridge/underpass could be placed anywhere on the track without the ends linking to anything else? If so I think a user graphic would probably do the job.
 
 #121 from Fly California/Silicon Airways via discord on 20/11/25 at 5:55
-a way to change track element overlays (stations/blue areas) without deleting the track element. maybe a single right click will clear any overlays, then a second will delete the track element?
+[Done in v2.23.3] a way to change track element overlays (stations/blue areas) without deleting the track element. maybe a single right click will clear any overlays, then a second will delete the track element?
 if I have a railway set up with distances and speed limits and i learn new stuff about operations while making the timetable, I should be able to update these areas more easily
 
 Albert — 20/11/25 at 08:48
@@ -1035,6 +1070,19 @@ Multi-player facility over the internet.
 -------------------------------------------------------------------------------
 
 4) Version change information
+
+VERSION CHANGES AFTER v2.23.3 for v2.23.4
+
+This release corrects one bug that was created at the last release when named location elements were erased first when they shared a square with a track element.  I'm sure that several users will have noriced that when cutting and pasting, or deleting an area, track elements were left behind instead of being erased.  That was bad enough, but worse was that preferred directions were corrupted in the process.  This release, it is very much hoped, has corrected both of these effects, and not created any new bugs!
+
+Not for website:
+/ Look for railway.exe in on-screen help & change to RailOS32/64.exe (at least sections 3, 3.4 & 6.8. Can't search directly on railway.exe, so search on railos32 in the manual and check each in the help file
+
+/ When max lateness is 1 min brackets are just () - corrected 29/12/25 in 32bit version (yet to compile 64bit version)
+
+/ Add Stafford & Edinburgh to UK map
+
+/ If fail in RebuildPrefDirVector give prefdir fail message & clear it instead of throwing an error
 
 VERSION CHANGES AFTER v2.23.2 for v2.23.3
 
@@ -3599,7 +3647,9 @@ Prior to uploading:
 9 Include (for 12 compiler) 5 x .dll files and 5 x .bpl files from the Win32 debug folder. 
 Include (for 12 compiler) 3 x .dll files and 5 x .bpl files from the Win64 release folder.
 
-10 Write release notes & include in DevHistory.txt for this release.
+9a include the relevant hash text file for each version
+
+10 Write release note(s) & include in DevHistory.txt for this release.
 
 11 Create new directories 'RailOS32-vx.x.x' & 'RailOS64-vx.x.x' from earlier release & replace files as follows for 32 bit - similar for 64 bit.
 	readme 32bit.txt (reference latest release & update user manual reference & no. of pages if required)
@@ -3608,9 +3658,12 @@ Include (for 12 compiler) 3 x .dll files and 5 x .bpl files from the Win64 relea
      	Release notes for vx.x.x.txt
 	Railway\RailOS32.exe
 	Railway\Help.chm (if updated)
+	Railway\Hash for RailOS32-vx.x.x.txt
 	In Railway, check have appropriate dlls and bpls as above + GNU licence + metadata files for B'ham & L'pool, and that all directories contain the expected files & no extras (will be if had run from the release folder), especially make sure there's NO config.txt
 
 12 Zip the above as RailOS32-vx.x.x.zip & RailOS64-vx.x.x.zip
+
+----------------to here 090126
 
 13 copy these new zip files to E:\Archives\railway backups
 
@@ -3624,6 +3677,8 @@ On GitHub:
 3 Make sure DevHistory.txt is up to date (include version change info [for web & internal] & drop any text before title)
 
 4 Update DevHistory.txt with relevant public information if not already done so & make read-only
+
+-----------to here 090126
 
 5 Leave source code as 32bit debug, commit current development branch locally & on remote, select TortoiseGit->Show Log, switch/checkout last master branch (make sure select switch to master, not switch to this, make sure branch is set to 'master' after the switch - shows as red), then click on latest development branch & select merge to master, and tag with release version. Delete the development branch.
 
@@ -3645,7 +3700,7 @@ On website (use Chrome - DiviBuilder seems to work better):
 1 Upload new release version zips for 32 & 64 bits to 'Media' + any other modified files - Manual, Quick Start, FileSpec etc.
 
 2 Go to All Products, select category 'Base Program & Documentation' & click 'Filter', edit product 'Railway Operation Simulator (RailOS)'
-	Check the full text of the page to see if any changes are needed, check particularly that the number of pages in the user manual is correct and that the important notes are in bold.
+	Check the full text of the page to see if any changes are needed, check particularly that the number of pages in the user manual is correct, that the important notes are in bold, and that the compiler version is correct.
 	Update short text if required  
 	Category should already be 'Base Program & Documentation'
 	Tag should already be 'Railway Operation Simulator'

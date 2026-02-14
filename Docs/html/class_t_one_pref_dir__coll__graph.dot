@@ -1,0 +1,8 @@
+digraph "TOnePrefDir"
+{
+ // INTERACTIVE_SVG=YES
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{TOnePrefDir\n|+ PrefDir4MultiMap\l+ PrefDirVector\l+ SearchVector\l# SearchLimitLowH\l# SearchLimitHighH\l# SearchLimitLowV\l# SearchLimitHighV\l# TotalSearchCount\l# PrefDirSearchLimit\l|+ PrefDirSize()\l+ SearchVectorSize()\l+ ExternalClearPrefDirAnd4\lMultiMap()\l+ GetPDTVecPos()\l+ GetOnePDPos()\l+ BiDirectionalPrefDir()\l+ CheckOnePrefDir()\l+ EndPossible()\l+ FindLinkingPrefDir()\l+ FindLinkingCompatiblePrefDir()\land 27 more...\l# PresetAutoRouteDiagonalFouled\lByTrack()\l# PresetAutoRouteElementValid()\l# SearchForPrefDir()\l# GetOnePrefDirPosition()\l# ConvertPrefDirSearchVector()\l- ClearPrefDir()\l- GetExactMatchFrom4MultiMap()\l- StorePrefDirElement()\l- ErasePrefDirElementAt()\l- CheckPrefDir4MultiMap()\l- DecrementPrefDirElementNumbers\lInPrefDir4MultiMap()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="The basic preferred direction class, consisting of any number of elements with preferred directions s..."];
+}

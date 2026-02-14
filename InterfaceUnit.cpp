@@ -2756,6 +2756,11 @@ void __fastcall TInterface::LoadRailwayMenuItemClick(TObject* Sender)
             SetLevel1Mode(11); // calls Clearand... to plot the new railway
             Utilities->CallLogPop(31);
         }
+        else
+        {
+            Utilities->CallLogPop(2753); //added at v2.23.4 - needed in case 'cancel' clicked or otherwise returns false - else call log keeps building up
+            return;
+        }
 //        else ShowMessage("Load Safely Aborted"); //dropped at v2.20.0, not needed
     }
     catch (const Exception &e) //made a non-error catch at v2.14.0 following Albie Vowles error of 15/12/22
@@ -7629,7 +7634,6 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
         {
             AnsiButton = "mbRight";
         }
-        TrainController->LogEvent("MainScreenMouseDown2," + AnsiButton + "," + AnsiString(X) + "," + AnsiString(Y));
         Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",MainScreenMouseDown2," + AnsiButton + "," + AnsiString(X) +
                                      "," + AnsiString(Y));
         // unplot GapFlash graphics if plotted & cancel gap flashing if left mouse button pressed (so can move display with right mouse button)
@@ -7643,6 +7647,7 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
         }
         int HLoc, VLoc;
         Track->GetTrackLocsFromScreenPos(1, HLoc, VLoc, X, Y);
+        TrainController->LogEvent("MainScreenMouseDown2," + AnsiButton + "," + AnsiString(X) + "," + AnsiString(Y) + "," + AnsiString(HLoc) + "," + AnsiString(VLoc));
         int NoOffsetX, NoOffsetY;
         Track->GetTruePositionsFromScreenPos(0, NoOffsetX, NoOffsetY, X, Y);
         if(Button == mbRight) // track, PrefDir or text erase, PrefDir/route truncate, or take signaller control of train
@@ -8728,7 +8733,7 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
 
         else if((Level1Mode == PrefDirMode) && (Level2PrefDirMode != PrefDirContinuing) && (Level2PrefDirMode != PrefDirSelecting))
         {
-            TrainController->LogEvent("mbLeft + != PrefDirContinuing");
+            TrainController->LogEvent("mbLeft + != PrefDirContinuing + HLoc = " + AnsiString(HLoc) + " VLoc = " + AnsiString(VLoc)); //added H & VLoc at v2.23.4 as X&Y alone don't give true railway position
 // ResetChangedFileDataAndCaption(, false); //moved after 2.7.0 to later in case don't click on element
 // RlyFile = false; - don't alter this just for PrefDir changes
             if(ConstructPrefDir->GetPrefDirStartElement(1, HLoc, VLoc))
@@ -8744,7 +8749,7 @@ void TInterface::MainScreenMouseDown2(int Caller, TMouseButton Button, TShiftSta
 
         else if(Level2PrefDirMode == PrefDirContinuing)
         {
-            TrainController->LogEvent("mbLeft + PrefDirContinuing");
+            TrainController->LogEvent("mbLeft + PrefDirContinuing + HLoc = " + AnsiString(HLoc) + " VLoc = " + AnsiString(VLoc)); //added H & VLoc at v2.23.4 as X&Y alone don't give true railway position
 // ResetChangedFileDataAndCaption(, false);  //moved after 2.7.0 to later in case don't click on element
 // RlyFile = false; - don't alter this just for PrefDir changes
             bool FinishElement;
@@ -10814,6 +10819,7 @@ pause or run and it cycled round the operate panel buttons
 //            AnsiString MouseStr = "RemX: " + AnsiString(ReminderX) + "; RemY: " + AnsiString(ReminderY);
             DevelopmentPanel->Caption = CurDir + " " + MouseStr + "; OffH " + OffH + ";OffV " + OffV;
             Track->GetTrackLocsFromScreenPos(7, HLoc, VLoc, ScreenX, ScreenY);
+            int PDTVecPos = EveryPrefDir->GetPDTVecPos(HLoc, VLoc); //-1 if no PDs  //added at v2.23.4 to compare with TVPos
 
             AnsiString InARoute = "No";    //added at v2.15.0 for diagnostics
             THVPair HVPair;
@@ -10839,17 +10845,54 @@ pause or run and it cycled round the operate panel buttons
                 {
                     COS = "Yes";
                 }
+                int TECon0 = TrackElement.Conn[0]; //added at v2.23.4
+                int TECon1 = TrackElement.Conn[1];
+                int TECon2 = TrackElement.Conn[2];
+                int TECon3 = TrackElement.Conn[3];
+                int P0,P1,P2,P3; //interim PD positions
+                int Con0c0 = -1, Con0c1 = -1, Con0c2 = -1, Con0c3 = -1;
+                int Con1c0 = -1, Con1c1 = -1, Con1c2 = -1, Con1c3 = -1;
+                int Con2c0 = -1, Con2c1 = -1, Con2c2 = -1, Con2c3 = -1;
+                int Con3c0 = -1, Con3c1 = -1, Con3c2 = -1, Con3c3 = -1;
+                bool FoundFlag; //unused
+                EveryPrefDir->GetVectorPositionsFromPrefDir4MultiMap(7777, HLoc, VLoc, FoundFlag, P0, P1, P2, P3);
+                if(P0 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P0, Con0c0, Con0c1, Con0c2, Con0c3); //these are track vector positions, not PD vector positions
+                }
+                if(P1 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P1, Con1c0, Con1c1, Con1c2, Con1c3);
+                }
+                if(P2 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P2, Con2c0, Con2c1, Con2c2, Con2c3);
+                }
+                if(P3 > -1)
+                {
+                    EveryPrefDir->Get4TVConns(P3, Con3c0, Con3c1, Con3c2, Con3c3);
+                }
 
-                DevelopmentPanel->Caption = MouseStr + "; OffH " + OffH + ";OffV " + OffV + "; TVPos: " + AnsiString(Position) + "; H: " + AnsiString(HLoc) + "; V: " +
-                    AnsiString(VLoc) + "; SpTg: " + AnsiString(TrackElement.SpeedTag) + "; Type: " + Type[TrackElement.TrackType] + "; Att: " + AnsiString(TrackElement.Attribute)
-                    + "; COS: " + COS + "; SPos1: " + AnsiString(TrackElement.StationEntryStopLinkPos1) + "; SPos2: " + AnsiString(TrackElement.StationEntryStopLinkPos2)
-                    + "; SPos3: " + AnsiString(TrackElement.StationEntryStopLinkPos3) + "; SPos4: " + AnsiString(TrackElement.StationEntryStopLinkPos4)
-                    + "; TrID: " + AnsiString(TrackElement.TrainIDOnElement) + "; TrID01: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit01) +
-                    "; TrID23: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit23) + "; Locname: " + TrackElement.LocationName + "; Activename: " +
-                    TrackElement.ActiveTrackElementName + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID + "; PDVecPos " + RoutePrefDirPos + " Links: " +
-                    TrackElement.Link[0] + "," + TrackElement.Link[1] + "," + TrackElement.Link[2] + "," + TrackElement.Link[3] + " CLPos " +
-                    TrackElement.ConnLinkPos[0] + "," +TrackElement.ConnLinkPos[1] + "," +TrackElement.ConnLinkPos[2] + "," +TrackElement.ConnLinkPos[3];
+                DevelopmentPanel->Caption = MouseStr + "; OffH " + OffH + ";OffV " + OffV + "; TVPos: " + AnsiString(Position)
+                    + "; Conn0: " + TECon0 +"; Conn1: " + TECon1 +"; Conn2: " + TECon2 +"; Conn3: " + TECon3
+                    + "; H: " + AnsiString(HLoc) + "; V: " + AnsiString(VLoc)
+                    + "; SpTg: " + AnsiString(TrackElement.SpeedTag) + "; Type: " + Type[TrackElement.TrackType] + "; Att: " + AnsiString(TrackElement.Attribute)
+//                    + "; COS: " + COS + "; SPos1: " + AnsiString(TrackElement.StationEntryStopLinkPos1) + "; SPos2: " + AnsiString(TrackElement.StationEntryStopLinkPos2)
+//                    + "; SPos3: " + AnsiString(TrackElement.StationEntryStopLinkPos3) + "; SPos4: " + AnsiString(TrackElement.StationEntryStopLinkPos4)
+//                    + "; TrID: " + AnsiString(TrackElement.TrainIDOnElement) + "; TrID01: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit01)
+//                    + "; TrID23: " + AnsiString(TrackElement.TrainIDOnBridgeOrFailedPointOrigSpeedLimit23) + "; Locname: " + TrackElement.LocationName
+                    + "; Activename: " + TrackElement.ActiveTrackElementName
+                    + "; PDTVecPos = " + PDTVecPos
+                    + "; Con0c0: " + Con0c0 + "; Con0c1: " + Con0c1 + "; Con0c2: " + Con0c2 + "; Con0c3: " + Con0c3
+                    + "; Con1c0: " + Con1c0 + "; Con1c1: " + Con1c1 + "; Con1c2: " + Con1c2 + "; Con1c3: " + Con1c3
+                    + "; Con2c0: " + Con2c0 + "; Con2c1: " + Con2c1 + "; Con2c2: " + Con2c2 + "; Con2c3: " + Con2c3
+                    + "; Con3c0: " + Con3c0 + "; Con3c1: " + Con3c1 + "; Con3c2: " + Con3c2 + "; Con3c3: " + Con3c3
+//                    + "; InRoute " + InARoute + "; RtNum " + RouteNumber + "; RtID " + RouteID
+//                    + "; RtPDPos " + RoutePrefDirPos + " Links: " + TrackElement.Link[0] + "," + TrackElement.Link[1] + "," + TrackElement.Link[2] + "," + TrackElement.Link[3]
+//                    + "; CLPos " + TrackElement.ConnLinkPos[0] + "," +TrackElement.ConnLinkPos[1] + "," +TrackElement.ConnLinkPos[2] + "," +TrackElement.ConnLinkPos[3];
                     // + "; OAHintCtr: " + TrainController->OpActionPanelHintDelayCounter;
+
+                    ;
             }
             else
             {//below used in elapsed time investigations
@@ -14998,7 +15041,7 @@ void __fastcall TInterface::BecomeNewServiceMenuItemClick(TObject *Sender) //add
         TTrain &Train = TrainController->TrainVectorAtIdent(58, SelectedTrainID);
         TActionVectorEntry *NewServiceActionEntryPtr = Train.ActionVectorEntryPtr; //set initially to current position
         while((NewServiceActionEntryPtr->Command != "Fns") && (NewServiceActionEntryPtr->Command != "Fns-sh") && (NewServiceActionEntryPtr->Command != "F-nshs") &&
-            (NewServiceActionEntryPtr->Command != "Frh-sh"))  //last condition added after v2.23.0 because of error reported by andre (andrek1410) via discord ticket #86
+            (NewServiceActionEntryPtr->Command != "Frh-sh"))  //last condition added at v2.23.1 because of error reported by andre (andrek1410) via discord ticket #86
         {                                                     //error was that received the below message wrongly with plain shuttles without feeders
             NewServiceActionEntryPtr++;
             if(NewServiceActionEntryPtr > &Train.TrainDataEntryPtr->ActionVector.back()) //failed to find a new service
@@ -19616,7 +19659,7 @@ void TInterface::SetLevel2TrackMode(int Caller)
             InfoPanel->Visible = true;
             InfoPanel->Caption = "PASTING: Please wait";
             InfoPanel->Update();
-    // erase track elements
+    // erase track elements that fall within region to be overwritten
             int LowSelectHLoc = SelectBitmapHLoc;
             int HighSelectHLoc = SelectBitmapHLoc + (SelectBitmap->Width / 16);
             int LowSelectVLoc = SelectBitmapVLoc;
@@ -19711,7 +19754,7 @@ void TInterface::SetLevel2TrackMode(int Caller)
                     }
                 }
                 bool InternalChecks = false;
-    // if(Track->PastingWithAttributes) //new at v2.2.0 to select the new funtion & skip multimap checks //drop in v2.4.0
+    // if(Track->PastingWithAttributes) //new at v2.2.0 to select the new funtion & skip multimap checks //drop at v2.4.0
     // {
                 Track->PlotPastedTrackElementWithAttributes(0, Track->SelectVectorAt(2, x), Track->SelectVectorAt(3, x).HLoc, Track->SelectVectorAt(4, x).VLoc,
                                                             TrackLinkingRequiredFlag, InternalChecks);
@@ -26433,6 +26476,7 @@ void TInterface::TestFunction()    //triggered by Ctrl Alt 4
 
 //test code here
 
+//throw Exception("test error");
 
 //end of test code
 

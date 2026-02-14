@@ -1405,7 +1405,7 @@ and can be modelled better anyway.  Added at v2.1.0. */
     bool PresetAutoRouteElementValid(int Caller, TPrefDirElement ElementIn, int EntryPos);
 /// Try to find a selected element from a given start position.  Enter with CurrentTrackElement stored in the PrefDirVector, XLinkPos set to the link to search on, & SearchVector cleared unless entered recursively.  Function is a continuous loop that exits when find required element (returns true) or reaches a buffer or continuation or otherwise fails a search condition (returns false).
     bool SearchForPrefDir(int Caller, TTrackElement TrackElement, int XLinkPos, int RequiredPosition);
-/// Although there may be up to four entries at one H & V position this function gets just one. It is used in EraseFromPrefDirVectorAnd4MultiMap by being called as many times as there are PrefDir elements at H & V
+/// Although there may be up to four entries at one H & V position this function gets just one. It is used in EraseFromPrefDirVectorAnd4MultiMap by being called as many times as there are PrefDir elements at H & V.  Returns -1 if nothing found
     int GetOnePrefDirPosition(int Caller, int HLoc, int VLoc);
 /// Called after a successful search to add the elements from the search vector to the pref dir vector
     void ConvertPrefDirSearchVector(int Caller);
@@ -1437,6 +1437,33 @@ public:
     void ExternalClearPrefDirAnd4MultiMap()
     {
         ClearPrefDir();
+    }
+
+    int GetPDTVecPos(int HLoc, int VLoc)
+    {
+        int PDPos = GetOnePrefDirPosition(5, HLoc, VLoc); //5 is caller number.  Returns -1 if nothing found.
+                                                              // Used for development panel. Added at v2.23.4
+        if(PDPos > -1)
+        {
+            TPrefDirElement PDE = GetFixedPrefDirElementAt(271, PDPos);
+            return PDE.TrackVectorPosition;
+        }
+        return -1;
+    }
+
+    int GetOnePDPos(int HLoc, int VLoc) //added at v2.23.4
+    {
+        int PDPos = GetOnePrefDirPosition(6, HLoc, VLoc); //6 is caller number.  Returns -1 if nothing found.
+        return PDPos;
+    }
+
+    void Get4TVConns(int PDPos, int &Con0, int &Con1, int &Con2, int &Con3) //added at v2.23.4 for dev't panel
+    {
+        TPrefDirElement PDE = GetFixedPrefDirElementAt(7777, PDPos);
+        Con0 = PDE.Conn[0];
+        Con1 = PDE.Conn[1];
+        Con2 = PDE.Conn[2];
+        Con3 = PDE.Conn[3];
     }
 
     // functions defined in .cpp file
@@ -1514,7 +1541,7 @@ PrefDir (BuildingPrefDir true) then the start and end rectangles are also displa
     void EraseFromPrefDirVectorAnd4MultiMap(int Caller, int HLoc, int VLoc);
 /// Similar to PrefDirMarker but used only to display EveryPrefDir - red for unidirectional PrefDir & green for bidirectional. Colours taken from the route colours. Plot red first so green overwrites for bidirectional points.
     void EveryPrefDirMarker(int Caller, TDisplay *Disp);
-/// After a track element is erased the preferred direction elements are likely to be affected. This function erases any preferred direction elements that either correspond to the erased track element, or were linked to it
+/// After a track element is erased preferred direction elements will to be affected. This function erases any preferred direction elements that either correspond to the erased track element, or were linked to it, and any that weren't erased have their TVPos value decremented if it was above that of the erased track element.
     void RealignAfterTrackErase(int Caller, int ErasedTrackVectorPosition);
 /// Called after the track vector has been rebuilt following linking, to rebuild the preferred direction vector to correspond to the element positions in the rebuilt track vector. Doesn't affect the preferred direction multimap.
     void RebuildPrefDirVector(int Caller);

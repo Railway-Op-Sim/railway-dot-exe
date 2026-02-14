@@ -20,7 +20,7 @@ digraph "TOnePrefDir::DecrementPrefDirElementNumbersInPrefDir4MultiMap"
   Node7 [label="TOnePrefDir::GetPrefDirTruncate\lElement",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_t_one_pref_dir.html#a8fd55282096fe63f0baeab323c6ccc8b",tooltip="Called during PrefDir build or distance setting. It truncates at & including the first element in the..."];
   Node7 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node2 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node8 [label="TOnePrefDir::RealignAfter\lTrackErase",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_t_one_pref_dir.html#ab5bb3791670fd04645faf4ab1f2a5781",tooltip="After a track element is erased the preferred direction elements are likely to be affected...."];
+  Node8 [label="TOnePrefDir::RealignAfter\lTrackErase",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_t_one_pref_dir.html#ab5bb3791670fd04645faf4ab1f2a5781",tooltip="After a track element is erased preferred direction elements will to be affected. This function erase..."];
   Node8 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node9 [label="TInterface::SetLevel2TrackMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_t_interface.html#a19ee788122a66d7e97873159bf2e4e4b",tooltip="Sets the Level2TrackMode user mode, using the Level2TrackMode variable to determine the mode."];

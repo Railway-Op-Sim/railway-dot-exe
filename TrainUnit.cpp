@@ -22469,7 +22469,8 @@ int TTrainController::CalculateMaxLateness(AnsiString& MaxLine) //added at v2.23
             OnePerfLine = AnsiString(Buffer);
             if((MaxLateness == 0) && (OnePerfLine.Length() > 14) && (OnePerfLine.SubString(OnePerfLine.Length() - 10, 11) == "minute late"))
             {
-                (MaxLateness = 1);
+                MaxLateness = 1;
+                MaxLine = OnePerfLine; //added at v2.23.4 when noticed that had '()' instead of the correct line
             }
             else if((OnePerfLine.Length() > 25) && (OnePerfLine.SubString(OnePerfLine.Length() - 11, 12) == "minutes late"))
             {

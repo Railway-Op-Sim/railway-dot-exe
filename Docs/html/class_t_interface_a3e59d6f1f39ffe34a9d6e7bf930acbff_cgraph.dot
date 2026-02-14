@@ -167,9 +167,9 @@ digraph "TInterface::ExitOperationButtonClick"
   Node147 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node62 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node1 -> Node239 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node239 [label="TTrainController::Unplot\lTrains",height=0.2,width=0.4,color="red", fillcolor="white", style="filled",URL="$class_t_train_controller.html#a7e2abfcc38e51933883d959c4155aca0",tooltip="unplot all trains from screen"];
-  Node239 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node239 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node239 -> Node24 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node240 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node240 [label="TTrainController::Unplot\lTrains",height=0.2,width=0.4,color="red", fillcolor="white", style="filled",URL="$class_t_train_controller.html#a7e2abfcc38e51933883d959c4155aca0",tooltip="unplot all trains from screen"];
+  Node240 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node240 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node240 -> Node24 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
 }
