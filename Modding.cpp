@@ -23,11 +23,8 @@ void RuntimeModifier::create_directories_() const {
 }
 
 
-void RuntimeModifier::attach_callback(std::function<void()> callback, bool execute_on_attach) {
-	// Call once for initial setup
-	if(execute_on_attach) callback();
-
-	// Now attach to tracked callbacks, these will be executed
+void RuntimeModifier::attach_callback(std::function<void()> callback) {
+	// Attach to tracked callbacks, these will be executed
 	// if the modifier is changed
 	callbacks_.push_back(std::move(callback));
 }

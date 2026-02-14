@@ -892,9 +892,9 @@ TRailGraphics::TRailGraphics()
 	SetWebSafeHeadCodeGraphics(0);
 
 	Modifier->attach_callback([this]() {this->loadGraphics();});
-	Modifier->attach_callback([this](){this->loadSpeedButGlyphs();}, false);
-	Modifier->attach_callback([this](){this->ChangeAllTransparentColours();}, false);
-	Modifier->attach_callback([this](){this->SetUpAllDerivativeGraphics();}, false);
+	Modifier->attach_callback([this](){this->loadSpeedButGlyphs();});
+	Modifier->attach_callback([this](){this->ChangeAllTransparentColours();});
+	Modifier->attach_callback([this](){this->SetUpAllDerivativeGraphics();});
 
 }
 // ---------------------------------------------------------------------------

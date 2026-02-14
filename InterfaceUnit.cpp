@@ -630,7 +630,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 		}
 
 		Modifier->attach_callback([this](){this->loadGraphicsSet();});
-		Modifier->attach_callback([this](){this->loadSignalAspectGraphics();}, false);
+		Modifier->attach_callback([this](){this->loadSignalAspectGraphics();});
 		Modifier->attach_callback([this](){this->SaveConfigFile(0);});
 
 
