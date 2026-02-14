@@ -1731,6 +1731,8 @@ is loaded fillowed by AvHoursIntValue then all failed trains if any. */
 	void UpdateActionsDuePanel(int Caller);
 /// Loads available mod content
 	void loadModdedContent();
+/// Loads signal button graphics
+	void loadSignalAspectGraphics();
 };
 
 // ---------------------------------------------------------------------------

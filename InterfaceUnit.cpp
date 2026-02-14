@@ -630,6 +630,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 		}
 
 		Modifier->attach_callback([this](){this->loadGraphicsSet();});
+		Modifier->attach_callback([this](){this->loadSignalAspectGraphics();}, false);
         Modifier->attach_callback([this](){this->SaveConfigFile(0);});
 
 
@@ -2081,43 +2082,53 @@ void __fastcall TInterface::TextOrUserGraphicGridButtonClick(TObject *Sender)
     }
 }
 
+void TInterface::loadSignalAspectGraphics() {
+	try {
+		switch(Track->SignalAspectBuildMode) {
+			case TTrack::FourAspectBuild:
+				Modifier->load_graphic(SigAspectButton->Glyph, "FourAspect");
+				LoadNormalSignalGlyphs(0);
+				break;
+			case TTrack::ThreeAspectBuild:
+				Modifier->load_graphic(SigAspectButton->Glyph, "ThreeAspect");
+				LoadNormalSignalGlyphs(0);
+				break;
+			case TTrack::TwoAspectBuild:
+				Modifier->load_graphic(SigAspectButton->Glyph, "TwoAspect");
+				LoadNormalSignalGlyphs(0);
+				break;
+			default:
+				Modifier->load_graphic(SigAspectButton->Glyph, "GroundSig");
+				LoadGroundSignalGlyphs(0);
+        }
+	}
+    catch(const Exception &e)
+	{
+		ErrorLog(180, e.Message);
+	}
+}
+
 // ---------------------------------------------------------------------------
 void __fastcall TInterface::SigAspectButtonClick(TObject *Sender)
 {
-    try
-    {
-        TrainController->LogEvent("SigAspectButtonClick," + AnsiString(Track->SignalAspectBuildMode));
-        Utilities->CallLog.push_back(Utilities->TimeStamp() + ",SigAspectButtonClick");
-        if(Track->SignalAspectBuildMode == TTrack::FourAspectBuild)
-        {
-            Track->SignalAspectBuildMode = TTrack::ThreeAspectBuild;
-            Modifier->load_graphic(SigAspectButton->Glyph, "ThreeAspect");
-        }
-        else if(Track->SignalAspectBuildMode == TTrack::ThreeAspectBuild)
-        {
-            Track->SignalAspectBuildMode = TTrack::TwoAspectBuild;
-            Modifier->load_graphic(SigAspectButton->Glyph, "TwoAspect");
-        }
-        else if(Track->SignalAspectBuildMode == TTrack::TwoAspectBuild)
-        {
-            Track->SignalAspectBuildMode = TTrack::GroundSignalBuild;
-            Modifier->load_graphic(SigAspectButton->Glyph, "GroundSig");
-// set all signal glyphs to ground signals
-            LoadGroundSignalGlyphs(0);
-        }
-        else
-        {
-            Track->SignalAspectBuildMode = TTrack::FourAspectBuild;
-            Modifier->load_graphic(SigAspectButton->Glyph, "FourAspect");
-// set all signal glyphs to normal signals
-            LoadNormalSignalGlyphs(0);
-        }
-        Utilities->CallLogPop(1869);
-    }
-    catch(const Exception &e)
-    {
-        ErrorLog(180, e.Message);
-    }
+	TrainController->LogEvent("SigAspectButtonClick," + AnsiString(Track->SignalAspectBuildMode));
+	Utilities->CallLog.push_back(Utilities->TimeStamp() + ",SigAspectButtonClick");
+	switch(Track->SignalAspectBuildMode) {
+		case TTrack::FourAspectBuild:
+			Track->SignalAspectBuildMode = TTrack::ThreeAspectBuild;
+			break;
+		case TTrack::ThreeAspectBuild:
+			Track->SignalAspectBuildMode = TTrack::TwoAspectBuild;
+			break;
+		case TTrack::TwoAspectBuild:
+			Track->SignalAspectBuildMode = TTrack::GroundSignalBuild;
+			break;
+		default:
+			Track->SignalAspectBuildMode = TTrack::FourAspectBuild;
+	}
+	loadSignalAspectGraphics();
+	Utilities->CallLogPop(1869);
+
 }
 
 // ---------------------------------------------------------------------------

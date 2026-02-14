@@ -57,7 +57,7 @@ class RuntimeModifier {
             return graphics_library_;
         }
 
-		void attach_callback(std::function<void()> callback);
+		void attach_callback(std::function<void()> callback, bool execute_on_attach = true);
 
 		std::vector<std::string> get_graphics_libraries() const;
 

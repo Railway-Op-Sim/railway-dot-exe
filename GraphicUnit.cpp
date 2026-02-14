@@ -52,6 +52,44 @@ TRailGraphics *RailGraphics;
 
 // ---------------------------------------------------------------------------
 
+void TRailGraphics::loadSpeedButGlyphs() {
+
+// These are the new glyphs for v2.3.0 that stay black, they are transparent, using the bottom LH corner pixel as the transparent colour
+    SpeedBut68NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut68NormBlackGlyph->Assign(gl68); // changed at v2.3.1 from 'LoadFromResourceName' for consistency
+    SpeedBut69NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut69NormBlackGlyph->Assign(gl69);
+    SpeedBut70NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut70NormBlackGlyph->Assign(gl70);
+    SpeedBut71NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut71NormBlackGlyph->Assign(gl71);
+    SpeedBut72NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut72NormBlackGlyph->Assign(gl72);
+    SpeedBut73NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut73NormBlackGlyph->Assign(gl73);
+    SpeedBut74NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut74NormBlackGlyph->Assign(gl74);
+    SpeedBut75NormBlackGlyph = new Graphics::TBitmap;
+    SpeedBut75NormBlackGlyph->Assign(gl75);
+
+    SpeedBut68GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut68GrndBlackGlyph->Assign(bm68grounddblred);
+    SpeedBut69GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut69GrndBlackGlyph->Assign(bm69grounddblred);
+    SpeedBut70GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut70GrndBlackGlyph->Assign(bm70grounddblred);
+    SpeedBut71GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut71GrndBlackGlyph->Assign(bm71grounddblred);
+    SpeedBut72GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut72GrndBlackGlyph->Assign(bm72grounddblred);
+    SpeedBut73GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut73GrndBlackGlyph->Assign(gl73grounddblred); // these have to use 'gl' graphics as bot LH corner = transparent
+    SpeedBut74GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut74GrndBlackGlyph->Assign(gl74grounddblred); // colour, & 'bm' graphics have black at that position
+    SpeedBut75GrndBlackGlyph = new Graphics::TBitmap;
+    SpeedBut75GrndBlackGlyph->Assign(bm75grounddblred);
+}
+
 TRailGraphics::TRailGraphics()
 {
 // See Graphics.xlsx for details of all graphics
@@ -688,41 +726,7 @@ TRailGraphics::TRailGraphics()
     bmStraightEWSignalBlank = new Graphics::TBitmap;
 	bmStraightNSSignalBlank = new Graphics::TBitmap;
 
-
-// These are the new glyphs for v2.3.0 that stay black, they are transparent, using the bottom LH corner pixel as the transparent colour
-    SpeedBut68NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut68NormBlackGlyph->Assign(gl68); // changed at v2.3.1 from 'LoadFromResourceName' for consistency
-    SpeedBut69NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut69NormBlackGlyph->Assign(gl69);
-    SpeedBut70NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut70NormBlackGlyph->Assign(gl70);
-    SpeedBut71NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut71NormBlackGlyph->Assign(gl71);
-    SpeedBut72NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut72NormBlackGlyph->Assign(gl72);
-    SpeedBut73NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut73NormBlackGlyph->Assign(gl73);
-    SpeedBut74NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut74NormBlackGlyph->Assign(gl74);
-    SpeedBut75NormBlackGlyph = new Graphics::TBitmap;
-    SpeedBut75NormBlackGlyph->Assign(gl75);
-
-    SpeedBut68GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut68GrndBlackGlyph->Assign(bm68grounddblred);
-    SpeedBut69GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut69GrndBlackGlyph->Assign(bm69grounddblred);
-    SpeedBut70GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut70GrndBlackGlyph->Assign(bm70grounddblred);
-    SpeedBut71GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut71GrndBlackGlyph->Assign(bm71grounddblred);
-    SpeedBut72GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut72GrndBlackGlyph->Assign(bm72grounddblred);
-    SpeedBut73GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut73GrndBlackGlyph->Assign(gl73grounddblred); // these have to use 'gl' graphics as bot LH corner = transparent
-    SpeedBut74GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut74GrndBlackGlyph->Assign(gl74grounddblred); // colour, & 'bm' graphics have black at that position
-    SpeedBut75GrndBlackGlyph = new Graphics::TBitmap;
-    SpeedBut75GrndBlackGlyph->Assign(bm75grounddblred);
+	loadSpeedButGlyphs();
 
     // GridBitmap is a 10 x 9 grid image, quicker to plot these for whole screen than small ones
     GridBitmap = new Graphics::TBitmap;
@@ -888,8 +892,9 @@ TRailGraphics::TRailGraphics()
 	SetWebSafeHeadCodeGraphics(0);
 
 	Modifier->attach_callback([this]() {this->loadGraphics();});
-    Modifier->attach_callback([this](){this->ChangeAllTransparentColours();});
-    Modifier->attach_callback([this](){this->SetUpAllDerivativeGraphics();});
+	Modifier->attach_callback([this](){this->loadSpeedButGlyphs();}, false);
+	Modifier->attach_callback([this](){this->ChangeAllTransparentColours();}, false);
+	Modifier->attach_callback([this](){this->SetUpAllDerivativeGraphics();}, false);
 
 }
 // ---------------------------------------------------------------------------

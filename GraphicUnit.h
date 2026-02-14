@@ -1153,7 +1153,8 @@ public:
 ///ensures all headcodes have a websafe palette
     void SetWebSafeHeadCodeGraphics(int Caller);
 
-  	void loadGraphics();
+	void loadGraphics();
+	void loadSpeedButGlyphs();
 };
 
 // ---------------------------------------------------------------------------

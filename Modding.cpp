@@ -23,9 +23,9 @@ void RuntimeModifier::create_directories_() const {
 }
 
 
-void RuntimeModifier::attach_callback(std::function<void()> callback) {
+void RuntimeModifier::attach_callback(std::function<void()> callback, bool execute_on_attach) {
 	// Call once for initial setup
-	callback();
+	if(execute_on_attach) callback();
 
 	// Now attach to tracked callbacks, these will be executed
 	// if the modifier is changed
@@ -91,7 +91,7 @@ void RuntimeModifier::load_graphic(TBitmap* target, const std::string& graphic, 
 	if(local_file_.has_value() && std::filesystem::exists(local_file_.value())) {
 		target->LoadFromFile(local_file_.value().c_str());
 	} else {
-		target->LoadFromResourceName(0, graphic.c_str());
+		target->LoadFromResourceName((int)HInstance, graphic.c_str());
 	}
 
 	if(transparency != Transparency::Undefined) {
