@@ -5,9 +5,9 @@
 #include <tchar.h>
 //---------------------------------------------------------------------------
 USEFORM("PerfLogUnit.cpp", PerfLogForm);
-USEFORM("ActionsDueUnit.cpp", ActionsDueForm);
 USEFORM("AboutUnit.cpp", AboutForm);
 USEFORM("InterfaceUnit.cpp", Interface);
+USEFORM("ActionsDueUnit.cpp", ActionsDueForm);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

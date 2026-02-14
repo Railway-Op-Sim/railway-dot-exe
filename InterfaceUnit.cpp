@@ -631,7 +631,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 
 		Modifier->attach_callback([this](){this->loadGraphicsSet();});
 		Modifier->attach_callback([this](){this->loadSignalAspectGraphics();}, false);
-        Modifier->attach_callback([this](){this->SaveConfigFile(0);});
+		Modifier->attach_callback([this](){this->SaveConfigFile(0);});
 
 
 /* Don't need this - load icon directly into both Interface form & Application (via Project - Options - Application - Load Icon)
@@ -789,7 +789,9 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         // read the locality conversion structure
         conv = localeconv(); // this is what updates the structure
         ExitHeatmaps(); //to set up initial parameters
-        Utilities->DecimalPoint = conv->decimal_point[0];
+		Utilities->DecimalPoint = conv->decimal_point[0];
+
+		Modifier->set_graphics_library(std::nullopt);
     }
 
     catch(const EFOpenError &e)

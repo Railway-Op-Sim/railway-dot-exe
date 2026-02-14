@@ -198,17 +198,17 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
     </PropertyGroup>
     <ItemGroup>
-        <CppCompile Include="..\..\..\Documdnts\GitHub\railway-dot-exe\ActionsDueUnit.cpp">
-            <Form>ActionsDueForm</Form>
-            <FormType>dfm</FormType>
-            <DependentOn>ActionsDueUnit.h</DependentOn>
-            <BuildOrder>14</BuildOrder>
-        </CppCompile>
         <CppCompile Include="AboutUnit.cpp">
             <Form>AboutForm</Form>
             <FormType>dfm</FormType>
             <DependentOn>AboutUnit.h</DependentOn>
             <BuildOrder>3</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="ActionsDueUnit.cpp">
+            <Form>ActionsDueForm</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>ActionsDueUnit.h</DependentOn>
+            <BuildOrder>15</BuildOrder>
         </CppCompile>
         <CppCompile Include="API.cpp">
             <DependentOn>API.h</DependentOn>
@@ -268,9 +268,9 @@
             <BuildOrder>10</BuildOrder>
         </CppCompile>
         <FormResources Include="PerfLogUnit.dfm"/>
-        <FormResources Include="..\..\..\Documdnts\GitHub\railway-dot-exe\ActionsDueUnit.dfm"/>
         <FormResources Include="AboutUnit.dfm"/>
         <FormResources Include="InterfaceUnit.dfm"/>
+        <FormResources Include="ActionsDueUnit.dfm"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
