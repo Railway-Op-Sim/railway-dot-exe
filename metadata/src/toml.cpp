@@ -1,0 +1,163 @@
+#include "metadata/toml.hxx"
+
+void Date::validate_() {
+	if(month > 12) {
+		const std::string err_ = "Value '" + std::to_string(month) +
+			"' must be a valid month.";
+		throw std::invalid_argument(err_);
+	}
+	const bool date_too_large_ = day > 31 || (
+		(
+			(month == 11 || month == 4 || month == 6 || month == 9)  &&
+			day > 30
+		) ||
+		(
+			(month == 2)  &&
+			day > 29
+		) ||
+		(
+			(month == 1 || month == 3 || month == 5 || month == 7 || month == 10 || month == 12)  &&
+			day > 31
+		)
+	);
+	if(date_too_large_) {
+		const std::string err_ = "Value '" + std::to_string(day) +
+			"' must be a valid day of month " + std::to_string(month) + ".";
+		throw std::invalid_argument(err_);
+	}
+}
+
+void TOML::clear() {
+	lists_.clear();
+	strings_.clear();
+	integers_.clear();
+	versions_.clear();
+	booleans_.clear();
+	dates_.clear();
+}
+
+OptionalVector TOML::get_list(const std::string& label) const {
+	if(lists_.find(label) == lists_.end()) return std::nullopt;
+	const std::vector<std::string> value_ = lists_.at(label);
+
+    return std::make_optional<std::vector<std::string>>(value_);
+}
+
+std::optional<int> TOML::get_boolean(const std::string& label) const {
+	if(booleans_.find(label) == booleans_.end()) return std::nullopt;
+	const int value_ = static_cast<int>(booleans_.at(label));
+
+	return std::make_optional<int>(value_);
+}
+
+std::optional<int> TOML::get_integer(const std::string& label) const {
+	if(integers_.find(label) == integers_.end()) return std::nullopt;
+	const int value_ = integers_.at(label);
+
+	return std::make_optional<int>(value_);
+}
+
+std::optional<std::string> TOML::get_string(const std::string& label) const {
+	if(strings_.find(label) == strings_.end()) return std::nullopt;
+	const std::string value_ = strings_.at(label);
+
+	return std::make_optional<std::string>(value_);
+}
+
+std::optional<Date> TOML::get_date(const std::string& label) const {
+	if(dates_.find(label) == dates_.end()) return std::nullopt;
+	const Date value_ = dates_.at(label);
+
+	return std::make_optional<Date>(value_);
+}
+
+std::optional<Version> TOML::get_version(const std::string& label) const {
+	if(versions_.find(label) == versions_.end()) return std::nullopt;
+	const Version value_ = versions_.at(label);
+
+	return std::make_optional<Version>(value_);
+}
+
+void TOML::read(const std::filesystem::path& input_file) {
+	clear();
+
+	if (!std::filesystem::exists(input_file)) {
+        std::cerr << "Failed to open metdata file " << input_file << std::endl;
+        return;
+	}
+
+	std::ifstream input_(input_file.string());
+	std::string line_;
+	std::smatch match_;
+	std::string key_;
+    std::vector<std::string> list_;
+
+	while(std::getline(input_, line_)) {
+		// See if it is a single line list
+		if(std::regex_search(line_, match_, parse_key_)) {
+			key_ = match_[1];
+			list_.clear();
+		} else if(std::regex_search(line_, match_, parse_list_element_new_line_)) {
+			list_.push_back(match_[1]);
+            continue;
+		}
+
+		if(std::regex_search(line_, parse_list_end_)) {
+		   lists_[key_] = list_;
+           list_.clear();
+		}
+
+		std::sregex_iterator begin_(line_.begin(), line_.end(), parse_list_element_);
+		std::sregex_iterator end_;
+
+		if(begin_ != end_) {
+		   for(auto it{begin_}; it != end_; ++it) {
+               list_.push_back((*it)[1]);
+           }
+		}
+
+		if(std::regex_search(line_, match_, parse_date_)) {
+			unsigned int day_{0};
+			unsigned int month_{0};
+			unsigned int year_{0};
+			std::stringstream ss_{match_[1]};
+			std::string item_;
+
+			while(std::getline(ss_, item_, '-')) {
+				if(year_ == 0) year_ = std::stoi(item_);
+				else if(month_ == 0) month_ = std::stoi(item_);
+                else day_ = std::stoi(item_);
+            }
+
+		   dates_.insert(std::make_pair(key_, Date{year_, month_, day_}));
+		}
+
+		if(std::regex_search(line_, match_, parse_version_)) {
+			unsigned int major_{0};
+			unsigned int minor_{0};
+			unsigned int patch_{0};
+			std::stringstream ss_{match_[1]};
+			std::string item_;
+
+			while(std::getline(ss_, item_, '.')) {
+				if(major_ == 0) major_ = std::stoi(item_);
+				else if(minor_ == 0) minor_ = std::stoi(item_);
+                else patch_ = std::stoi(item_);
+            }
+
+		   versions_.insert(std::make_pair(key_, Version{major_, minor_, patch_}));
+        }
+
+		if(std::regex_search(line_, match_, parse_integer_)) {
+		   integers_[key_] = std::stoi(match_[1]);
+		}
+
+		if(std::regex_search(line_, match_, parse_boolean_)) {
+		   booleans_[key_] = (match_[1] == "true") ? true : false;
+		}
+
+        if(std::regex_search(line_, match_, parse_string_)) {
+		   strings_[key_] = match_[1];
+        }
+    }
+}
