@@ -7,7 +7,7 @@
         <MainSource>railway.cpp</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <ProjectName Condition="'$(ProjectName)'==''">railway</ProjectName>
     </PropertyGroup>
@@ -93,8 +93,8 @@
         <Icon_MainIcon>$(BDS)\bin\cbuilder_PROJECTICON.ico</Icon_MainIcon>
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
-        <IncludePath>..\..\GitHub Current Version\railway-dot-exe\;railway\;$(IncludePath)</IncludePath>
-        <ILINK_LibraryPath>..\..\GitHub Current Version\railway-dot-exe\;railway\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <IncludePath>metadata\;..\..\GitHub Current Version\railway-dot-exe\;railway\;$(IncludePath)</IncludePath>
+        <ILINK_LibraryPath>metadata\;..\..\GitHub Current Version\railway-dot-exe\;railway\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <SanitizedProjectName>railway</SanitizedProjectName>
         <FeatureFilesAdded>false</FeatureFilesAdded>
     </PropertyGroup>
@@ -159,6 +159,7 @@
         <VerInfo_MinorVer>23</VerInfo_MinorVer>
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)$(CC_SUFFIX)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <VerInfo_Release>4</VerInfo_Release>
+        <BCC_UseClassicCompiler>false</BCC_UseClassicCompiler>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -232,6 +233,18 @@
             <DependentOn>InterfaceUnit.h</DependentOn>
             <BuildOrder>6</BuildOrder>
         </CppCompile>
+        <None Include="metadata\iso_country_codes.hxx">
+            <BuildOrder>15</BuildOrder>
+        </None>
+        <CppCompile Include="metadata\reader.cpp">
+            <BuildOrder>16</BuildOrder>
+        </CppCompile>
+        <None Include="metadata\reader.hxx">
+            <BuildOrder>17</BuildOrder>
+        </None>
+        <None Include="metadata\toml.hxx">
+            <BuildOrder>18</BuildOrder>
+        </None>
         <CppCompile Include="PerfLogUnit.cpp">
             <Form>PerfLogForm</Form>
             <FormType>dfm</FormType>
@@ -478,6 +491,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName=".\Win64\Debug\railway.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\Win64\Debug\railway.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>railway.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName=".\Win64\Release\railway.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName=".\Win64\Release\railway.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
@@ -488,6 +507,12 @@
                 <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -505,9 +530,45 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="metadata\iso_country_codes.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="metadata\iso_country_codes.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="metadata\reader.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="metadata\reader.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="metadata\toml.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
