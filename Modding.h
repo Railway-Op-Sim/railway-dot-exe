@@ -69,6 +69,8 @@ class RuntimeModifier {
 		std::optional<std::string> get_current_graphics_directory() const;
 
 		void load_graphic(TBitmap* target, const std::string& graphic, const Transparency transparency = Transparency::Undefined);
+
+        void clear_callbacks();
 };
 
 extern std::unique_ptr<RuntimeModifier> Modifier;

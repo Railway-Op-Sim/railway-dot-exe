@@ -901,6 +901,8 @@ TRailGraphics::TRailGraphics()
 
 TRailGraphics::~TRailGraphics()
 {
+	Modifier->clear_callbacks();
+
     for(int x = 0; x < 30; x++)
     {
         delete LinkPrefDirGraphicsPtr[x];

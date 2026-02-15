@@ -118,3 +118,7 @@ std::optional<std::string> RuntimeModifier::get_library_icon_file(const std::str
 	}
 	return std::nullopt;
 }
+
+void RuntimeModifier::clear_callbacks() {
+    callbacks_.clear();
+}
