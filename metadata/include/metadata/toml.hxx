@@ -65,15 +65,15 @@ namespace toml {
 			TOMLBoolMap booleans_;
 			TOMLDateMap dates_;
 			const std::regex parse_key_{R"delim(^(.*)\s=)delim"};
-			const std::regex parse_list_start_{R"delim(=\s*\[)delim"};
-			const std::regex parse_list_end_{R"delim(\]\s*$)delim"};
+			const std::regex parse_list_start_{R"delim(=\s*\[\s*$)delim"};
+			const std::regex parse_list_end_{R"delim(^\]\s*$)delim"};
 			const std::regex parse_integer_{R"delim(=\s*(\d+)\s*$)delim"};
 			const std::regex parse_boolean_{R"delim(=\s*(false|true)\s*$)delim"};
 			const std::regex parse_string_{R"delim(=\s*"(.*)"\s*$)delim"};
 			const std::regex parse_date_{R"delim(=\s*"(\d{4}-\d{2}-\d{2})"\s*$)delim"};
 			const std::regex parse_version_{R"delim(=\s*"(\d+\.\d+\.\d+)"\s*$)delim"};
 			const std::regex parse_list_element_{R"delim("([^"]*)")delim"};
-			const std::regex parse_list_element_new_line_{R"delim(^\s*"(.*)"\s*$)delim"};
+			const std::regex parse_list_element_new_line_{R"delim(^\s*"(.*)")delim"};
 			const std::regex parse_list_same_line_{R"delim(=\s*\[(.*)\]\s*$)delim"};
 		public:
 			OptionalVector get_list(const std::string& label) const;

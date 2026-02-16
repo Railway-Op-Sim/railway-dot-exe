@@ -7,7 +7,7 @@
 #include <optional>
 #include <stdexcept>
 
-SessionMetadata MetadataReader::read_metadata_from_file(const std::filesystem::path& metadata_file, bool verbose) {
+SimulationMetadata MetadataReader::read_metadata_from_file(const std::filesystem::path& metadata_file, bool verbose) {
 	
 	const std::filesystem::path outfile_prefix_{output_directory_ / metadata_file.stem()};
 	const std::filesystem::path outfile_{outfile_prefix_.string() + ".log"};
@@ -30,15 +30,17 @@ SessionMetadata MetadataReader::read_metadata_from_file(const std::filesystem::p
 		} else {
 			validation_.dump(outfile_);
 		}
-		throw std::invalid_argument(
-			std::string("Validation of session metadata failed. ") +
+		throw MetadataFileException(
+			std::string("Validation of 'Metadata\\") +
+			metadata_file.filename().string() +
+			"' failed. " +
 			"Result written to '" +
 			outfile_.string() +
 			"'."
 		);
 	}
 
-	const SessionMetadata session_data_{
+	const SimulationMetadata session_data_{
 		reader_.get_string("name").value(),
 		reader_.get_string("description"),
 		reader_.get_string("display_name"),
@@ -58,6 +60,7 @@ SessionMetadata MetadataReader::read_metadata_from_file(const std::filesystem::p
 		reader_.get_date("release_date").value(),
 		reader_.get_version("minimum_required"),
 		(reader_.get_string("signal_position").has_value()) ? ((reader_.get_string("signal_position").value() == "left") ? SignalPosition::Left : SignalPosition::Right) : SignalPosition::Left
+
 	};
 	return session_data_;
 }
@@ -75,6 +78,7 @@ ValidationResult MetadataReader::validate() const {
 	// Check types
 	for(auto [key, type] : required_types_) {
 		bool failed_validation_{false};
+		bool empty_container_{false};
 		switch (type) {
 			case toml::Type::Integer:
 				failed_validation_ = !reader_.get_integer(key).has_value();
@@ -87,6 +91,7 @@ ValidationResult MetadataReader::validate() const {
 				break;
 			case toml::Type::List:
 				failed_validation_ = !reader_.get_list(key).has_value();
+				empty_container_ = reader_.get_list(key).value().empty();
 				break;
 			case toml::Type::Version:
 				failed_validation_ = !reader_.get_version(key).has_value();
@@ -98,11 +103,15 @@ ValidationResult MetadataReader::validate() const {
 		if(failed_validation_) {
 			result_[ValidationError::IncorrectType].push_back(key);
 		}
+        if(empty_container_) {
+			result_[ValidationError::Empty].push_back(key);
+		}
 	}
 
 	for(auto [key, type] : optional_types_) {
 		if(!reader_.has_key(key)) continue;
 		bool failed_validation_{false};
+        bool empty_container_{false};
 		switch (type) {
 			case toml::Type::Integer:
 				failed_validation_ = !reader_.get_integer(key).has_value();
@@ -133,7 +142,7 @@ ValidationResult MetadataReader::validate() const {
 void ValidationResult::dump(const std::filesystem::path& output_file) const {
 	const std::filesystem::path directory_{output_file.parent_path()};
 	if(!std::filesystem::exists(directory_)) {
-		throw std::invalid_argument(
+		throw MetadataFileException(
 			"Cannot write metadata validation result, directory '" +
 			directory_.string() +
 			"' directory does not exist."
@@ -144,14 +153,43 @@ void ValidationResult::dump(const std::filesystem::path& output_file) const {
 	output_.close();
 }
 
-void MetadataReader::read_local_simulation(const std::string& simulation_name) {
-	const std::filesystem::path file_name_{simulation_name};
-	const std::filesystem::path prefix_{file_name_.stem()};
-	std::filesystem::path metadata_file_{
-		std::filesystem::path{output_directory_} / "Metadata" / prefix_
-	};
-	metadata_file_ += ".toml";
-	if(std::filesystem::exists(metadata_file_)) {
-       current_metadata_ = read_metadata_from_file(metadata_file_);
+void MetadataReader::read_directory(const std::filesystem::path& directory) {
+	if(!std::filesystem::is_directory(directory)) {
+		throw MetadataFileException(
+            "Location '" + directory.string() + "' is not a directory."
+		);
+	}
+
+	for(const auto& entry : std::filesystem::directory_iterator(directory)) {
+		 if(std::filesystem::path(entry.path()).extension().string() != ".toml") {
+			 continue;
+		 }
+		 current_metadata_[entry.path().string()] = read_metadata_from_file(entry.path());
     }
+}
+
+std::optional<SimulationMetadata> MetadataReader::get_by_prefix(const std::string& prefix) const {
+	for(const auto [_, metadata] : get_metadata()) {
+		if(std::filesystem::path(metadata.rly_file).stem().string().find(prefix) != std::string::npos) {
+			return metadata;
+		}
+		for(const auto ttb_file : metadata.ttb_files) {
+			if(std::filesystem::path(ttb_file).stem().string().find(prefix) != std::string::npos) {
+				return metadata;
+			}
+		}
+		for(const auto docs_file : metadata.doc_files) {
+			if(std::filesystem::path(docs_file).stem().string().find(prefix) != std::string::npos) {
+				return metadata;
+			}
+		}
+		if(metadata.ssn_files.has_value()) {
+			for(const auto ssn_file : metadata.ssn_files.value()) {
+				if(std::filesystem::path(ssn_file).stem().string().find(prefix) != std::string::npos) {
+					return metadata;
+				}
+			}
+		}
+	}
+	return std::nullopt;
 }

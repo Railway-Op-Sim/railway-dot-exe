@@ -14,17 +14,19 @@ TEST_CASE("Test Read Example TOML File", "[toml]") {
     std::filesystem::path test_data_file{std::string(TEST_DATA_DIRECTORY)};
     test_data_file = test_data_file / "Western_Lyon_Tram_Train.toml";
     MetadataReader Metadata(std::filesystem::path("."));
-    const SessionMetadata metadata_{Metadata.read_metadata_from_file(test_data_file, true)};
+    const SimulationMetadata metadata_{Metadata.read_metadata_from_file(test_data_file, true)};
 
     REQUIRE(metadata_.name == "Western Lyon Tram Train");
+    REQUIRE(!metadata_.ttb_files.empty());
 }
 
 TEST_CASE("Test Read/Write TOML File", "[toml]") {
     std::filesystem::path test_data_file{std::string(TEST_DATA_DIRECTORY)};
     test_data_file = test_data_file / "Western_Lyon_Tram_Train.toml";
-    TOML toml_;
+    toml::TOML toml_;
     toml_.load(test_data_file);
     const std::string name_{toml_.get<std::string>("name")};
+    CAPTURE(name_);
     REQUIRE(name_ == "Western Lyon Tram Train");
     std::filesystem::path out_data_file_{std::string(TEST_DATA_DIRECTORY)};
     out_data_file_ = out_data_file_ / "Test.toml";

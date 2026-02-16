@@ -81,7 +81,7 @@ const UnicodeString TInterface::IMAGE_DIR_NAME = "Images";
 const UnicodeString TInterface::FORMATTEDTT_DIR_NAME = "Formatted timetables";
 const UnicodeString TInterface::USERGRAPHICS_DIR_NAME = "Graphics";
 const UnicodeString TInterface::METADATA_DIR_NAME = "Metadata";
-
+const UnicodeString TInterface::DOCUMENTATION_DIR_NAME = "Documentation";
 // ---------------------------------------------------------------------------
 
 __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
@@ -112,7 +112,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 //        ShowMessage("FullProgramName " + FullProgramName);
         UnicodeString ProgramName = ExtractFileName(FullProgramName);  // as above
 //        ShowMessage("ProgramName " + ProgramName);
-        UnicodeString ProgramDirectoryName = ExtractFilePath(FullProgramName);  // as above
+		UnicodeString ProgramDirectoryName = ExtractFilePath(FullProgramName);  // as above
 //        ShowMessage("ProgramDirectoryName " + ProgramDirectoryName);
 
         if(!FileExists(ProgramName))  //added at v2.9.0 after discovering the effect described in the message
@@ -187,6 +187,13 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 		if(!DirectoryExists(METADATA_DIR_NAME))
         {
             if(!CreateDir(METADATA_DIR_NAME))
+            {
+                DirOpenError = true;
+            }
+		}
+        if(!DirectoryExists(DOCUMENTATION_DIR_NAME))
+        {
+            if(!CreateDir(DOCUMENTATION_DIR_NAME))
             {
                 DirOpenError = true;
             }
@@ -708,26 +715,28 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         // read the locality conversion structure
         conv = localeconv(); // this is what updates the structure
         ExitHeatmaps(); //to set up initial parameters
-        Utilities->DecimalPoint = conv->decimal_point[0];
+		Utilities->DecimalPoint = conv->decimal_point[0];
+
     }
 
     catch(const EFOpenError &e)
     {
         TMsgDlgButtons But;
         But << mbOK;
-        MessageDlg(e.Message + " - program must terminate", mtError, But, 0);
-        Application->Terminate();
-    }
+		MessageDlg(e.Message + " - program must terminate", mtError, But, 0);
+		Application->Terminate();
+	}
 
-    catch(const Exception &e)
-    {
-        TMsgDlgButtons But;
-        But << mbOK;
-        AnsiString Message = "A fatal error occurred during the program setup process, the program must terminate.  Message = " + e.Message;
-        MessageDlg(Message, mtError, But, 0); // this message given first in case can't create the error log
-        ErrorLog(115, e.Message);
-        Application->Terminate();
-    }
+	catch(const Exception &e)
+	{
+		TMsgDlgButtons But;
+		But << mbOK;
+		AnsiString Message = "A fatal error occurred during the program setup process, the program must terminate.  Message = " + e.Message;
+		MessageDlg(Message, mtError, But, 0); // this message given first in case can't create the error log
+		ErrorLog(115, e.Message);
+		Application->Terminate();
+	}
+
 }
 
 // ---------------------------------------------------------------------------
@@ -783,10 +792,8 @@ void __fastcall TInterface::FormCreate(TObject *Sender)
     catch(const Exception &e)
     {
         ErrorLog(117, e.Message);
-    }
+	}
 }
-
-// ---------------------------------------------------------------------------
 
 void __fastcall TInterface::AppDeactivate(TObject *Sender)
 {
@@ -3593,7 +3600,6 @@ void __fastcall TInterface::EditTimetableMenuItemClick(TObject *Sender)
 			std::ifstream TTBLFile(CreateEditTTFileName.c_str(), std::ios_base::binary); // open in binary to examine each character
 			if(TTBLFile.is_open())
 			{
-				metadata_reader_.read_local_simulation(std::string(CreateEditTTFileName.c_str()));
                 // check doesn't contain any control characters except CR, LF & '\0' (changed at v2.16.0 to allow extended characters in location names)
                 char c;
                 while(!TTBLFile.eof())
@@ -29773,5 +29779,29 @@ void __fastcall TInterface::TrainLongServRefInfoOnOffMenuItemClick(TObject *Send
    Overall conclusion:  Avoid all tellg's & seekg's.  If need to reset a file position then close and reopen it.
 */
 
+//---------------------------------------------------------------------------
+
+void __fastcall TInterface::LoadMetadata1Click(TObject *Sender)
+{
+  	try {
+		// Read all metadata files, if a string is returned there was a parse
+		// error for one or more files, raise this as a warning
+		const UnicodeString programDirName{ExtractFilePath(GetModuleName(0))};
+		const std::string program_dir_name_{AnsiString(programDirName).c_str()};
+		const std::filesystem::path metadata_dir_{program_dir_name_};
+		metadata_reader_->read_directory(metadata_dir_ / "Metadata");
+
+	} catch(const toml::TOMLException &e) {
+		std::string message_ = "Metadata TOML parse error: ";
+		message_ += e.what();
+		const AnsiString msgAnsi(message_.c_str());
+		MessageDlg(msgAnsi, mtError, TMsgDlgButtons() << mbOK, 0);
+	} catch(const MetadataFileException &e) {
+		std::string message_ = "Metadata file read error: ";
+		message_ += e.what();
+		const AnsiString msgAnsi(message_.c_str());
+		MessageDlg(msgAnsi, mtError, TMsgDlgButtons() << mbOK, 0);
+	}
+}
 //---------------------------------------------------------------------------
 

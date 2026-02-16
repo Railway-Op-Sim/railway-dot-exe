@@ -773,6 +773,7 @@ __published: // IDE-managed Components
     TMenuItem *N7;
     TMenuItem *TrainLongServRefInfoOnOffMenuItem;
     TMenuItem *TrainTTInfoOnOffMenuItem;
+	TMenuItem *LoadMetadata1;
 
 // menu item actions
     void __fastcall AboutMenuItemClick(TObject *Sender);
@@ -926,9 +927,9 @@ __published: // IDE-managed Components
 // miscellaneous actions
     void __fastcall AppActivate(TObject *Sender);
     void __fastcall AppDeactivate(TObject *Sender);
-    void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-    void __fastcall FormCreate(TObject *Sender);
-    void __fastcall LocationNameComboBoxClick(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall LocationNameComboBoxClick(TObject *Sender);
     void __fastcall MasterClockTimer(TObject *Sender);
     void __fastcall FormKeyUp(TObject *Sender, WORD &Key, TShiftState Shift);
     void __fastcall SpeedEditBoxKeyUp(TObject *Sender, WORD &Key, TShiftState Shift);
@@ -1009,6 +1010,7 @@ __published: // IDE-managed Components
     void __fastcall SpeedsHeatmapButtonClick(TObject *Sender);
     void __fastcall HeatmapsRedlowvaluesMenuItemClick(TObject *Sender);
     void __fastcall TrainLongServRefInfoOnOffMenuItemClick(TObject *Sender);
+	void __fastcall LoadMetadata1Click(TObject *Sender);
 
 public: // AboutForm needs access to these
 
@@ -1051,7 +1053,8 @@ private:
     static const UnicodeString IMAGE_DIR_NAME;
     static const UnicodeString FORMATTEDTT_DIR_NAME;
 	static const UnicodeString USERGRAPHICS_DIR_NAME;
-    static const UnicodeString METADATA_DIR_NAME;
+	static const UnicodeString METADATA_DIR_NAME;
+    static const UnicodeString DOCUMENTATION_DIR_NAME;
 // Level 2 program modes (i.e. submodes from the level 1 modes)
     enum TLevel2OperMode
     {
@@ -1236,7 +1239,7 @@ private:
 // ---------------------------------------------------------------------------
 
 // Metadata reader
-    MetadataReader metadata_reader_;
+    std::unique_ptr<MetadataReader> metadata_reader_{new MetadataReader};
 
 // ---------------------------------------------------------------------------
 

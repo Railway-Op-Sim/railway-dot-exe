@@ -20,7 +20,13 @@
 enum class ValidationError {
 	MissingKey,
 	IncorrectType,
+    Empty,
 	ValueError,
+};
+
+class MetadataFileException : public std::invalid_argument {
+	public:
+		explicit MetadataFileException(const std::string& message) : std::invalid_argument(message) {}
 };
 
 class ValidationResult : public std::map<ValidationError, std::vector<std::string>> {
@@ -28,6 +34,7 @@ class ValidationResult : public std::map<ValidationError, std::vector<std::strin
 		ValidationResult() {
 			this->insert({ValidationError::MissingKey, {}});
 			this->insert({ValidationError::IncorrectType, {}});
+            this->insert({ValidationError::Empty, {}});
 			this->insert({ValidationError::ValueError, {}});
 		}
 		ValidationResult(ValidationResult& other) {
@@ -37,6 +44,7 @@ class ValidationResult : public std::map<ValidationError, std::vector<std::strin
 			return (
 				this->at(ValidationError::MissingKey).empty() &&
 				this->at(ValidationError::IncorrectType).empty() &&
+                this->at(ValidationError::Empty).empty() &&
 				this->at(ValidationError::ValueError).empty()
 			);
 		}
@@ -47,6 +55,9 @@ class ValidationResult : public std::map<ValidationError, std::vector<std::strin
 			}
 			for(auto entry : validation.at(ValidationError::MissingKey)) {
 				os << "MISSING_KEY: Mandatory key '" << entry << "' is missing." << std::endl;
+			}
+            for(auto entry : validation.at(ValidationError::Empty)) {
+				os << "EMPTY: Value for '" << entry << "' is an empty list." << std::endl;
 			}
 			for(auto entry : validation.at(ValidationError::IncorrectType)) {
 				os << "INVALID_FORMAT: Value for '" << entry << "' is in invalid format." << std::endl;
@@ -60,7 +71,7 @@ enum class SignalPosition {
 	Right
 };
 
-struct SessionMetadata {
+struct SimulationMetadata {
 	std::string name{""};
 	std::optional<std::string> description{std::nullopt};
 	std::optional<std::string> display_name{std::nullopt};
@@ -81,8 +92,8 @@ struct SessionMetadata {
 	std::optional<toml::Version> minimum_required{std::nullopt};
 	SignalPosition signal_position{SignalPosition::Left};
 
-	friend std::ostream& operator<<(std::ostream& os, const SessionMetadata& metadata) {
-		os << "SessionMetadata{";
+	friend std::ostream& operator<<(std::ostream& os, const SimulationMetadata& metadata) {
+		os << "SimulationMetadata{";
 		os << "\tname = '" << metadata.name << "',\n";
 		os << "\tdescription = " << ((metadata.description.has_value()) ? (std::string("'") + metadata.description.value() + "'") : "null") << ",\n";
 		os << "\tdisplay_name = " << ((metadata.display_name.has_value()) ? (std::string("'") + metadata.display_name.value() + std::string("'")) : "null") << ",\n";
@@ -176,7 +187,6 @@ class MetadataReader {
 			{"display_name", toml::Type::String},
 			{"rly_file", toml::Type::String},
 			{"ttb_files", toml::Type::List},
-			{"ssn_files", toml::Type::List},
 			{"doc_files", toml::Type::List},
 			{"country_code", toml::Type::String},
 			{"year", toml::Type::Integer},
@@ -197,14 +207,14 @@ class MetadataReader {
 			{"signal_position", toml::Type::String},
 	
 		};
-		std::optional<std::string> current_metadata_file_{std::nullopt};
-        std::optional<SessionMetadata> current_metadata_{std::nullopt};
+        std::map<std::string, SimulationMetadata> current_metadata_;
 	public:
 		MetadataReader(const std::filesystem::path& output_dir = std::filesystem::path(".")) : output_directory_(output_dir) {}
 		ValidationResult validate() const;
-		SessionMetadata read_metadata_from_file(const std::filesystem::path& metadata_file, bool verbose = false);
-        void read_local_simulation(const std::string& simulation_name);
-		std::optional<SessionMetadata> get_metadata() const {
+		SimulationMetadata read_metadata_from_file(const std::filesystem::path& metadata_file, bool verbose = false);
+		std::map<std::string, SimulationMetadata> get_metadata() const {
 			return current_metadata_;
 		}
+		void read_directory(const std::filesystem::path& directory);
+        std::optional<SimulationMetadata> get_by_prefix(const std::string& prefix) const;
 };

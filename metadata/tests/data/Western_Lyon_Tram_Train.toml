@@ -13,4 +13,6 @@ name = "Western Lyon Tram Train"
 signal_position = "right"
 author = "Krizar"
 contributors = []
-ssn_files = ["Western_Lyon_Tram_Train_0530_Jan_2026.ssn"]
+ssn_files = [
+    "Western_Lyon_Tram_Train_0530_Jan_2026.ssn"
+]
