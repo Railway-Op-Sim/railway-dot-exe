@@ -4,7 +4,7 @@ void Date::validate_() {
 	if(month > 12) {
 		const std::string err_ = "Value '" + std::to_string(month) +
 			"' must be a valid month.";
-		throw std::invalid_argument(err_);
+		throw TOMLException(err_);
 	}
 	const bool date_too_large_ = day > 31 || (
 		(
@@ -23,7 +23,7 @@ void Date::validate_() {
 	if(date_too_large_) {
 		const std::string err_ = "Value '" + std::to_string(day) +
 			"' must be a valid day of month " + std::to_string(month) + ".";
-		throw std::invalid_argument(err_);
+		throw TOMLException(err_);
 	}
 }
 
@@ -78,11 +78,11 @@ std::optional<Version> TOML::get_version(const std::string& label) const {
 	return std::make_optional<Version>(value_);
 }
 
-void TOML::read(const std::filesystem::path& input_file) {
+void TOML::read(const std::filesystem::path& input_file, bool verbose) {
 	clear();
 
 	if (!std::filesystem::exists(input_file)) {
-        std::cerr << "Failed to open metdata file " << input_file << std::endl;
+        std::cerr << "Failed to open metadata file " << input_file << std::endl;
         return;
 	}
 
@@ -129,7 +129,10 @@ void TOML::read(const std::filesystem::path& input_file) {
                 else day_ = std::stoi(item_);
             }
 
+			if(verbose) std::cout << "Found date " << key_ << "='" << match_[1] << "'" << std::endl;
+
 		   dates_.insert(std::make_pair(key_, Date{year_, month_, day_}));
+		   continue;
 		}
 
 		if(std::regex_search(line_, match_, parse_version_)) {
@@ -145,18 +148,24 @@ void TOML::read(const std::filesystem::path& input_file) {
                 else patch_ = std::stoi(item_);
             }
 
+			if(verbose) std::cout << "Found version " << key_ << "='" << match_[1] << "'" << std::endl;
+
 		   versions_.insert(std::make_pair(key_, Version{major_, minor_, patch_}));
+		   continue;
         }
 
 		if(std::regex_search(line_, match_, parse_integer_)) {
-		   integers_[key_] = std::stoi(match_[1]);
+			if(verbose) std::cout << "Found integer " << key_ << "=" << match_[1] << std::endl;
+			integers_[key_] = std::stoi(match_[1]);
 		}
 
 		if(std::regex_search(line_, match_, parse_boolean_)) {
-		   booleans_[key_] = (match_[1] == "true") ? true : false;
+			if(verbose) std::cout << "Found boolean " << key_ << "=" << match_[1] << std::endl;
+			booleans_[key_] = (match_[1] == "true") ? true : false;
 		}
 
         if(std::regex_search(line_, match_, parse_string_)) {
+			if(verbose) std::cout << "Found string " << key_ << "='" << match_[1] << "'" << std::endl;
 		   strings_[key_] = match_[1];
         }
     }

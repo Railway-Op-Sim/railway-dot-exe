@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <optional>
+#include <stdexcept>
 #include <filesystem>
 #include <sstream>
 #include <iostream>
@@ -18,6 +19,20 @@ using TOMLDateMap = std::map<std::string, Date>;
 using TOMLSemverMap = std::map<std::string, Version>;
 using TOMLBoolMap = std::map<std::string, bool>;
 using OptionalVector = std::optional<std::vector<std::string>>;
+
+enum class Type {
+	String,
+	Integer,
+	List,
+	Version,
+	Date,
+	Boolean
+};
+
+class TOMLException : public std::invalid_argument {
+    public:
+        explicit TOMLException(const std::string& message) : std::invalid_argument(message) {}
+};
 
 struct Version {
 	const unsigned int major{0};
@@ -63,10 +78,19 @@ class TOML {
 		std::optional<std::string> get_string(const std::string& label) const;
 		std::optional<Date> get_date(const std::string& label) const;
 		std::optional<Version> get_version(const std::string& label) const;
+		std::optional<Type> has_key(const std::string& label) const {
+			if(lists_.find(label) != lists_.end()) return Type::List;
+			if(integers_.find(label) != integers_.end()) return Type::Integer;
+			if(strings_.find(label) != strings_.end()) return Type::String;
+			if(versions_.find(label) != versions_.end()) return Type::Version;
+			if(dates_.find(label) != dates_.end()) return Type::Date;
+			if(booleans_.find(label) != booleans_.end()) return Type::Boolean;
+			return std::nullopt;
+		}
 
         // Have to return boolean as integer as C++ Builder hates optional<bool>
 		std::optional<int> get_boolean(const std::string& label) const;
 		std::optional<int> get_integer(const std::string& label) const;
-		void read(const std::filesystem::path& input_file);
+		void read(const std::filesystem::path& input_file, bool verbose = false);
 		void clear();
 };

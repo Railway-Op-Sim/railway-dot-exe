@@ -1,7 +1,7 @@
 rly_file = "Western_Lyon_Tram_Train.rly"
-ttb_files = [ "Lyon_Tram_Train_Jan_2026.ttb",]
-img_files = [ "Western_Lyon_Tram_Train.bmp",]
-doc_files = [ "README.pdf",]
+ttb_files = ["Lyon_Tram_Train_Jan_2026.ttb"]
+img_files = ["Western_Lyon_Tram_Train.bmp"]
+doc_files = ["README.pdf"]
 release_date = "2026-01-07"
 version = "1.0.0"
 country_code = "FR"
@@ -13,4 +13,4 @@ name = "Western Lyon Tram Train"
 signal_position = "right"
 author = "Krizar"
 contributors = []
-ssn_files = [ "Western_Lyon_Tram_Train_0530_Jan_2026.ssn",]
+ssn_files = ["Western_Lyon_Tram_Train_0530_Jan_2026.ssn"]
