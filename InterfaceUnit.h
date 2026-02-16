@@ -77,6 +77,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vcl.h>
 #include <windows.h>            //needed for 64 bit compilation
 
+#include "metadata/reader.hxx"
+
 // ---------------------------------------------------------------------------
 
 typedef std::pair<int, int>THVShortPair; //also defined in TrainUnit.h but that isn't available from here
@@ -1048,7 +1050,8 @@ private:
     static const UnicodeString SESSION_DIR_NAME;
     static const UnicodeString IMAGE_DIR_NAME;
     static const UnicodeString FORMATTEDTT_DIR_NAME;
-    static const UnicodeString USERGRAPHICS_DIR_NAME;
+	static const UnicodeString USERGRAPHICS_DIR_NAME;
+    static const UnicodeString METADATA_DIR_NAME;
 // Level 2 program modes (i.e. submodes from the level 1 modes)
     enum TLevel2OperMode
     {
@@ -1228,7 +1231,12 @@ private:
 
 // API tracking variables      //added at v2.10.0
     int api_main_mode_;
-    int api_oper_mode_;
+	int api_oper_mode_;
+
+// ---------------------------------------------------------------------------
+
+// Metadata reader
+    MetadataReader metadata_reader_;
 
 // ---------------------------------------------------------------------------
 

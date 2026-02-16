@@ -16,7 +16,7 @@ SessionMetadata MetadataReader::read_metadata_from_file(const std::filesystem::p
 
 	try {
 		reader_.load(metadata_file, verbose);
-	} catch(TOMLException& e) {
+	} catch(toml::TOMLException& e) {
 		ValidationResult validation_;
 		toml_parse_[ValidationError::ValueError].push_back(e.what());
 		toml_parse_.dump(outfile_);
@@ -76,22 +76,22 @@ ValidationResult MetadataReader::validate() const {
 	for(auto [key, type] : required_types_) {
 		bool failed_validation_{false};
 		switch (type) {
-			case Type::Integer:
+			case toml::Type::Integer:
 				failed_validation_ = !reader_.get_integer(key).has_value();
 				break;
-			case Type::String:
+			case toml::Type::String:
 				failed_validation_ = !reader_.get_string(key).has_value();
 				break;
-			case Type::Boolean:
+			case toml::Type::Boolean:
 				failed_validation_ = !reader_.get_boolean(key).has_value();
 				break;
-			case Type::List:
+			case toml::Type::List:
 				failed_validation_ = !reader_.get_list(key).has_value();
 				break;
-			case Type::Version:
+			case toml::Type::Version:
 				failed_validation_ = !reader_.get_version(key).has_value();
 				break;
-			case Type::Date:
+			case toml::Type::Date:
 				failed_validation_ = !reader_.get_date(key).has_value();
 				break;
 		}
@@ -104,22 +104,22 @@ ValidationResult MetadataReader::validate() const {
 		if(!reader_.has_key(key)) continue;
 		bool failed_validation_{false};
 		switch (type) {
-			case Type::Integer:
+			case toml::Type::Integer:
 				failed_validation_ = !reader_.get_integer(key).has_value();
 				break;
-			case Type::String:
+			case toml::Type::String:
 				failed_validation_ = !reader_.get_string(key).has_value();
 				break;
-			case Type::Boolean:
+			case toml::Type::Boolean:
 				failed_validation_ = !reader_.get_boolean(key).has_value();
 				break;
-			case Type::List:
+			case toml::Type::List:
 				failed_validation_ = !reader_.get_list(key).has_value();
 				break;
-			case Type::Version:
+			case toml::Type::Version:
 				failed_validation_ = !reader_.get_version(key).has_value();
 				break;
-			case Type::Date:
+			case toml::Type::Date:
 				failed_validation_ = !reader_.get_date(key).has_value();
 				break;
 		}
@@ -145,5 +145,13 @@ void ValidationResult::dump(const std::filesystem::path& output_file) const {
 }
 
 void MetadataReader::read_local_simulation(const std::string& simulation_name) {
-
+	const std::filesystem::path file_name_{simulation_name};
+	const std::filesystem::path prefix_{file_name_.stem()};
+	std::filesystem::path metadata_file_{
+		std::filesystem::path{output_directory_} / "Metadata" / prefix_
+	};
+	metadata_file_ += ".toml";
+	if(std::filesystem::exists(metadata_file_)) {
+       current_metadata_ = read_metadata_from_file(metadata_file_);
+    }
 }

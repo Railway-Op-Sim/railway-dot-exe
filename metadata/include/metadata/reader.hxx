@@ -76,9 +76,9 @@ struct SessionMetadata {
 	std::optional<unsigned int> difficulty{std::nullopt};
 	std::string author{""};
 	std::optional<std::vector<std::string>> contributors;
-	Version version;
-	Date release_date;
-	std::optional<Version> minimum_required{std::nullopt};
+	toml::Version version;
+	toml::Date release_date;
+	std::optional<toml::Version> minimum_required{std::nullopt};
 	SignalPosition signal_position{SignalPosition::Left};
 
 	friend std::ostream& operator<<(std::ostream& os, const SessionMetadata& metadata) {
@@ -168,39 +168,39 @@ struct SessionMetadata {
 
 class MetadataReader {
 	private:
-    	TOML reader_;
+    	toml::TOML reader_;
 		const std::filesystem::path output_directory_;
 		ValidationResult validation_;
-		const std::map<std::string, Type> required_types_{
-			{"name", Type::String},
-			{"display_name", Type::String},
-			{"rly_file", Type::String},
-			{"ttb_files", Type::List},
-			{"ssn_files", Type::List},
-			{"doc_files", Type::List},
-			{"country_code", Type::String},
-			{"year", Type::Integer},
-			{"factual", Type::Boolean},
-			{"author", Type::String},
-			{"version", Type::Version},
-			{"release_date", Type::Date},
+		const std::map<std::string, toml::Type> required_types_{
+			{"name", toml::Type::String},
+			{"display_name", toml::Type::String},
+			{"rly_file", toml::Type::String},
+			{"ttb_files", toml::Type::List},
+			{"ssn_files", toml::Type::List},
+			{"doc_files", toml::Type::List},
+			{"country_code", toml::Type::String},
+			{"year", toml::Type::Integer},
+			{"factual", toml::Type::Boolean},
+			{"author", toml::Type::String},
+			{"version", toml::Type::Version},
+			{"release_date", toml::Type::Date},
 		};
-		const std::map<std::string, Type> optional_types_{
-			{"display_name", Type::String},
-			{"description", Type::String},
-			{"ssn_files", Type::List},
-			{"img_files", Type::List},
-			{"graphic_files", Type::List},
-			{"difficulty", Type::Integer},
-			{"contributors", Type::List},
-			{"minimum_required", Type::Version},
-			{"signal_position", Type::String},
+		const std::map<std::string, toml::Type> optional_types_{
+			{"display_name", toml::Type::String},
+			{"description", toml::Type::String},
+			{"ssn_files", toml::Type::List},
+			{"img_files", toml::Type::List},
+			{"graphic_files", toml::Type::List},
+			{"difficulty", toml::Type::Integer},
+			{"contributors", toml::Type::List},
+			{"minimum_required", toml::Type::Version},
+			{"signal_position", toml::Type::String},
 	
 		};
 		std::optional<std::string> current_metadata_file_{std::nullopt};
         std::optional<SessionMetadata> current_metadata_{std::nullopt};
 	public:
-		MetadataReader(const std::filesystem::path& output_dir) : output_directory_(output_dir) {}
+		MetadataReader(const std::filesystem::path& output_dir = std::filesystem::path(".")) : output_directory_(output_dir) {}
 		ValidationResult validate() const;
 		SessionMetadata read_metadata_from_file(const std::filesystem::path& metadata_file, bool verbose = false);
         void read_local_simulation(const std::string& simulation_name);

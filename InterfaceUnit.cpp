@@ -80,6 +80,7 @@ const UnicodeString TInterface::SESSION_DIR_NAME = "Sessions";
 const UnicodeString TInterface::IMAGE_DIR_NAME = "Images";
 const UnicodeString TInterface::FORMATTEDTT_DIR_NAME = "Formatted timetables";
 const UnicodeString TInterface::USERGRAPHICS_DIR_NAME = "Graphics";
+const UnicodeString TInterface::METADATA_DIR_NAME = "Metadata";
 
 // ---------------------------------------------------------------------------
 
@@ -176,13 +177,20 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
                 DirOpenError = true;
             }
         }
-        if(!DirectoryExists(USERGRAPHICS_DIR_NAME))
+		if(!DirectoryExists(USERGRAPHICS_DIR_NAME))
+		{
+			if(!CreateDir(USERGRAPHICS_DIR_NAME))
+			{
+				DirOpenError = true;
+			}
+		}
+		if(!DirectoryExists(METADATA_DIR_NAME))
         {
-            if(!CreateDir(USERGRAPHICS_DIR_NAME))
+            if(!CreateDir(METADATA_DIR_NAME))
             {
                 DirOpenError = true;
             }
-        }
+		}
         if(DirOpenError)
         {
             ShowMessage("Failed to create one or more of folders: " + RAILWAY_DIR_NAME + ", " + TIMETABLE_DIR_NAME + ", " + PERFLOG_DIR_NAME + ", " +
@@ -3582,9 +3590,10 @@ void __fastcall TInterface::EditTimetableMenuItemClick(TObject *Sender)
             }
             CreateEditTTFileName = AnsiString(TimetableDialog->FileName);
             TrainController->LogEvent("EditTimetable " + CreateEditTTFileName);
-            std::ifstream TTBLFile(CreateEditTTFileName.c_str(), std::ios_base::binary); // open in binary to examine each character
-            if(TTBLFile.is_open())
-            {
+			std::ifstream TTBLFile(CreateEditTTFileName.c_str(), std::ios_base::binary); // open in binary to examine each character
+			if(TTBLFile.is_open())
+			{
+				metadata_reader_.read_local_simulation(std::string(CreateEditTTFileName.c_str()));
                 // check doesn't contain any control characters except CR, LF & '\0' (changed at v2.16.0 to allow extended characters in location names)
                 char c;
                 while(!TTBLFile.eof())
@@ -4077,8 +4086,8 @@ void __fastcall TInterface::InvertTTEntryButtonClick(TObject *Sender) //added at
     {
         TrainController->LogEvent("InvertTTEntryButtonClick");
         Utilities->CallLog.push_back(Utilities->TimeStamp() + ",InvertTTEntryButtonClick");
-        TTimetableEditVector InputVector, OutputVector, OutputVector2, TimeVector1, TimeVector2; //TTimetableEditVector is an ansistring vector type so convenient to use
-        typedef std::vector<int> TMinVector;
+		TTimetableEditVector InputVector, OutputVector, OutputVector2, TimeVector1, TimeVector2; //TTimetableEditVector is an ansistring vector typd so convenient to use
+		typedef std::vector<int> TMinVector;
         TMinVector MinVector;
         AnsiString OneLine = *TTCurrentEntryIterator, SubStr, First, Second, Third, Fourth, TrainDataLine, NewEntry;
         AnsiString ArrivalTime, DepartureTime, FirstTimeLoc, FirstLocation;

@@ -93,8 +93,8 @@
         <Icon_MainIcon>$(BDS)\bin\cbuilder_PROJECTICON.ico</Icon_MainIcon>
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
-        <IncludePath>metadata\;..\..\GitHub Current Version\railway-dot-exe\;railway\;$(IncludePath)</IncludePath>
-        <ILINK_LibraryPath>metadata\;..\..\GitHub Current Version\railway-dot-exe\;railway\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <IncludePath>metadata\include\metadata\;metadata\src\;metadata\;..\..\GitHub Current Version\railway-dot-exe\;railway\;$(IncludePath)</IncludePath>
+        <ILINK_LibraryPath>metadata\include\metadata\;metadata\src\;metadata\;..\..\GitHub Current Version\railway-dot-exe\;railway\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <SanitizedProjectName>railway</SanitizedProjectName>
         <FeatureFilesAdded>false</FeatureFilesAdded>
     </PropertyGroup>
@@ -162,12 +162,12 @@
         <BCC_UseClassicCompiler>false</BCC_UseClassicCompiler>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <LinkPackageImports>rtl.bpi;vcl.bpi;vclimg.bpi;IndySystem.bpi;IndyCore.bpi</LinkPackageImports>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Icon_MainIcon>..\..\GitHub Current Version\railway-dot-exe\Railway.ico</Icon_MainIcon>
+        <Icon_MainIcon>Railway.ico</Icon_MainIcon>
+        <BCC_IncludePath>.\metadata\include;$(BCC_IncludePath)</BCC_IncludePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64x)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -233,18 +233,21 @@
             <DependentOn>InterfaceUnit.h</DependentOn>
             <BuildOrder>6</BuildOrder>
         </CppCompile>
-        <None Include="metadata\iso_country_codes.hxx">
-            <BuildOrder>15</BuildOrder>
-        </None>
-        <CppCompile Include="metadata\reader.cpp">
-            <BuildOrder>16</BuildOrder>
-        </CppCompile>
-        <None Include="metadata\reader.hxx">
+        <None Include="metadata\include\metadata\iso_country_codes.hxx">
             <BuildOrder>17</BuildOrder>
         </None>
-        <None Include="metadata\toml.hxx">
+        <None Include="metadata\include\metadata\reader.hxx">
             <BuildOrder>18</BuildOrder>
         </None>
+        <None Include="metadata\include\metadata\toml.hxx">
+            <BuildOrder>19</BuildOrder>
+        </None>
+        <CppCompile Include="metadata\src\reader.cpp">
+            <BuildOrder>15</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="metadata\src\toml.cpp">
+            <BuildOrder>16</BuildOrder>
+        </CppCompile>
         <CppCompile Include="PerfLogUnit.cpp">
             <Form>PerfLogForm</Form>
             <FormType>dfm</FormType>
@@ -530,32 +533,32 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="metadata\include\metadata\iso_country_codes.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="metadata\include\metadata\reader.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="metadata\include\metadata\toml.hxx" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="metadata\iso_country_codes.hxx" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="metadata\iso_country_codes.hxx" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="metadata\reader.hxx" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="metadata\reader.hxx" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="metadata\toml.hxx" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>

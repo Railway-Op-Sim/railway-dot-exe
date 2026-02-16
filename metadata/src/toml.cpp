@@ -4,6 +4,8 @@
 #include <sstream>
 #include <stdexcept>
 
+using namespace toml;
+
 void Date::validate_() {
 	if(month > 12) {
 		const std::string err_ = "Value '" + std::to_string(month) +
