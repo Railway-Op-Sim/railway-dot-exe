@@ -1,4 +1,5 @@
 #pragma once
+#include <ostream>
 #include <regex>
 #include <map>
 #include <vector>
@@ -87,10 +88,121 @@ class TOML {
 			if(booleans_.find(label) != booleans_.end()) return Type::Boolean;
 			return std::nullopt;
 		}
+		void integer(int value);
+
+		template<typename T>
+		void insert(const std::string& key, const T& value) {
+			if constexpr (std::is_same_v<T, int>) {
+				integers_[key] = value;
+			} else if constexpr (std::is_same_v<T, std::string>) {
+				strings_[key] = value;
+			} else if constexpr (std::is_same_v<T, Date>) {
+				dates_[key] = value;
+			} else if constexpr (std::is_same_v<T, Version>) {
+				versions_[key] = value;
+			} else if constexpr (std::is_same_v<T, bool>) {
+				booleans_[key] = value;
+			} else if constexpr (std::is_same_v<T, std::vector<std::string>>) {
+				lists_[key] = value;
+			} else {
+				throw std::invalid_argument("Unsupported type for value");
+			}
+		}
+
+		template<typename T>
+		T get(const std::string& key) {
+		    if(!has_key(key)) {
+		        throw TOMLException(
+		            "Key '" + key + "' not found."
+		        );
+		    }
+		    if constexpr (std::is_same_v<T, int>) {
+		        if(integers_.find(key) == integers_.end()) {
+		            throw TOMLException(
+		                "Key '" + key + "' not found."
+		            );
+		        }
+		        return integers_[key];
+		    } else if constexpr (std::is_same_v<T, std::string>) {
+		        if(strings_.find(key) == strings_.end()) {
+		            throw TOMLException(
+		                "Key '" + key + "' not found."
+		            );
+		        }
+		        return strings_[key];
+		    } else if constexpr (std::is_same_v<T, Date>) {
+		        if(dates_.find(key) == dates_.end()) {
+		            throw TOMLException(
+		                "Key '" + key + "' not found."
+		            );
+		        }
+		        return dates_[key];
+		    } else if constexpr (std::is_same_v<T, Version>) {
+		        if(versions_.find(key) == versions_.end()) {
+		            throw TOMLException(
+		                "Key '" + key + "' not found."
+		            );
+		        }
+		        return versions_[key];
+		    } else if constexpr (std::is_same_v<T, bool>) {
+		        if(booleans_.find(key) == booleans_.end()) {
+		            throw TOMLException(
+		                "Key '" + key + "' not found."
+		            );
+		        }
+		        return booleans_[key];
+		    } else if constexpr (std::is_same_v<T, std::vector<std::string>>) {
+		        if(lists_.find(key) == lists_.end()) {
+		            throw TOMLException(
+		                "Key '" + key + "' not found."
+		            );
+		        }
+		        return lists_[key];
+		    } else {
+		        throw std::invalid_argument("Unsupported type for value");
+		    }
+		
+		}
 
         // Have to return boolean as integer as C++ Builder hates optional<bool>
 		std::optional<int> get_boolean(const std::string& label) const;
 		std::optional<int> get_integer(const std::string& label) const;
-		void read(const std::filesystem::path& input_file, bool verbose = false);
+		void load(const std::filesystem::path& input_file, bool verbose = false);
 		void clear();
+		void dump(const std::filesystem::path& output_file);
+
+		friend std::ostream& operator<<(std::ostream& os, const TOML& toml) {
+			for(auto [key, date] :toml.dates_) {
+				os << key << " = " << '"';
+				os << date.year << "-";
+				os << ((date.month < 10) ? "0" : "") << date.month << "-";
+				os << ((date.day < 10) ? "0" : "") << date.day << '"';
+				os << "\n";
+			}
+			for(auto [key, version] :toml.versions_) {
+				os << key << " = " << '"';
+				os << version.major << ".";
+				os << version.minor << ".";
+				os << version.patch << '"';
+				os << "\n";
+			}
+			for(auto [key, string] :toml.strings_) {
+				os << key << " = " << '"' << string << '"' << "\n";
+			}
+			for(auto [key, integer] :toml.integers_) {
+				os << key << " = " << integer << "\n";
+			}
+			for(auto [key, list] :toml.lists_) {
+				if(list.empty()) continue;
+				os << key << " = [";
+				for(auto string : list) {
+					os << "\t" << '"' << string << '"' << ",\n";
+				}
+				os << "]" << "\n";
+			}
+			for(auto [key, boolean] : toml.booleans_) {
+				os << key << " = " << ((boolean) ? "true" : "false") << "\n";
+			}
+			return os;
+		}
 };

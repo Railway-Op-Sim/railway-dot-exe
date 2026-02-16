@@ -1,4 +1,8 @@
 #include "metadata/toml.hxx"
+#include <cstdarg>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
 
 void Date::validate_() {
 	if(month > 12) {
@@ -78,7 +82,7 @@ std::optional<Version> TOML::get_version(const std::string& label) const {
 	return std::make_optional<Version>(value_);
 }
 
-void TOML::read(const std::filesystem::path& input_file, bool verbose) {
+void TOML::load(const std::filesystem::path& input_file, bool verbose) {
 	clear();
 
 	if (!std::filesystem::exists(input_file)) {
@@ -169,4 +173,13 @@ void TOML::read(const std::filesystem::path& input_file, bool verbose) {
 		   strings_[key_] = match_[1];
         }
     }
+}
+
+void TOML::dump(const std::filesystem::path& output_file) {
+	std::stringstream ss;
+	ss << *this;
+
+	std::ofstream output_{output_file};
+	output_ << ss.str();
+	output_.close();
 }

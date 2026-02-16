@@ -15,7 +15,7 @@ SessionMetadata MetadataReader::read_metadata_from_file(const std::filesystem::p
 	ValidationResult toml_parse_;
 
 	try {
-		reader_.read(metadata_file, verbose);
+		reader_.load(metadata_file, verbose);
 	} catch(TOMLException& e) {
 		ValidationResult validation_;
 		toml_parse_[ValidationError::ValueError].push_back(e.what());
