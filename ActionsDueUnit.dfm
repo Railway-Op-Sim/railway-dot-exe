@@ -21,7 +21,6 @@ object ActionsDueForm: TActionsDueForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = [fsBold]
-  Visible = True
   OnCreate = FormCreate
   OnResize = ADFResize
   TextHeight = 13

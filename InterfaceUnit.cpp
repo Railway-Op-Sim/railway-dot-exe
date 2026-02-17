@@ -617,7 +617,9 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
             ShowMessage("Please note that this program works best with a screen resolution of at least 1024 x 768.  Please change if possible");
         }
         SkipFormResizeEvent = true; // added at v2.1.0
-        MasterClock->Enabled = true;
+//        MasterClock->Enabled = true;  //too early here, allowed ClockTimer2 to run before ActionsDueForm & PerfLogForm created making the error catch itself fail (not EFOpenError)
+                                        //for errors after this point.  ClockTimer2 makes calls to ActionsDueForm & PerfLogForm, changed after v2.23.4
+                                        //put it after all forms created.
         Visible = true; // make Interface form visible (set to false at design time)    autocalls FormResize so it is skipped by SkipFormResizeEvent being true
         WindowState = wsMaximized; // need this for full screen at start                autocalls FormResize so it is skipped by SkipFormResizeEvent being true
         MTBFEditBox->Left = MainScreen->Left + MainScreen->Width - MTBFEditBox->Width + 30; // new v2.4.0 30 is to place it above the positional panel
@@ -701,6 +703,11 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         conv = localeconv(); // this is what updates the structure
         ExitHeatmaps(); //to set up initial parameters
         Utilities->DecimalPoint = conv->decimal_point[0];
+
+//        TMsgDlgButtons But;   //diagnostics
+//        But << mbOK;
+//        MessageDlg("test message", mtError, But, 0);
+
     }
 
     catch(const EFOpenError &e)
@@ -2536,7 +2543,7 @@ void __fastcall TInterface::OperatorActionButtonClick(TObject *Sender)
         if(!ShowActionsDueForm)
         {
             ShowActionsDueForm = true;
-            if(FirstActionsDueFormDisplay) //initial position of PerfLogForm
+            if(FirstActionsDueFormDisplay) //initial position of ActionsDueForm
             {
                 ActionsDueForm->Top = Screen->Height - ActionsDueForm->Height - 32; //-32 to avoid overlapping taskbar;
                 ActionsDueForm->Left = Screen->Width - ActionsDueForm->Width;

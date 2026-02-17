@@ -42,6 +42,9 @@ void __fastcall TActionsDueForm::FormCreate(TObject *Sender)
     Interface->ADFTop = ActionsDueForm->Top; //initialises these values
     Interface->ADFLeft = ActionsDueForm->Left;
     Interface->FirstActionsDueFormDisplay = true;
+    Interface->MasterClock->Enabled = true;  //moved here (last form to be constructed - see railway.cpp) from the
+                                             //TInterface constructor after v2.23.4.  Don't want timer running before
+                                             //all forms have been created and initialised.
 }
 //---------------------------------------------------------------------------
 void __fastcall TActionsDueForm::ActionsDueListBoxMouseDown(TObject *Sender, TMouseButton Button,
