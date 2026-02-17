@@ -153,7 +153,7 @@ void ValidationResult::dump(const std::filesystem::path& output_file) const {
 	output_.close();
 }
 
-void MetadataReader::read_directory(const std::filesystem::path& directory) {
+void MetadataReader::read_directory(const std::filesystem::path& directory, bool raise_except) {
 	if(!std::filesystem::is_directory(directory)) {
 		throw MetadataFileException(
             "Location '" + directory.string() + "' is not a directory."
@@ -164,12 +164,18 @@ void MetadataReader::read_directory(const std::filesystem::path& directory) {
 		 if(std::filesystem::path(entry.path()).extension().string() != ".toml") {
 			 continue;
 		 }
-		 current_metadata_[entry.path().string()] = read_metadata_from_file(entry.path());
+		 try {
+			current_metadata_[entry.path().string()] = read_metadata_from_file(entry.path());
+		 } catch(toml::TOMLException& e) {
+			 if(raise_except) throw e;
+		 } catch(MetadataFileException& e) {
+			 if(raise_except) throw e;
+         }
     }
 }
 
 std::optional<SimulationMetadata> MetadataReader::get_by_prefix(const std::string& prefix) const {
-	for(const auto [_, metadata] : get_metadata()) {
+	for(auto [_, metadata] : get_metadata()) {
 		if(std::filesystem::path(metadata.rly_file).stem().string().find(prefix) != std::string::npos) {
 			return metadata;
 		}

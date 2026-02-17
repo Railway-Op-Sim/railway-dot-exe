@@ -446,7 +446,6 @@ __published: // IDE-managed Components
     TMenuItem *LoadRailwayMenuItem;
     TMenuItem *SaveAsMenuItem;
     TMenuItem *SaveMenuItem;
-    TMenuItem *LoadTimetableMenuItem;
     TMenuItem *LoadSessionMenuItem;
     TMenuItem *ExportTTMenuItem;
     TMenuItem *ClearAllMenuItem;
@@ -773,7 +772,8 @@ __published: // IDE-managed Components
     TMenuItem *N7;
     TMenuItem *TrainLongServRefInfoOnOffMenuItem;
     TMenuItem *TrainTTInfoOnOffMenuItem;
-	TMenuItem *LoadMetadata1;
+	TMenuItem *LoadTimetableSuggested;
+	TMenuItem *FromBrowser1;
 
 // menu item actions
     void __fastcall AboutMenuItemClick(TObject *Sender);
@@ -793,7 +793,6 @@ __published: // IDE-managed Components
     void __fastcall FlipMenuItemClick(TObject *Sender);
     void __fastcall LoadRailwayMenuItemClick(TObject *Sender);
     void __fastcall LoadSessionMenuItemClick(TObject *Sender);
-    void __fastcall LoadTimetableMenuItemClick(TObject *Sender);
     void __fastcall MirrorMenuItemClick(TObject *Sender);
     void __fastcall OpenHelpMenuItemClick(TObject *Sender);
     void __fastcall OperateRailwayMenuItemClick(TObject *Sender);
@@ -1009,8 +1008,10 @@ __published: // IDE-managed Components
     void __fastcall LengthsHeatmapButtonClick(TObject *Sender);
     void __fastcall SpeedsHeatmapButtonClick(TObject *Sender);
     void __fastcall HeatmapsRedlowvaluesMenuItemClick(TObject *Sender);
-    void __fastcall TrainLongServRefInfoOnOffMenuItemClick(TObject *Sender);
-	void __fastcall LoadMetadata1Click(TObject *Sender);
+	void __fastcall TrainLongServRefInfoOnOffMenuItemClick(TObject *Sender);
+	void __fastcall FromBrowser1Click(TObject *Sender);
+	void __fastcall FileMenuClick(TObject *Sender);
+	void __fastcall TTBMenuClick(TObject *Sender);
 
 public: // AboutForm needs access to these
 
@@ -1734,7 +1735,13 @@ is loaded fillowed by AvHoursIntValue then all failed trains if any. */
 /// Controls the floating window function, called during the ClockTimer2 function
     void TrackTrainFloat(int Caller);
 /// Called every 5 secs to update the panel (if visible)
-    void UpdateActionsDuePanel(int Caller);
+	void UpdateActionsDuePanel(int Caller);
+/// Load Metadata file
+	void LoadMetadata();
+/// Populate available files from metadata into menu
+	void PopulateMenusFromMetadata();
+/// Load a timetable from a file
+    void LoadTimetableFromFile(const AnsiString&);
 };
 
 // ---------------------------------------------------------------------------

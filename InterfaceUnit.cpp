@@ -110,7 +110,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 //        ShowMessage("Curdir from GetCurrentDir() " + CurDir);    //these used to check behaviour outside the compiler
         UnicodeString FullProgramName = GetModuleName(0);              // added at v2.9.0 to check executable exists
 //        ShowMessage("FullProgramName " + FullProgramName);
-        UnicodeString ProgramName = ExtractFileName(FullProgramName);  // as above
+		UnicodeString ProgramName = ExtractFileName(FullProgramName);  // as above
 //        ShowMessage("ProgramName " + ProgramName);
 		UnicodeString ProgramDirectoryName = ExtractFilePath(FullProgramName);  // as above
 //        ShowMessage("ProgramDirectoryName " + ProgramDirectoryName);
@@ -911,21 +911,35 @@ void __fastcall TInterface::BuildTrackMenuItemClick(TObject *Sender) // Mode Men
 
 void __fastcall TInterface::AddTrackButtonClick(TObject *Sender)
 {
-    try
-    {
-        TrainController->LogEvent("AddTrackButtonClick");
-        Utilities->CallLog.push_back(Utilities->TimeStamp() + ",AddTrackButtonClick");
-        ExitHeatmaps();
-        Level1Mode = TrackMode;
-        SetLevel1Mode(38);
-        Level2TrackMode = AddTrack;
-        SetLevel2TrackMode(2);
-        Utilities->CallLogPop(1162);
-    }
-    catch(const Exception &e)
-    {
-        ErrorLog(121, e.Message);
-    }
+	try
+	{
+		TrainController->LogEvent("AddTrackButtonClick");
+		Utilities->CallLog.push_back(Utilities->TimeStamp() + ",AddTrackButtonClick");
+		ExitHeatmaps();
+		Level1Mode = TrackMode;
+		SetLevel1Mode(38);
+		Level2TrackMode = AddTrack;
+		SetLevel2TrackMode(2);
+		Utilities->CallLogPop(1162);
+	}
+	catch(const Exception &e)
+	{
+		ErrorLog(121, e.Message);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+void __fastcall TInterface::TTBMenuClick(TObject *Sender)
+{
+	TMenuItem *item = dynamic_cast<TMenuItem*>(Sender);
+	const UnicodeString FullProgramName = GetModuleName(0);
+	const UnicodeString ProgramName = ExtractFileName(FullProgramName);
+	const UnicodeString ProgramDirectoryName = ExtractFilePath(FullProgramName);
+	std::filesystem::path file_path_{ProgramDirectoryName.c_str()};
+	file_path_ /= std::filesystem::path(TIMETABLE_DIR_NAME.c_str());
+	file_path_ /= std::filesystem::path((item->Caption + ".ttb").c_str());
+	LoadTimetableFromFile(AnsiString(file_path_.c_str()));
 }
 
 // ---------------------------------------------------------------------------
@@ -13686,73 +13700,6 @@ to another point bidir leg with 3 PDs set.  If so it returns true, else false.
     return true;
 }
 
-//---------------------------------------------------------------------------
-
-void __fastcall TInterface::LoadTimetableMenuItemClick(TObject *Sender)
-{
-    try
-    {
-        TrainController->LogEvent("LoadTimetableMenuItemClick");
-        Utilities->CallLog.push_back(Utilities->TimeStamp() + ",LoadTimetableMenuItemClick");
-        TimetableDialog->Filter = "Timetable file (*.ttb)|*.ttb";
-        // reset all message flags, stops them being given twice  new at v2.4.0
-        TrainController->SSHigh = false;
-//        TrainController->MRSHigh = false; removed at v2.21.0
-//        TrainController->MRSLow = false;
-        TrainController->MassHigh = false;
-        TrainController->BFHigh = false;
-        TrainController->BFLow = false;
-        TrainController->PwrHigh = false;
-        TrainController->SigSHigh = false;
-        TrainController->SigSLow = false;
-        if(TimetableDialog->Execute())
-        {
-            if(TimetableDialog->InitialDir != TPath::GetDirectoryName(TimetableDialog->FileName)) // new at v2.6.0 to retain a new directory
-            {
-                TimetableDialog->InitialDir = TPath::GetDirectoryName(TimetableDialog->FileName);
-                SaveTTDialog->InitialDir = TPath::GetDirectoryName(TimetableDialog->FileName);
-            }
-            TrainController->LogEvent("LoadTimetable " + TimetableDialog->FileName);
-            bool CheckLocationsExistInRailwayTrue = true;
-            if(TrainController->TimetableIntegrityCheck(0, AnsiString(TimetableDialog->FileName).c_str(), true, CheckLocationsExistInRailwayTrue))
-            // true for GiveMessages
-            {
-                Screen->Cursor = TCursor(-11); // Hourglass;
-                std::ifstream TTBLFile(AnsiString(TimetableDialog->FileName).c_str(), std::ios_base::binary);
-                if(TTBLFile.is_open())
-                {
-                    bool SessionFileFalse = false;
-                    if(BuildTrainDataVectorForLoadFile(0, TTBLFile, true, CheckLocationsExistInRailwayTrue, SessionFileFalse)) // true for GiveMessages
-                    {
-                        SaveTempTimetableFile(0, TimetableDialog->FileName);
-                    } // don't need an 'else' as messages given in BuildTrainDataVectorForLoadFile
-
-                }
-                else
-                {
-                    ShowMessage("Failed to open timetable file, make sure it's spelled correctly, it exists and isn't open in another application");
-                }
-                Screen->Cursor = TCursor(-2); // Arrow
-            } // if(TimetableIntegrityCheck
-            else
-            {
-                ShowMessage("Timetable integrity check failed - unable to load " + TimetableDialog->FileName + ". \n\nPlease make sure that you are using the latest program version and that the timetable contains no errors.");
-                //message clarified at v2.14.0
-            }
-        } // if(TimetableDialog->Execute())
-
-        // else ShowMessage("Load Aborted");
-        Utilities->CallLogPop(752);
-    }
-    catch(const Exception &e)  //made a non-error catch at v2.14.0 following Albie Vowles error of 15/12/22
-    {
-        TrainController->StopTTClockMessage(137, "Timetable file failed to load - is the latest program version in use?\nIf so then the file may be corrupt.\n\nError message: " + e.Message);
-        Screen->Cursor = TCursor(-2); // Arrow;
-        Utilities->CallLogPop(2553);
-//        ErrorLog(34, e.Message);
-    }
-}
-
 // ---------------------------------------------------------------------------
 void __fastcall TInterface::TakeSignallerControlMenuItemClick(TObject *Sender)
 {
@@ -18617,11 +18564,11 @@ void TInterface::SetLevel1Mode(int Caller)
         }
         if(RlyFile)
         {
-            LoadTimetableMenuItem->Enabled = true;
+            LoadTimetableSuggested->Enabled = true;
         }
         else
         {
-            LoadTimetableMenuItem->Enabled = false;
+			LoadTimetableSuggested->Enabled = false;
         }
         LoadRailwayMenuItem->Enabled = true;
         if(NoRailway())
@@ -25794,7 +25741,7 @@ void TInterface::SaveErrorFile()
     {
         TrainController->StopTTClockMessage(6, "Error file failed to open, error log won't be saved.");
     }
-    Screen->Cursor = TCursor(-2); // Arrow
+	Screen->Cursor = TCursor(-2); // Arrow
 }
 
 // ---------------------------------------------------------------------------
@@ -29714,6 +29661,43 @@ void __fastcall TInterface::TrainLongServRefInfoOnOffMenuItemClick(TObject *Send
     Utilities->CallLogPop(2730);
 }
 
+void TInterface::LoadTimetableFromFile(const AnsiString& filename) {
+	TrainController->SSHigh = false;
+	TrainController->MassHigh = false;
+	TrainController->BFHigh = false;
+	TrainController->BFLow = false;
+	TrainController->PwrHigh = false;
+	TrainController->SigSHigh = false;
+	TrainController->SigSLow = false;
+
+    bool CheckLocationsExistInRailwayTrue = true;
+	if(TrainController->TimetableIntegrityCheck(0, filename.c_str(), true, CheckLocationsExistInRailwayTrue))
+	// true for GiveMessages
+	{
+		Screen->Cursor = TCursor(-11); // Hourglass;
+		std::ifstream TTBLFile(filename.c_str(), std::ios_base::binary);
+		if(TTBLFile.is_open())
+		{
+			bool SessionFileFalse = false;
+			if(BuildTrainDataVectorForLoadFile(0, TTBLFile, true, CheckLocationsExistInRailwayTrue, SessionFileFalse)) // true for GiveMessages
+			{
+				SaveTempTimetableFile(0, filename);
+			} // don't need an 'else' as messages given in BuildTrainDataVectorForLoadFile
+
+		}
+		else
+		{
+			ShowMessage("Failed to open timetable file, make sure it's spelled correctly, it exists and isn't open in another application");
+		}
+		Screen->Cursor = TCursor(-2); // Arrow
+	} // if(TimetableIntegrityCheck
+	else
+	{
+		ShowMessage("Timetable integrity check failed - unable to load " + filename + ". \n\nPlease make sure that you are using the latest program version and that the timetable contains no errors.");
+		//message clarified at v2.14.0
+	}
+}
+
 //---------------------------------------------------------------------------
 
 /*
@@ -29780,28 +29764,77 @@ void __fastcall TInterface::TrainLongServRefInfoOnOffMenuItemClick(TObject *Send
 */
 
 //---------------------------------------------------------------------------
-
-void __fastcall TInterface::LoadMetadata1Click(TObject *Sender)
+void __fastcall TInterface::FromBrowser1Click(TObject *Sender)
 {
-  	try {
-		// Read all metadata files, if a string is returned there was a parse
-		// error for one or more files, raise this as a warning
-		const UnicodeString programDirName{ExtractFilePath(GetModuleName(0))};
-		const std::string program_dir_name_{AnsiString(programDirName).c_str()};
-		const std::filesystem::path metadata_dir_{program_dir_name_};
-		metadata_reader_->read_directory(metadata_dir_ / "Metadata");
+    try
+    {
+        TrainController->LogEvent("FromBrowser1Click");
+		Utilities->CallLog.push_back(Utilities->TimeStamp() + ",LoadTimetableSuggestedClick");
+        TimetableDialog->Filter = "Timetable file (*.ttb)|*.ttb";
+        // reset all message flags, stops them being given twice  new at v2.4.0
+        if(TimetableDialog->Execute())
+        {
+            if(TimetableDialog->InitialDir != TPath::GetDirectoryName(TimetableDialog->FileName)) // new at v2.6.0 to retain a new directory
+            {
+                TimetableDialog->InitialDir = TPath::GetDirectoryName(TimetableDialog->FileName);
+                SaveTTDialog->InitialDir = TPath::GetDirectoryName(TimetableDialog->FileName);
+            }
+			TrainController->LogEvent("LoadTimetable " + TimetableDialog->FileName);
+			LoadTimetableFromFile(AnsiString(TimetableDialog->FileName));
+		} // if(TimetableDialog->Execute())
 
-	} catch(const toml::TOMLException &e) {
-		std::string message_ = "Metadata TOML parse error: ";
-		message_ += e.what();
-		const AnsiString msgAnsi(message_.c_str());
-		MessageDlg(msgAnsi, mtError, TMsgDlgButtons() << mbOK, 0);
-	} catch(const MetadataFileException &e) {
-		std::string message_ = "Metadata file read error: ";
-		message_ += e.what();
-		const AnsiString msgAnsi(message_.c_str());
-		MessageDlg(msgAnsi, mtError, TMsgDlgButtons() << mbOK, 0);
+        // else ShowMessage("Load Aborted");
+        Utilities->CallLogPop(752);
+    }
+    catch(const Exception &e)  //made a non-error catch at v2.14.0 following Albie Vowles error of 15/12/22
+    {
+        TrainController->StopTTClockMessage(137, "Timetable file failed to load - is the latest program version in use?\nIf so then the file may be corrupt.\n\nError message: " + e.Message);
+        Screen->Cursor = TCursor(-2); // Arrow;
+        Utilities->CallLogPop(2553);
+//        ErrorLog(34, e.Message);
+    }
+}
+//---------------------------------------------------------------------------
+
+void TInterface::LoadMetadata()
+{
+	// Read all metadata files, if a string is returned there was a parse
+	// error for one or more files, ignore exception throws
+	const UnicodeString programDirName{ExtractFilePath(GetModuleName(0))};
+	const std::string program_dir_name_{AnsiString(programDirName).c_str()};
+	const std::filesystem::path metadata_dir_{program_dir_name_};
+	metadata_reader_->read_directory(metadata_dir_ / "Metadata", false);
+}
+
+void TInterface::PopulateMenusFromMetadata() {
+	const std::string search_term_{RailwayTitle.c_str()};
+	for (int i = LoadTimetableSuggested->Count - 1; i >= 1; i--)
+    {
+        delete LoadTimetableSuggested->Items[i];
 	}
+	const auto search_{metadata_reader_->get_by_prefix(search_term_)};
+    TMenuItem *separator = new TMenuItem(this);
+	separator->Caption = "-";
+	LoadTimetableSuggested->Add(separator);
+	if(search_term_.empty() || !search_.has_value()) {
+        TMenuItem *item = new TMenuItem(this);
+		item->Caption = "No suggestions";
+        item->Enabled = false;
+		LoadTimetableSuggested->Add(item);
+        return;
+	}
+	for(const auto ttb_file_ : search_.value().ttb_files) {
+        TMenuItem *item = new TMenuItem(this);
+		item->Caption = AnsiString(std::filesystem::path(ttb_file_).stem().string().c_str());
+        item->OnClick = TTBMenuClick;
+		LoadTimetableSuggested->Add(item);
+    }
+}
+
+void __fastcall TInterface::FileMenuClick(TObject *Sender)
+{
+	LoadMetadata();
+    PopulateMenusFromMetadata();
 }
 //---------------------------------------------------------------------------
 

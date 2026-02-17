@@ -215,6 +215,6 @@ class MetadataReader {
 		std::map<std::string, SimulationMetadata> get_metadata() const {
 			return current_metadata_;
 		}
-		void read_directory(const std::filesystem::path& directory);
+		void read_directory(const std::filesystem::path& directory, bool raise_except = true);
         std::optional<SimulationMetadata> get_by_prefix(const std::string& prefix) const;
 };
