@@ -146,41 +146,19 @@ void TOML::load(const std::filesystem::path& input_file, bool verbose) {
 			list_.clear();
 		}
 
-		if(std::regex_search(line_, match_, parse_date_)) {
-			unsigned int day_{0};
-			unsigned int month_{0};
-			unsigned int year_{0};
-			std::stringstream ss_{match_[1]};
-			std::string item_;
-
-			while(std::getline(ss_, item_, '-')) {
-				if(year_ == 0) year_ = std::stoi(item_);
-				else if(month_ == 0) month_ = std::stoi(item_);
-                else day_ = std::stoi(item_);
-            }
+		if(std::regex_search(line_, match_, parse_date)) {
+			
 
 			if(verbose) std::cout << "Found date " << key_ << "='" << match_[1] << "'" << std::endl;
 
-		   dates_.insert(std::make_pair(key_, Date{year_, month_, day_}));
+		   dates_[key_] = Date::from_string(line_);
 		   continue;
 		}
 
-		if(std::regex_search(line_, match_, parse_version_)) {
-			unsigned int major_{0};
-			unsigned int minor_{0};
-			unsigned int patch_{0};
-			std::stringstream ss_{match_[1]};
-			std::string item_;
-
-			while(std::getline(ss_, item_, '.')) {
-				if(major_ == 0) major_ = std::stoi(item_);
-				else if(minor_ == 0) minor_ = std::stoi(item_);
-                else patch_ = std::stoi(item_);
-            }
-
+		if(std::regex_search(line_, match_, parse_version)) {
 			if(verbose) std::cout << "Found version " << key_ << "='" << match_[1] << "'" << std::endl;
 
-		   versions_.insert(std::make_pair(key_, Version{major_, minor_, patch_}));
+		   versions_[key_] = Version::from_string(line_);
 		   continue;
         }
 

@@ -22,6 +22,9 @@ namespace toml {
 	using TOMLBoolMap = std::map<std::string, bool>;
 	using OptionalVector = std::optional<std::vector<std::string>>;
 
+	const std::regex parse_version{R"delim(^.*(\d+\.\d+\.\d+).*$)delim"};
+	const std::regex parse_date{R"delim(^.*(\d{4}-\d{2}-\d{2}).*$)delim"};
+
 	enum class Type {
 		String,
 		Integer,
@@ -40,6 +43,36 @@ namespace toml {
 		unsigned int major{0};
 		unsigned int minor{0};
 		unsigned int patch{0};
+
+		bool operator==(const Version& other) const {
+			return (
+				major == other.major &&
+				minor == other.minor &&
+                patch == other.patch
+			);
+        }
+
+		static Version from_string(const std::string& version) {
+			std::smatch match_;
+			if(!std::regex_search(version, match_, parse_version)) {
+				throw std::invalid_argument(
+                    "'" + version + "' is not a valid version string."
+				);
+			}
+			unsigned int major_{0};
+			unsigned int minor_{0};
+			unsigned int patch_{0};
+			std::stringstream ss_{match_[1]};
+			std::string item_;
+
+			while(std::getline(ss_, item_, '.')) {
+				if(major_ == 0) major_ = std::stoi(item_);
+				else if(minor_ == 0) minor_ = std::stoi(item_);
+				else patch_ = std::stoi(item_);
+			}
+
+            return Version{major_, minor_, patch_};
+        }
 	};
 
 	class Date {
@@ -54,6 +87,28 @@ namespace toml {
 				validate_();
 			}
 			Date() : year(1973), month(1), day(1) {}
+
+            static Date from_string(const std::string& date) {
+				std::smatch match_;
+				if(!std::regex_search(date, match_, parse_date)) {
+					throw std::invalid_argument(
+						"'" + date + "' is not a valid date string."
+					);
+				}
+				unsigned int day_{0};
+				unsigned int month_{0};
+				unsigned int year_{0};
+				std::stringstream ss_{match_[1]};
+				std::string item_;
+
+				while(std::getline(ss_, item_, '-')) {
+					if(year_ == 0) year_ = std::stoi(item_);
+					else if(month_ == 0) month_ = std::stoi(item_);
+					else day_ = std::stoi(item_);
+				}
+
+				return Date{year_, month_, day_};
+			}
 	};
 
 	class TOML {
@@ -70,8 +125,6 @@ namespace toml {
 			const std::regex parse_integer_{R"delim(=\s*(\d+)\s*$)delim"};
 			const std::regex parse_boolean_{R"delim(=\s*(false|true)\s*$)delim"};
 			const std::regex parse_string_{R"delim(=\s*"(.*)"\s*$)delim"};
-			const std::regex parse_date_{R"delim(=\s*"(\d{4}-\d{2}-\d{2})"\s*$)delim"};
-			const std::regex parse_version_{R"delim(=\s*"(\d+\.\d+\.\d+)"\s*$)delim"};
 			const std::regex parse_list_element_{R"delim("([^"]*)")delim"};
 			const std::regex parse_list_element_new_line_{R"delim(^\s*"(.*)")delim"};
 			const std::regex parse_list_same_line_{R"delim(=\s*\[(.*)\]\s*$)delim"};

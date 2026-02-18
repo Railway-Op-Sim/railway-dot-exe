@@ -50,7 +50,7 @@ SimulationMetadata MetadataReader::read_metadata_from_file(const std::filesystem
 		reader_.get_list("doc_files").value(),
 		reader_.get_list("img_files"),
 		reader_.get_list("graphics_files"),
-		iso::from_string(reader_.get_string("country_code").value()),
+		reader_.get_string("country_code").value(),
 		reader_.get_integer("year"),
 		static_cast<bool>(reader_.get_boolean("factual")),
 		reader_.get_integer("difficulty"),
@@ -75,6 +75,12 @@ ValidationResult MetadataReader::validate() const {
 		}
 	}
 
+	const std::string country_code_{reader_.get_string("country_code").value()};
+
+	if(iso::country_codes.find(country_code_) == iso::country_codes.end()) {
+        result_[ValidationError::ValueError].push_back("country_code");
+	}
+
 	// Check types
 	for(auto [key, type] : required_types_) {
 		bool failed_validation_{false};
@@ -91,7 +97,7 @@ ValidationResult MetadataReader::validate() const {
 				break;
 			case toml::Type::List:
 				failed_validation_ = !reader_.get_list(key).has_value();
-				empty_container_ = reader_.get_list(key).value().empty();
+				if(!failed_validation_) empty_container_ = reader_.get_list(key).value().empty();
 				break;
 			case toml::Type::Version:
 				failed_validation_ = !reader_.get_version(key).has_value();
@@ -136,6 +142,27 @@ ValidationResult MetadataReader::validate() const {
 			result_[ValidationError::IncorrectType].push_back(key);
 		}
 	}
+
+	for(const auto& [key, directory] : file_directories_) {
+		if(key == "rly_file" && reader_.get_list(key).has_value()) {
+			const std::string rly_file_ = reader_.get_string(key).value();
+			std::filesystem::path file_path_{directory};
+			file_path_ = file_path_ / rly_file_;
+			if(!std::filesystem::exists(file_path_)) {
+			   result_[ValidationError::FileNotFound].push_back(key);
+			}
+		} else if(reader_.get_list(key).has_value()) {
+			const std::vector<std::string> files_ = reader_.get_list(key).value();
+			for (const auto& file : files_) {
+				std::filesystem::path file_path_{directory};
+				file_path_ = file_path_ / file;
+				if(!std::filesystem::exists(file_path_)) {
+				   result_[ValidationError::FileNotFound].push_back(key);
+				}
+			}
+        }
+    }
+
 	return result_;
 }
 
@@ -151,6 +178,19 @@ void ValidationResult::dump(const std::filesystem::path& output_file) const {
 	std::ofstream output_{output_file};
 	output_ << (*this) << std::endl;
 	output_.close();
+}
+
+std::vector<std::string> MetadataReader::get_list_from_delimited(
+	const std::string& value,
+	const char delimiter
+) {
+   	std::vector<std::string> tokens_;
+    std::stringstream ss_(value);
+	std::string item_;
+
+	while (std::getline(ss_, item_, delimiter)) tokens_.push_back(item_);
+
+	return tokens_;
 }
 
 void MetadataReader::read_directory(const std::filesystem::path& directory, bool raise_except) {

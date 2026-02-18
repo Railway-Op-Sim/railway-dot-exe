@@ -58,6 +58,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Dialogs.hpp>
 #include <Graphics.hpp>
 #include <ComCtrls.hpp>
+#include <System.SysUtils.hpp>
 #include <System.ImageList.hpp>
 #include <System.IOUtils.hpp>  //for directory manipulation
 #include <Vcl.ImgList.hpp>
@@ -69,12 +70,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <IdSocketHandle.hpp>   //
 #include <IdException.hpp>      // These added from internet searches on 'EIdSocketError received on closing the app'
 #include <IdStack.hpp>
-#include <Vcl.Grids.hpp>        // needed for the multiplayer StringGrid
+#include <Vcl.Grids.hpp>
+#include <Vcl.Samples.Spin.hpp>        // needed for the multiplayer StringGrid
 #include <map>
 #include <list>
 #include <fstream>
 #include <vector>
 #include <vcl.h>
+#include <memory>
 #include <windows.h>            //needed for 64 bit compilation
 
 #include "metadata/reader.hxx"
@@ -163,7 +166,7 @@ __published: // IDE-managed Components
     TBitBtn *ExitPrefDirButton;
 
 // 'Create a timetable'/'Edit a timetable' mode - top buttons left to right
-    TBitBtn *ShowHideTTButton;
+	TBitBtn *ShowHideTTButton;
     TBitBtn *ExitTTModeButton;
 
 // left hand column timetable buttons top to bottom
@@ -774,6 +777,63 @@ __published: // IDE-managed Components
     TMenuItem *TrainTTInfoOnOffMenuItem;
 	TMenuItem *LoadTimetableSuggested;
 	TMenuItem *FromBrowser1;
+	TMenuItem *DefineMetadata;
+	TPanel *MetadataEditPanel;
+	TLabel *MetadataPanelHeader;
+	TEdit *MetadataNameEdit;
+	TLabel *MetadataLabelName;
+	TLabel *MetadataHelpLabel1;
+	TLabel *MetadataHelpLabel2;
+	TLabel *Label1;
+	TEdit *MetadataDisplayNameEdit;
+	TLabel *Label2;
+	TEdit *MetadataAuthorEdit;
+	TLabel *Label3;
+	TLabel *Label4;
+	TEdit *MetadataReleaseEdit;
+	TEdit *MetadataVersionEdit;
+	TLabel *Label5;
+	TComboBox *MetadataCountryCodeEdit;
+	TLabel *MetadataCountryCodeLabel;
+	TEdit *MetadataRlyFileEdit;
+	TLabel *Label6;
+	TButton *MetadataRlyFindButton;
+	TLabel *Label7;
+	TEdit *MetadataTTBFileEdit;
+	TButton *MetadataTTBFindButton;
+	TLabel *Label8;
+	TLabel *Label9;
+	TEdit *MetadataSSNFileEdit;
+	TButton *MetdataSSNFindButton;
+	TEdit *MetadataGraphicsEdit;
+	TLabel *Label10;
+	TButton *MetadataGraphicsFindButton;
+	TLabel *Label11;
+	TEdit *MetadataImagesEdit;
+	TButton *MetadataImagesFindButton;
+	TEdit *MetadataDocsEdit;
+	TLabel *Label12;
+	TButton *MetadataDocsFindButton;
+	TEdit *MetadataContributorsEdit;
+	TLabel *Label13;
+	TEdit *MetadataMinProgVersionEdit;
+	TLabel *Label14;
+	TCheckBox *MetadataSignalRightEdit;
+	TCheckBox *MetadataFactualEdit;
+	TSpinEdit *MetadataDifficultyEdit;
+	TLabel *Label15;
+	TSpinEdit *MetadataYearEdit;
+	TLabel *Label16;
+	TLabel *Label17;
+	TEdit *MetadataDescriptionEdit;
+	TButton *MetadataEditSaveButton;
+	TButton *MetadataSaveCancelButton;
+	TOpenDialog *MetadataTTBOpenDialog;
+	TOpenDialog *MetadataImgFilesOpenDialog;
+	TOpenDialog *MetadataSSNFilesOpenDialog;
+	TOpenDialog *MetadataGraphicsFilesOpenDialog;
+	TOpenDialog *MetadataDocsOpenDialog;
+	TOpenDialog *MetadataRlyFilesOpenDialog;
 
 // menu item actions
     void __fastcall AboutMenuItemClick(TObject *Sender);
@@ -1012,6 +1072,12 @@ __published: // IDE-managed Components
 	void __fastcall FromBrowser1Click(TObject *Sender);
 	void __fastcall FileMenuClick(TObject *Sender);
 	void __fastcall TTBMenuClick(TObject *Sender);
+	void __fastcall DefineMetadataClick(TObject *Sender);
+	void __fastcall MetadataEditPanelEnter(TObject *Sender);
+	void __fastcall MetadataRlyFindButtonClick(TObject *Sender);
+	void __fastcall MetadataSaveCancelButtonClick(TObject *Sender);
+	void __fastcall MetadataTTBFindButtonClick(TObject *Sender);
+	void __fastcall MetadataEditSaveButtonClick(TObject *Sender);
 
 public: // AboutForm needs access to these
 
@@ -1240,7 +1306,7 @@ private:
 // ---------------------------------------------------------------------------
 
 // Metadata reader
-    std::unique_ptr<MetadataReader> metadata_reader_{new MetadataReader};
+    std::unique_ptr<MetadataReader> metadata_reader_;
 
 // ---------------------------------------------------------------------------
 
@@ -1741,7 +1807,11 @@ is loaded fillowed by AvHoursIntValue then all failed trains if any. */
 /// Populate available files from metadata into menu
 	void PopulateMenusFromMetadata();
 /// Load a timetable from a file
-    void LoadTimetableFromFile(const AnsiString&);
+	void LoadTimetableFromFile(const AnsiString&);
+/// Clear Metadata form
+	void ClearMetadataForm();
+/// Read data from Metadata Form into TOML reader
+	bool ReadMetadataForm();
 };
 
 // ---------------------------------------------------------------------------

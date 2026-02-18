@@ -34,6 +34,8 @@
 #include <Dialogs.hpp>
 #include <Graphics.hpp>
 #include <ComCtrls.hpp>
+#include <System.SysUtils.hpp>
+#include <System.DateUtils.hpp>
 #include <Clipbrd.hpp> //for selection clipboard functions at v2.8.0
 #include <fstream>
 #include <sstream> //for clipboard functions at v2.8.0
@@ -687,7 +689,8 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         SkipTTActionsListBox->Visible = false;
         SkipListHeaderPanel->Visible = false;
         ReminderHeaderPanel->Visible = false;
-        ElapsedTimeTestFunctionStart = false;
+		ElapsedTimeTestFunctionStart = false;
+        MetadataEditPanel->Visible = false;
         ElapsedTimerRunning = false;
         Utilities->DelayMode = Nil;
         Utilities->FailureMode = FNil;
@@ -716,6 +719,15 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         conv = localeconv(); // this is what updates the structure
         ExitHeatmaps(); //to set up initial parameters
 		Utilities->DecimalPoint = conv->decimal_point[0];
+
+		metadata_reader_ = std::unique_ptr<MetadataReader>(new MetadataReader({
+			{"ttb_files", std::string(AnsiString(TIMETABLE_DIR_NAME).c_str())},
+			{"ssn_files", std::string(AnsiString(SESSION_DIR_NAME).c_str())},
+			{"doc_files", std::string(AnsiString(DOCUMENTATION_DIR_NAME).c_str())},
+			{"graphics_files", std::string(AnsiString(USERGRAPHICS_DIR_NAME).c_str())},
+			{"img_files", std::string(AnsiString(IMAGE_DIR_NAME).c_str())},
+			{"rly_file", std::string(AnsiString(RAILWAY_DIR_NAME).c_str())},
+		}, std::filesystem::path(AnsiString(GetCurrentDir()).c_str())));
 
     }
 
@@ -29831,10 +29843,202 @@ void TInterface::PopulateMenusFromMetadata() {
     }
 }
 
+void TInterface::ClearMetadataForm() {
+	const int Year = YearOf(Date());
+
+    const AnsiString CurDir{GetCurrentDir()};
+
+	MetadataRlyFilesOpenDialog->InitialDir = CurDir + "\\" + RAILWAY_DIR_NAME;
+    MetadataTTBOpenDialog->InitialDir = CurDir + "\\" + TIMETABLE_DIR_NAME;
+
+	MetadataNameEdit->Clear();
+	MetadataReleaseEdit->Clear();
+	MetadataDisplayNameEdit->Clear();
+	MetadataVersionEdit->Clear();
+	MetadataDescriptionEdit->Clear();
+	MetadataAuthorEdit->Clear();
+	MetadataCountryCodeEdit->Text = "Fictional (FN)";
+	MetadataContributorsEdit->Clear();
+	MetadataMinProgVersionEdit->Clear();
+	MetadataRlyFileEdit->Clear();
+	MetadataTTBFileEdit->Clear();
+	MetadataSSNFileEdit->Clear();
+	MetadataGraphicsEdit->Clear();
+	MetadataImagesEdit->Clear();
+	MetadataDocsEdit->Clear();
+	MetadataDifficultyEdit->Value = 0;
+	MetadataYearEdit->Value = Year;
+	MetadataSignalRightEdit->Checked = false;
+	MetadataFactualEdit->Checked = false;
+}
+
+bool TInterface::ReadMetadataForm() {
+	metadata_reader_->clear();
+
+	const std::string name_{AnsiString(MetadataNameEdit->Text).c_str()};
+	const std::string release_date_{AnsiString(MetadataReleaseEdit->Text).c_str()};
+	const std::string country_code_{AnsiString(MetadataCountryCodeEdit->Text).c_str()};
+	const std::string author_{AnsiString(MetadataAuthorEdit->Text).c_str()};
+    const std::string contributors_{AnsiString(MetadataContributorsEdit->Text).c_str()};
+	const std::string description_{AnsiString(MetadataDescriptionEdit->Text).c_str()};
+	const std::string version_str_{AnsiString(MetadataVersionEdit->Text).c_str()};
+	const std::string min_req_str_{AnsiString(MetadataMinProgVersionEdit->Text).c_str()};
+	const std::string rly_file_{AnsiString(MetadataRlyFileEdit->Text).c_str()};
+	const std::string ttb_files_{AnsiString(MetadataTTBFileEdit->Text).c_str()};
+	const std::string ssn_files_{AnsiString(MetadataSSNFileEdit->Text).c_str()};
+	const std::string graphic_files_{AnsiString(MetadataGraphicsEdit->Text).c_str()};
+	const std::string img_files_{AnsiString(MetadataImagesEdit->Text).c_str()};
+	const std::string doc_files_{AnsiString(MetadataDocsEdit->Text).c_str()};
+	const std::string sig_position_{(MetadataFactualEdit->Checked) ? "right" : "left"};
+	const bool factual_{MetadataFactualEdit->Checked};
+	const int year_{MetadataYearEdit->Value};
+	const int difficulty_{MetadataDifficultyEdit->Value};
+
+    metadata_reader_->insert<bool>("factual", factual_);
+	metadata_reader_->insert<std::string>("signal_position", sig_position_);
+    metadata_reader_->insert<int>("year", year_);
+
+	if(!name_.empty()) metadata_reader_->insert<std::string>("name", name_);
+	if(!country_code_.empty()) metadata_reader_->insert<std::string>("country_code", country_code_);
+	if(!author_.empty()) metadata_reader_->insert<std::string>("author", author_);
+	if(!rly_file_.empty()) metadata_reader_->insert<std::string>("rly_file", rly_file_);
+    if(!contributors_.empty()) metadata_reader_->insert_list("contributors", contributors_);
+	if(!ttb_files_.empty()) metadata_reader_->insert_list("ttb_files", ttb_files_);
+	if(!ssn_files_.empty()) metadata_reader_->insert_list("ssn_files", ssn_files_);
+	if(!graphic_files_.empty()) metadata_reader_->insert_list("graphic_files", graphic_files_);
+	if(!img_files_.empty()) metadata_reader_->insert_list("img_files", img_files_);
+	if(!doc_files_.empty()) metadata_reader_->insert_list("doc_files", doc_files_);
+	if(difficulty_ != 0) metadata_reader_->insert<int>("difficulty", difficulty_);
+	if(!description_.empty()) metadata_reader_->insert<std::string>("description", description_);
+	if(!version_str_.empty()) {
+		try {
+			metadata_reader_->insert<toml::Version>("version", toml::Version::from_string(version_str_));
+		} catch(std::invalid_argument& _) {
+			const AnsiString FailureMsg = "Input for 'version' is not a valid semantic version";
+            TMsgDlgButtons But;
+        	But << mbOK;
+			MessageDlg(FailureMsg, mtError, But, 0);
+			return false;
+		}
+	}
+	if(!release_date_.empty()) {
+        try {
+			metadata_reader_->insert<toml::Date>("release_date", toml::Date::from_string(version_str_));
+		} catch(std::invalid_argument& _) {
+			const AnsiString FailureMsg = "Input for 'release_date' is not a date";
+            TMsgDlgButtons But;
+        	But << mbOK;
+			MessageDlg(FailureMsg, mtError, But, 0);
+			return false;
+		}
+    }
+	if(!min_req_str_.empty()) {
+		try {
+			metadata_reader_->insert<toml::Version>("minimum_required", toml::Version::from_string(min_req_str_));
+		} catch(std::invalid_argument& _) {
+			const AnsiString FailureMsg = "Input for 'minimum_required' is not a valid semantic version";
+            TMsgDlgButtons But;
+        	But << mbOK;
+			MessageDlg(FailureMsg, mtError, But, 0);
+			return false;
+		}
+	}
+
+    return true;
+}
+
 void __fastcall TInterface::FileMenuClick(TObject *Sender)
 {
 	LoadMetadata();
     PopulateMenusFromMetadata();
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TInterface::DefineMetadataClick(TObject *Sender)
+{
+    ClearMetadataForm();
+    metadata_reader_->clear();
+	HighlightPanel->Visible = false;
+	MetadataEditPanel->Visible = true;
+	MetadataEditPanel->BringToFront();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TInterface::MetadataEditPanelEnter(TObject *Sender)
+{
+	MetadataCountryCodeEdit->Items->Clear();
+
+	for(const auto& [country, code] : iso::country_codes) {
+		const std::string entry_str_{country + " (" + code + ")"};
+		const AnsiString Entry{entry_str_.c_str()};
+        MetadataCountryCodeEdit->Items->Add(Entry);
+    }
+
+	MetadataCountryCodeEdit->Text = "Fictional (FN)";
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TInterface::MetadataRlyFindButtonClick(TObject *Sender)
+{
+	MetadataRlyFileEdit->Clear();
+	if(!MetadataRlyFilesOpenDialog->Execute()) return;
+	const std::filesystem::path full_path_{
+		(MetadataRlyFilesOpenDialog->FileName).c_str()
+	};
+	MetadataRlyFileEdit->Text = full_path_.filename().string().c_str();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TInterface::MetadataSaveCancelButtonClick(TObject *Sender)
+{
+    ClearMetadataForm();
+    metadata_reader_->clear();
+    MetadataEditPanel->Visible = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TInterface::MetadataTTBFindButtonClick(TObject *Sender)
+{
+	const AnsiString CurrentEntries{MetadataTTBFileEdit->Text};
+	if(!MetadataTTBOpenDialog->Execute()) return;
+	const std::filesystem::path full_path_{
+		(MetadataTTBOpenDialog->FileName).c_str()
+	};
+	MetadataTTBFileEdit->Text = (
+		((CurrentEntries != "") ? CurrentEntries + ";" : "") +
+		full_path_.filename().string().c_str()
+	);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TInterface::MetadataEditSaveButtonClick(TObject *Sender) {
+	if(!ReadMetadataForm()) return;
+
+	const ValidationResult validation_{metadata_reader_->validate()};
+
+	for(const auto entry : validation_.at(ValidationError::MissingKey)) {
+		MessageDlg("Value for '" + AnsiString(entry.c_str()) + "' is required.", mtError, TMsgDlgButtons() << mbOK, 0);
+        return;
+	}
+
+	for(const auto entry : validation_.at(ValidationError::IncorrectType)) {
+		MessageDlg("Value for '" + AnsiString(entry.c_str()) + "' is invalid type.", mtError, TMsgDlgButtons() << mbOK, 0);
+		return;
+	}
+	for(const auto entry : validation_.at(ValidationError::Empty)) {
+		MessageDlg("Value for '" + AnsiString(entry.c_str()) + "' cannot be empty.", mtError, TMsgDlgButtons() << mbOK, 0);
+		return;
+	}
+
+	for(const auto entry : validation_.at(ValidationError::ValueError)) {
+		MessageDlg("Value for '" + AnsiString(entry.c_str()) + "' is in an invalid format.", mtError, TMsgDlgButtons() << mbOK, 0);
+		return;
+	}
+
 }
 //---------------------------------------------------------------------------
 
