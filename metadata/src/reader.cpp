@@ -18,7 +18,7 @@ SimulationMetadata MetadataReader::read_metadata_from_file(const std::filesystem
 		reader_.load(metadata_file, verbose);
 	} catch(toml::TOMLException& e) {
 		ValidationResult validation_;
-		toml_parse_[ValidationError::ValueError].push_back(e.what());
+		toml_parse_[ValidationError::ValueError].insert(e.what());
 		toml_parse_.dump(outfile_);
 	}
 	
@@ -71,14 +71,20 @@ ValidationResult MetadataReader::validate() const {
 	// Check for missing keys
 	for(auto [key, _] : required_types_) {
 		if(!reader_.has_key(key)) {
-			result_[ValidationError::MissingKey].push_back(key);
+			result_[ValidationError::MissingKey].insert(key);
 		}
 	}
 
 	const std::string country_code_{reader_.get_string("country_code").value()};
 
-	if(iso::country_codes.find(country_code_) == iso::country_codes.end()) {
-        result_[ValidationError::ValueError].push_back("country_code");
+	const bool valid_cc_{std::any_of(
+		iso::country_codes.begin(),
+		iso::country_codes.end(),
+		[&](const auto& pair){ return pair.second == country_code_; })
+	};
+
+	if(!valid_cc_) {
+		result_[ValidationError::ValueError].insert("country_code");
 	}
 
 	// Check types
@@ -107,10 +113,10 @@ ValidationResult MetadataReader::validate() const {
 				break;
 		}
 		if(failed_validation_) {
-			result_[ValidationError::IncorrectType].push_back(key);
+			result_[ValidationError::IncorrectType].insert(key);
 		}
         if(empty_container_) {
-			result_[ValidationError::Empty].push_back(key);
+			result_[ValidationError::Empty].insert(key);
 		}
 	}
 
@@ -139,25 +145,47 @@ ValidationResult MetadataReader::validate() const {
 				break;
 		}
 		if(failed_validation_) {
-			result_[ValidationError::IncorrectType].push_back(key);
+			result_[ValidationError::IncorrectType].insert(key);
 		}
 	}
 
 	for(const auto& [key, directory] : file_directories_) {
 		if(key == "rly_file" && reader_.get_list(key).has_value()) {
 			const std::string rly_file_ = reader_.get_string(key).value();
-			std::filesystem::path file_path_{directory};
-			file_path_ = file_path_ / rly_file_;
-			if(!std::filesystem::exists(file_path_)) {
-			   result_[ValidationError::FileNotFound].push_back(key);
+			const std::filesystem::path file_path_{directory};
+			bool file_found_{false};
+			for (const auto& entry : std::filesystem::recursive_directory_iterator(file_path_)) {
+				if (entry.path().filename() == rly_file_) {
+					file_found_ = true;
+				}
+			}
+			if(!file_found_) {
+			   result_[ValidationError::FileNotFound].insert(key);
+			} else break;
+			for (const auto& c : invalid_filename_chars) {
+				if(rly_file_.find(c) != std::string::npos) {
+					result_[ValidationError::FileNameWarning].insert(key);
+					break;
+				}
 			}
 		} else if(reader_.get_list(key).has_value()) {
 			const std::vector<std::string> files_ = reader_.get_list(key).value();
 			for (const auto& file : files_) {
-				std::filesystem::path file_path_{directory};
-				file_path_ = file_path_ / file;
-				if(!std::filesystem::exists(file_path_)) {
-				   result_[ValidationError::FileNotFound].push_back(key);
+				const std::filesystem::path file_path_{directory};
+				bool file_found_{false};
+				for (const auto& entry : std::filesystem::recursive_directory_iterator(file_path_)) {
+					if (entry.path().filename() == file) {
+						file_found_ = true;
+					}
+				}
+				if(!file_found_) {
+				   result_[ValidationError::FileNotFound].insert(key);
+				} else break;
+				for (const auto& c : invalid_filename_chars) {
+					if(file.find(c) != std::string::npos) {
+						result_[ValidationError::FileNameWarning].insert(key);
+                        break;
+					}
 				}
 			}
         }

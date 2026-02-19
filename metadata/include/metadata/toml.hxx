@@ -22,8 +22,8 @@ namespace toml {
 	using TOMLBoolMap = std::map<std::string, bool>;
 	using OptionalVector = std::optional<std::vector<std::string>>;
 
-	const std::regex parse_version{R"delim(^.*(\d+\.\d+\.\d+).*$)delim"};
-	const std::regex parse_date{R"delim(^.*(\d{4}-\d{2}-\d{2}).*$)delim"};
+	const std::regex parse_version{R"delim((?:=)?\s*["']?(\d+\.\d+\.\d+)["']?)delim"};
+	const std::regex parse_date{R"delim((?:=)?\s*["']?(\d{4}-\d{2}-\d{2})["']?)delim"};
 
 	enum class Type {
 		String,
@@ -248,9 +248,9 @@ namespace toml {
 				}
 				for(auto [key, list] :toml.lists_) {
 					if(list.empty()) continue;
-					os << key << " = [";
+					os << key << " = [\n";
 					for(auto string : list) {
-						os << "\t" << '"' << string << '"' << ",\n";
+						os << "  " << '"' << string << '"' << ",\n";
 					}
 					os << "]" << "\n";
 				}

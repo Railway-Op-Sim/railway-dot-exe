@@ -5,8 +5,10 @@
 
 #include <fstream>
 #include <optional>
+#include <algorithm>
 #include <ostream>
 #include <vector>
+#include <unordered_set>
 #include <filesystem>
 #include <string>
 #include <map>
@@ -22,6 +24,7 @@ enum class ValidationError {
 	IncorrectType,
     Empty,
 	ValueError,
+    FileNameWarning,
 	FileNotFound
 };
 
@@ -30,7 +33,7 @@ class MetadataFileException : public std::invalid_argument {
 		explicit MetadataFileException(const std::string& message) : std::invalid_argument(message) {}
 };
 
-class ValidationResult : public std::map<ValidationError, std::vector<std::string>> {
+class ValidationResult : public std::map<ValidationError, std::unordered_set<std::string>> {
 	public:
 		ValidationResult() {
 			this->insert({ValidationError::MissingKey, {}});
@@ -38,6 +41,7 @@ class ValidationResult : public std::map<ValidationError, std::vector<std::strin
             this->insert({ValidationError::Empty, {}});
 			this->insert({ValidationError::ValueError, {}});
 			this->insert({ValidationError::FileNotFound, {}});
+			this->insert({ValidationError::FileNameWarning, {}});
 		}
 		ValidationResult(ValidationResult& other) {
 			(*this) = other;
@@ -48,7 +52,8 @@ class ValidationResult : public std::map<ValidationError, std::vector<std::strin
 				this->at(ValidationError::IncorrectType).empty() &&
                 this->at(ValidationError::Empty).empty() &&
 				this->at(ValidationError::ValueError).empty() &&
-				this->at(ValidationError::FileNotFound).empty()
+				this->at(ValidationError::FileNotFound).empty() &&
+				this->at(ValidationError::FileNameWarning).empty()
 			);
 		}
 		void dump(const std::filesystem::path& output_file) const;
@@ -64,6 +69,9 @@ class ValidationResult : public std::map<ValidationError, std::vector<std::strin
 			}
 			for(auto entry : validation.at(ValidationError::IncorrectType)) {
 				os << "INVALID_FORMAT: Value for '" << entry << "' is in invalid format." << std::endl;
+			}
+            for(auto entry : validation.at(ValidationError::IncorrectType)) {
+				os << "FILE_NOT_FOUND: Value for '" << entry << "' contains missing file." << std::endl;
 			}
 			return os;
 		}
@@ -216,12 +224,16 @@ class MetadataReader {
 		std::map<std::string, SimulationMetadata> current_metadata_;
 		std::map<std::string, std::string> file_directories_;
 	public:
+    	const std::vector<char> invalid_filename_chars{
+			'@', '`', '&', '$', '!', '\'', '"', '(', ')', '#', '%', '+', '=', ',', ' '
+		};
 		MetadataReader(
             const std::map<std::string, std::string> file_directories,
 			const std::filesystem::path& output_dir
 		) : output_directory_(output_dir), file_directories_(file_directories) {}
 		ValidationResult validate() const;
 		void clear() {reader_.clear();}
+        toml::TOML get_toml_reader() const {return reader_;}
 		template<typename T>
 		void insert(const std::string& key, const T& value) {
 			reader_.insert<T>(key, value);

@@ -1078,6 +1078,10 @@ __published: // IDE-managed Components
 	void __fastcall MetadataSaveCancelButtonClick(TObject *Sender);
 	void __fastcall MetadataTTBFindButtonClick(TObject *Sender);
 	void __fastcall MetadataEditSaveButtonClick(TObject *Sender);
+	void __fastcall MetdataSSNFindButtonClick(TObject *Sender);
+	void __fastcall MetadataDocsFindButtonClick(TObject *Sender);
+	void __fastcall MetadataGraphicsFindButtonClick(TObject *Sender);
+	void __fastcall MetadataImagesFindButtonClick(TObject *Sender);
 
 public: // AboutForm needs access to these
 

@@ -108,7 +108,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         // check for presence of directories, creation failure probably indicates that the
         // working folder is read-only
 
-        CurDir = AnsiString(GetCurrentDir());
+		CurDir = AnsiString(GetCurrentDir());
 //        ShowMessage("Curdir from GetCurrentDir() " + CurDir);    //these used to check behaviour outside the compiler
         UnicodeString FullProgramName = GetModuleName(0);              // added at v2.9.0 to check executable exists
 //        ShowMessage("FullProgramName " + FullProgramName);
@@ -721,13 +721,21 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 		Utilities->DecimalPoint = conv->decimal_point[0];
 
 		metadata_reader_ = std::unique_ptr<MetadataReader>(new MetadataReader({
-			{"ttb_files", std::string(AnsiString(TIMETABLE_DIR_NAME).c_str())},
-			{"ssn_files", std::string(AnsiString(SESSION_DIR_NAME).c_str())},
-			{"doc_files", std::string(AnsiString(DOCUMENTATION_DIR_NAME).c_str())},
-			{"graphics_files", std::string(AnsiString(USERGRAPHICS_DIR_NAME).c_str())},
-			{"img_files", std::string(AnsiString(IMAGE_DIR_NAME).c_str())},
-			{"rly_file", std::string(AnsiString(RAILWAY_DIR_NAME).c_str())},
+			{"ttb_files", std::string(AnsiString(CurDir + "\\" + TIMETABLE_DIR_NAME).c_str())},
+			{"ssn_files", std::string(AnsiString(CurDir + "\\" + SESSION_DIR_NAME).c_str())},
+			{"doc_files", std::string(AnsiString(CurDir + "\\" + DOCUMENTATION_DIR_NAME).c_str())},
+			{"graphics_files", std::string(AnsiString(CurDir + "\\" + USERGRAPHICS_DIR_NAME).c_str())},
+			{"img_files", std::string(AnsiString(CurDir + "\\" + IMAGE_DIR_NAME).c_str())},
+			{"rly_file", std::string(AnsiString(CurDir + "\\" + RAILWAY_DIR_NAME).c_str())},
 		}, std::filesystem::path(AnsiString(GetCurrentDir()).c_str())));
+
+        for(const auto& [country, code] : iso::country_codes) {
+			const std::string entry_str_{country + " (" + code + ")"};
+			const AnsiString Entry{entry_str_.c_str()};
+			MetadataCountryCodeEdit->Items->Add(Entry);
+		}
+
+		MetadataCountryCodeEdit->ItemIndex = 58;
 
     }
 
@@ -20823,7 +20831,7 @@ void TInterface::TrackTrainFloat(int Caller)
         if(Top < 30) // use 30 instead of MainScreen->Top [95] as top can go off MainScreen providing it doesn't reach the information panel, as that would
                      // obscure the window
         {
-            Top = 30;
+			Top = 30;
         }
     }
 /* if((Left != FloatingPanel->Left) || (Top != FloatingPanel->Top))    //dropped at v2.7.0 as causes more flicker than allowing window to move with mouse
@@ -22339,12 +22347,15 @@ void TInterface::SaveSession(int Caller)
         Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",SaveSession");
         AnsiString CurrentDateTimeStr = "", TimetableTimeStr = "", SessionFileStr = "";
         Screen->Cursor = TCursor(-11); // Hourglass;
-        CurrentDateTimeStr = TDateTime::CurrentDateTime().FormatString("dd-mm-yyyy hh.nn.ss");
+        CurrentDateTimeStr = TDateTime::CurrentDateTime().FormatString("yyyy_mm_dd_hh_nn_ss");
         // avoid characters in filename:=   / \ : * ? " < > |
-        TimetableTimeStr = Utilities->Format96HHMMSS(TrainController->TTClockTime);
-        TimetableTimeStr = TimetableTimeStr.SubString(1, 2) + '.' + TimetableTimeStr.SubString(4, 2) + '.' + TimetableTimeStr.SubString(7, 2);
-        SessionFileStr = LoadSessionDialog->InitialDir + "\\Session " + CurrentDateTimeStr + "; Timetable time " + TimetableTimeStr + "; " + RailwayTitle +
-            "; " + TimetableTitle + ".ssn";
+		TimetableTimeStr = Utilities->Format96HHMMSS(TrainController->TTClockTime);
+		const AnsiString RailwayTitleStr{StringReplace(RailwayTitle, " ", "_", TReplaceFlags() << rfReplaceAll << rfIgnoreCase)};
+		const AnsiString TTBTitleStr{StringReplace(TimetableTitle, " ", "_", TReplaceFlags() << rfReplaceAll << rfIgnoreCase)};
+		TimetableTimeStr = TimetableTimeStr.SubString(1, 2) + TimetableTimeStr.SubString(4, 2);
+		const AnsiString SessionFileName{"Session_" + CurrentDateTimeStr + "_start_" + TimetableTimeStr + "_" + RailwayTitleStr +
+			"_" + TTBTitleStr + ".ssn"};
+		SessionFileStr = LoadSessionDialog->InitialDir + "\\" + SessionFileName;
         std::ofstream SessionFile(SessionFileStr.c_str());
         if(SessionFile.fail())  //added at v2.16.0 to give another chance to save
         {
@@ -22354,8 +22365,7 @@ void TInterface::SaveSession(int Caller)
                                                      "'railway.exe' resides (can move to a more\n"
                                                      "appropriate folder manually later).\n");
             SessionFile.clear(); //clear flags
-            SessionFileStr = CurDir + "\\Session " + CurrentDateTimeStr + "; Timetable time " + TimetableTimeStr + "; " + RailwayTitle +
-                "; " + TimetableTitle + ".ssn";
+            SessionFileStr = CurDir + "\\" + SessionFileName;
             LoadSessionDialog->InitialDir = CurDir;
             SessionFile.open(SessionFileStr.c_str());
         }
@@ -22675,8 +22685,7 @@ In each case need to ensure that the following points are considered and dealt w
 //IF ADD MORE PARAMETERS REMEMBER TO ADD TO ERROR FILE TOO, BUT CHANGE 'SessionFile' to 'ErrorFile'
 
             SessionFile.close();
-            TrainController->StopTTClockMessage(4, "Session saved: Session " + CurrentDateTimeStr + "; Timetable time " + TimetableTimeStr + "; " +
-                                                RailwayTitle + "; " + TimetableTitle + ".ssn");
+			TrainController->StopTTClockMessage(4, "Session saved: " + SessionFileName);
             LastNonCtrlOrShiftKeyDown = -1;
 // to restore the ability to reselect Ctrl S after a save (FormKeyUp doesn't work because the Interface form doesn't have focus)
         }
@@ -29850,6 +29859,10 @@ void TInterface::ClearMetadataForm() {
 
 	MetadataRlyFilesOpenDialog->InitialDir = CurDir + "\\" + RAILWAY_DIR_NAME;
     MetadataTTBOpenDialog->InitialDir = CurDir + "\\" + TIMETABLE_DIR_NAME;
+	MetadataSSNFilesOpenDialog->InitialDir = CurDir + "\\" + SESSION_DIR_NAME;
+	MetadataImgFilesOpenDialog->InitialDir = CurDir + "\\" + IMAGE_DIR_NAME;
+	MetadataDocsOpenDialog->InitialDir = CurDir + "\\" + DOCUMENTATION_DIR_NAME;
+    MetadataGraphicsFilesOpenDialog->InitialDir = CurDir + "\\" + USERGRAPHICS_DIR_NAME;
 
 	MetadataNameEdit->Clear();
 	MetadataReleaseEdit->Clear();
@@ -29857,7 +29870,7 @@ void TInterface::ClearMetadataForm() {
 	MetadataVersionEdit->Clear();
 	MetadataDescriptionEdit->Clear();
 	MetadataAuthorEdit->Clear();
-	MetadataCountryCodeEdit->Text = "Fictional (FN)";
+	MetadataCountryCodeEdit->ItemIndex = 58;
 	MetadataContributorsEdit->Clear();
 	MetadataMinProgVersionEdit->Clear();
 	MetadataRlyFileEdit->Clear();
@@ -29870,39 +29883,57 @@ void TInterface::ClearMetadataForm() {
 	MetadataYearEdit->Value = Year;
 	MetadataSignalRightEdit->Checked = false;
 	MetadataFactualEdit->Checked = false;
+
+	// FOR TESTING
+	MetadataNameEdit->Text = "Route Name";
+	MetadataDisplayNameEdit->Text = "Extended Route Name";
+	MetadataDescriptionEdit->Text = "A description of this route";
+	MetadataContributorsEdit->Text = "JSmith;JDoe";
+	MetadataDifficultyEdit->Value = 3;
+	MetadataSignalRightEdit->Checked = true;
+	MetadataReleaseEdit->Text = "2020-10-01";
+	MetadataAuthorEdit->Text = "JBloggs";
+	MetadataDocsEdit->Text = "README.md";
+	MetadataRlyFileEdit->Text = "railway.rly";
+	MetadataTTBFileEdit->Text = "railway.ttb;railway_2.ttb";
+    MetadataVersionEdit->Text = "0.1.0";
 }
 
 bool TInterface::ReadMetadataForm() {
 	metadata_reader_->clear();
 
-	const std::string name_{AnsiString(MetadataNameEdit->Text).c_str()};
-	const std::string release_date_{AnsiString(MetadataReleaseEdit->Text).c_str()};
-	const std::string country_code_{AnsiString(MetadataCountryCodeEdit->Text).c_str()};
-	const std::string author_{AnsiString(MetadataAuthorEdit->Text).c_str()};
-    const std::string contributors_{AnsiString(MetadataContributorsEdit->Text).c_str()};
-	const std::string description_{AnsiString(MetadataDescriptionEdit->Text).c_str()};
-	const std::string version_str_{AnsiString(MetadataVersionEdit->Text).c_str()};
-	const std::string min_req_str_{AnsiString(MetadataMinProgVersionEdit->Text).c_str()};
-	const std::string rly_file_{AnsiString(MetadataRlyFileEdit->Text).c_str()};
-	const std::string ttb_files_{AnsiString(MetadataTTBFileEdit->Text).c_str()};
-	const std::string ssn_files_{AnsiString(MetadataSSNFileEdit->Text).c_str()};
-	const std::string graphic_files_{AnsiString(MetadataGraphicsEdit->Text).c_str()};
-	const std::string img_files_{AnsiString(MetadataImagesEdit->Text).c_str()};
-	const std::string doc_files_{AnsiString(MetadataDocsEdit->Text).c_str()};
+	const int country_code_index_{MetadataCountryCodeEdit->ItemIndex};
+	auto cc_iter_{iso::country_codes.begin()};
+	std::advance(cc_iter_, country_code_index_);
+
+	const std::string name_{UTF8String(MetadataNameEdit->Text).c_str()};
+	const std::string release_date_{UTF8String(MetadataReleaseEdit->Text).c_str()};
+	const std::string country_code_{cc_iter_->second};
+	const std::string author_{UTF8String(MetadataAuthorEdit->Text).c_str()};
+	const std::string contributors_{UTF8String(MetadataContributorsEdit->Text).c_str()};
+	const std::string description_{UTF8String(MetadataDescriptionEdit->Text).c_str()};
+	const std::string version_str_{UTF8String(MetadataVersionEdit->Text).c_str()};
+	const std::string min_req_str_{UTF8String(MetadataMinProgVersionEdit->Text).c_str()};
+	const std::string rly_file_{UTF8String(MetadataRlyFileEdit->Text).c_str()};
+	const std::string ttb_files_{UTF8String(MetadataTTBFileEdit->Text).c_str()};
+	const std::string ssn_files_{UTF8String(MetadataSSNFileEdit->Text).c_str()};
+	const std::string graphic_files_{UTF8String(MetadataGraphicsEdit->Text).c_str()};
+	const std::string img_files_{UTF8String(MetadataImagesEdit->Text).c_str()};
+	const std::string doc_files_{UTF8String(MetadataDocsEdit->Text).c_str()};
 	const std::string sig_position_{(MetadataFactualEdit->Checked) ? "right" : "left"};
 	const bool factual_{MetadataFactualEdit->Checked};
 	const int year_{MetadataYearEdit->Value};
 	const int difficulty_{MetadataDifficultyEdit->Value};
 
-    metadata_reader_->insert<bool>("factual", factual_);
+	metadata_reader_->insert<bool>("factual", factual_);
 	metadata_reader_->insert<std::string>("signal_position", sig_position_);
-    metadata_reader_->insert<int>("year", year_);
+	metadata_reader_->insert<int>("year", year_);
 
 	if(!name_.empty()) metadata_reader_->insert<std::string>("name", name_);
 	if(!country_code_.empty()) metadata_reader_->insert<std::string>("country_code", country_code_);
 	if(!author_.empty()) metadata_reader_->insert<std::string>("author", author_);
 	if(!rly_file_.empty()) metadata_reader_->insert<std::string>("rly_file", rly_file_);
-    if(!contributors_.empty()) metadata_reader_->insert_list("contributors", contributors_);
+	if(!contributors_.empty()) metadata_reader_->insert_list("contributors", contributors_);
 	if(!ttb_files_.empty()) metadata_reader_->insert_list("ttb_files", ttb_files_);
 	if(!ssn_files_.empty()) metadata_reader_->insert_list("ssn_files", ssn_files_);
 	if(!graphic_files_.empty()) metadata_reader_->insert_list("graphic_files", graphic_files_);
@@ -29910,6 +29941,8 @@ bool TInterface::ReadMetadataForm() {
 	if(!doc_files_.empty()) metadata_reader_->insert_list("doc_files", doc_files_);
 	if(difficulty_ != 0) metadata_reader_->insert<int>("difficulty", difficulty_);
 	if(!description_.empty()) metadata_reader_->insert<std::string>("description", description_);
+
+
 	if(!version_str_.empty()) {
 		try {
 			metadata_reader_->insert<toml::Version>("version", toml::Version::from_string(version_str_));
@@ -29923,7 +29956,7 @@ bool TInterface::ReadMetadataForm() {
 	}
 	if(!release_date_.empty()) {
         try {
-			metadata_reader_->insert<toml::Date>("release_date", toml::Date::from_string(version_str_));
+			metadata_reader_->insert<toml::Date>("release_date", toml::Date::from_string(release_date_));
 		} catch(std::invalid_argument& _) {
 			const AnsiString FailureMsg = "Input for 'release_date' is not a date";
             TMsgDlgButtons But;
@@ -29943,6 +29976,24 @@ bool TInterface::ReadMetadataForm() {
 			return false;
 		}
 	}
+
+	std::string out_file_name_ = name_;
+	std::replace(out_file_name_.begin(), out_file_name_.end(), ' ', '_');
+    out_file_name_ += ".toml";
+
+	for (const auto& c : metadata_reader_->invalid_filename_chars) {
+		out_file_name_.erase(std::remove(out_file_name_.begin(), out_file_name_.end(), c), out_file_name_.end());
+    }
+
+	std::filesystem::path output_file{AnsiString(GetCurrentDir()).c_str()};
+	output_file /= std::filesystem::path("Metadata") / out_file_name_;
+
+	metadata_reader_->get_toml_reader().dump(output_file);
+
+    TMsgDlgButtons But;
+	But << mbOK;
+	const AnsiString SuccessMsg = "Wrote output to file '" + AnsiString(out_file_name_.c_str()) + "'";
+	MessageDlg(SuccessMsg, mtInformation, But, 0);
 
     return true;
 }
@@ -29969,15 +30020,13 @@ void __fastcall TInterface::DefineMetadataClick(TObject *Sender)
 
 void __fastcall TInterface::MetadataEditPanelEnter(TObject *Sender)
 {
-	MetadataCountryCodeEdit->Items->Clear();
-
 	for(const auto& [country, code] : iso::country_codes) {
 		const std::string entry_str_{country + " (" + code + ")"};
 		const AnsiString Entry{entry_str_.c_str()};
         MetadataCountryCodeEdit->Items->Add(Entry);
     }
 
-	MetadataCountryCodeEdit->Text = "Fictional (FN)";
+	MetadataCountryCodeEdit->ItemIndex = 58;
 }
 //---------------------------------------------------------------------------
 
@@ -29997,7 +30046,7 @@ void __fastcall TInterface::MetadataSaveCancelButtonClick(TObject *Sender)
 {
     ClearMetadataForm();
     metadata_reader_->clear();
-    MetadataEditPanel->Visible = false;
+	MetadataEditPanel->Visible = false;
 }
 //---------------------------------------------------------------------------
 
@@ -30039,6 +30088,86 @@ void __fastcall TInterface::MetadataEditSaveButtonClick(TObject *Sender) {
 		return;
 	}
 
+	for(const auto entry : validation_.at(ValidationError::FileNotFound)) {
+		AnsiString warning_{"One or more files relating to key '"};
+		warning_ +=  AnsiString(entry.c_str()) + "' could not be found.";
+        warning_ += "This is a warning only.";
+		MessageDlg(warning_, mtWarning, TMsgDlgButtons() << mbOK, 0);
+	}
+	for(const auto entry : validation_.at(ValidationError::FileNameWarning)) {
+		AnsiString warning_{"Value in '" + AnsiString(entry.c_str())};
+		warning_ += "' contains a filename which is not cross-platform supported. ";
+		warning_ += "Invalid characters across all plaforms are '?><:\"/\\|*,;_-' and spaces. ";
+		warning_ += "This is a warning only.";
+		MessageDlg(warning_, mtWarning, TMsgDlgButtons() << mbOK, 0);
+	}
+
+	// Create Directory Subdirectory for specified documentation files
+	AnsiString ProjectName{MetadataNameEdit->Text};
+    ProjectName = StringReplace(ProjectName, " ", "_", TReplaceFlags() << rfReplaceAll << rfIgnoreCase);
+
+	for(const auto& c : metadata_reader_->invalid_filename_chars) {
+		ProjectName = StringReplace(ProjectName, c, "", TReplaceFlags() << rfReplaceAll << rfIgnoreCase);
+	}
+
+    MetadataEditPanel->Visible = false;
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TInterface::MetdataSSNFindButtonClick(TObject *Sender)
+{
+	const AnsiString CurrentEntries{MetadataSSNFileEdit->Text};
+	if(!MetadataSSNFilesOpenDialog->Execute()) return;
+	const std::filesystem::path full_path_{
+		(MetadataSSNFilesOpenDialog->FileName).c_str()
+	};
+	MetadataSSNFileEdit->Text = (
+		((CurrentEntries != "") ? CurrentEntries + ";" : "") +
+		full_path_.filename().string().c_str()
+	);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TInterface::MetadataDocsFindButtonClick(TObject *Sender)
+{
+	const AnsiString CurrentEntries{MetadataDocsEdit->Text};
+	if(!MetadataDocsOpenDialog->Execute()) return;
+	const std::filesystem::path full_path_{
+		(MetadataDocsOpenDialog->FileName).c_str()
+	};
+	MetadataDocsEdit->Text = (
+		((CurrentEntries != "") ? CurrentEntries + ";" : "") +
+		full_path_.filename().string().c_str()
+	);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TInterface::MetadataGraphicsFindButtonClick(TObject *Sender)
+{
+	const AnsiString CurrentEntries{MetadataGraphicsEdit->Text};
+	if(!MetadataGraphicsFilesOpenDialog->Execute()) return;
+	const std::filesystem::path full_path_{
+		(MetadataGraphicsFilesOpenDialog->FileName).c_str()
+	};
+	MetadataGraphicsEdit->Text = (
+		((CurrentEntries != "") ? CurrentEntries + ";" : "") +
+		full_path_.filename().string().c_str()
+	);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TInterface::MetadataImagesFindButtonClick(TObject *Sender)
+{
+	const AnsiString CurrentEntries{MetadataImagesEdit->Text};
+	if(!MetadataImgFilesOpenDialog->Execute()) return;
+	const std::filesystem::path full_path_{
+		(MetadataImgFilesOpenDialog->FileName).c_str()
+	};
+	MetadataImagesEdit->Text = (
+		((CurrentEntries != "") ? CurrentEntries + ";" : "") +
+		full_path_.filename().string().c_str()
+	);
+}
+//---------------------------------------------------------------------------
+
 

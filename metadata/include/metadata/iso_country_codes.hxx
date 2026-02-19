@@ -66,6 +66,7 @@ const std::map<std::string, std::string> country_codes{
     {"Estonia", "EE"},
     {"Eswatini", "SZ"},
     {"Ethiopia", "ET"},
+    {"Fictional", "FN"},
     {"Fiji", "FJ"},
     {"Finland", "FI"},
     {"France", "FR"},
@@ -197,12 +198,11 @@ const std::map<std::string, std::string> country_codes{
     {"Uzbekistan", "UZ"},
     {"Vanuatu", "VU"},
     {"Vatican_City", "VA"},
-    {"Venezuela", "VE"},
+	{"Venezuela", "VE"},
     {"Vietnam", "VN"},
     {"Yemen", "YE"},
     {"Zambia", "ZM"},
-    {"Zimbabwe", "ZW"},
-    {"Fictional", "FN"}
+    {"Zimbabwe", "ZW"}
 };
 inline const std::string get_name(const std::string& code) {
 	for(const auto& [country, c] : country_codes) {
