@@ -1,3 +1,4 @@
+#include <optional>
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_all.hpp>
 #include "metadata/toml.hxx"
@@ -13,7 +14,7 @@
 TEST_CASE("Test Read Example TOML File", "[toml]") {
     std::filesystem::path test_data_file{std::string(TEST_DATA_DIRECTORY)};
     test_data_file = test_data_file / "Western_Lyon_Tram_Train.toml";
-    MetadataReader Metadata({}, std::filesystem::path("."));
+    MetadataReader Metadata({}, std::filesystem::path{"."});
     const SimulationMetadata metadata_{Metadata.read_metadata_from_file(test_data_file, true)};
 
     REQUIRE(metadata_.name == "Western Lyon Tram Train");

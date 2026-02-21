@@ -1125,7 +1125,8 @@ private:
     static const UnicodeString FORMATTEDTT_DIR_NAME;
 	static const UnicodeString USERGRAPHICS_DIR_NAME;
 	static const UnicodeString METADATA_DIR_NAME;
-    static const UnicodeString DOCUMENTATION_DIR_NAME;
+	static const UnicodeString DOCUMENTATION_DIR_NAME;
+    static const UnicodeString LOGS_DIR_NAME;
 // Level 2 program modes (i.e. submodes from the level 1 modes)
     enum TLevel2OperMode
     {
@@ -1816,6 +1817,8 @@ is loaded fillowed by AvHoursIntValue then all failed trains if any. */
 	void ClearMetadataForm();
 /// Read data from Metadata Form into TOML reader
 	bool ReadMetadataForm();
+/// Write current metadata contents
+    void WriteCurrentMetadataToFile();
 };
 
 // ---------------------------------------------------------------------------

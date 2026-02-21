@@ -1,9 +1,4 @@
 #include "metadata/toml.hxx"
-#include <cstdarg>
-#include <fstream>
-#include <regex>
-#include <sstream>
-#include <stdexcept>
 
 using namespace toml;
 

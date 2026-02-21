@@ -84,6 +84,7 @@ const UnicodeString TInterface::FORMATTEDTT_DIR_NAME = "Formatted timetables";
 const UnicodeString TInterface::USERGRAPHICS_DIR_NAME = "Graphics";
 const UnicodeString TInterface::METADATA_DIR_NAME = "Metadata";
 const UnicodeString TInterface::DOCUMENTATION_DIR_NAME = "Documentation";
+const UnicodeString TInterface::LOGS_DIR_NAME = "Program_Logs";
 // ---------------------------------------------------------------------------
 
 __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
@@ -196,6 +197,13 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         if(!DirectoryExists(DOCUMENTATION_DIR_NAME))
         {
             if(!CreateDir(DOCUMENTATION_DIR_NAME))
+            {
+                DirOpenError = true;
+            }
+		}
+		if(!DirectoryExists(LOGS_DIR_NAME))
+        {
+            if(!CreateDir(LOGS_DIR_NAME))
             {
                 DirOpenError = true;
             }
@@ -727,7 +735,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 			{"graphics_files", std::string(AnsiString(CurDir + "\\" + USERGRAPHICS_DIR_NAME).c_str())},
 			{"img_files", std::string(AnsiString(CurDir + "\\" + IMAGE_DIR_NAME).c_str())},
 			{"rly_file", std::string(AnsiString(CurDir + "\\" + RAILWAY_DIR_NAME).c_str())},
-		}, std::filesystem::path(AnsiString(GetCurrentDir()).c_str())));
+		}, std::filesystem::path{AnsiString(CurDir + "\\" + LOGS_DIR_NAME).c_str()}));
 
         for(const auto& [country, code] : iso::country_codes) {
 			const std::string entry_str_{country + " (" + code + ")"};
@@ -29883,20 +29891,6 @@ void TInterface::ClearMetadataForm() {
 	MetadataYearEdit->Value = Year;
 	MetadataSignalRightEdit->Checked = false;
 	MetadataFactualEdit->Checked = false;
-
-	// FOR TESTING
-	MetadataNameEdit->Text = "Route Name";
-	MetadataDisplayNameEdit->Text = "Extended Route Name";
-	MetadataDescriptionEdit->Text = "A description of this route";
-	MetadataContributorsEdit->Text = "JSmith;JDoe";
-	MetadataDifficultyEdit->Value = 3;
-	MetadataSignalRightEdit->Checked = true;
-	MetadataReleaseEdit->Text = "2020-10-01";
-	MetadataAuthorEdit->Text = "JBloggs";
-	MetadataDocsEdit->Text = "README.md";
-	MetadataRlyFileEdit->Text = "railway.rly";
-	MetadataTTBFileEdit->Text = "railway.ttb;railway_2.ttb";
-    MetadataVersionEdit->Text = "0.1.0";
 }
 
 bool TInterface::ReadMetadataForm() {
@@ -29976,7 +29970,11 @@ bool TInterface::ReadMetadataForm() {
 			return false;
 		}
 	}
+    return true;
+}
 
+void TInterface::WriteCurrentMetadataToFile() {
+	const std::string name_{UTF8String(MetadataNameEdit->Text).c_str()};
 	std::string out_file_name_ = name_;
 	std::replace(out_file_name_.begin(), out_file_name_.end(), ' ', '_');
     out_file_name_ += ".toml";
@@ -29994,8 +29992,6 @@ bool TInterface::ReadMetadataForm() {
 	But << mbOK;
 	const AnsiString SuccessMsg = "Wrote output to file '" + AnsiString(out_file_name_.c_str()) + "'";
 	MessageDlg(SuccessMsg, mtInformation, But, 0);
-
-    return true;
 }
 
 void __fastcall TInterface::FileMenuClick(TObject *Sender)
@@ -30109,6 +30105,8 @@ void __fastcall TInterface::MetadataEditSaveButtonClick(TObject *Sender) {
 	for(const auto& c : metadata_reader_->invalid_filename_chars) {
 		ProjectName = StringReplace(ProjectName, c, "", TReplaceFlags() << rfReplaceAll << rfIgnoreCase);
 	}
+
+    if(validation_.empty()) WriteCurrentMetadataToFile();
 
     MetadataEditPanel->Visible = false;
 }

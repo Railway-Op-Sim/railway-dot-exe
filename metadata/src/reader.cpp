@@ -1,35 +1,36 @@
 //---------------------------------------------------------------------------
 
 #include "metadata/reader.hxx"
-#include "metadata/toml.hxx"
-#include <filesystem>
-#include <fstream>
-#include <optional>
-#include <stdexcept>
 
-SimulationMetadata MetadataReader::read_metadata_from_file(const std::filesystem::path& metadata_file, bool verbose) {
-	
+SimulationMetadata MetadataReader::read_metadata_from_file(
+	const std::filesystem::path& metadata_file,
+	bool verbose
+) {
+
 	const std::filesystem::path outfile_prefix_{output_directory_ / metadata_file.stem()};
 	const std::filesystem::path outfile_{outfile_prefix_.string() + ".log"};
-
-	ValidationResult toml_parse_;
 
 	try {
 		reader_.load(metadata_file, verbose);
 	} catch(toml::TOMLException& e) {
-		ValidationResult validation_;
+    	ValidationResult toml_parse_;
 		toml_parse_[ValidationError::ValueError].insert(e.what());
 		toml_parse_.dump(outfile_);
+		throw MetadataFileException(
+			std::string("Failed to read TOML file 'Metadata\\") +
+			metadata_file.filename().string() +
+			"' failed. " +
+			"Errors written to '" +
+			outfile_.string() +
+			"'."
+		);
 	}
-	
+
 	const ValidationResult validation_{validate()};
 
-	if(!validation_.empty() || !toml_parse_.empty()) {
-		if(!toml_parse_.empty()) {
-			toml_parse_.dump(outfile_);	
-		} else {
-			validation_.dump(outfile_);
-		}
+	if(!validation_.empty()) {
+		validation_.dump(outfile_);
+
 		throw MetadataFileException(
 			std::string("Validation of 'Metadata\\") +
 			metadata_file.filename().string() +

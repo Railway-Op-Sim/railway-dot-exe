@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <cstdarg>
 
 namespace toml {
 	struct Version;

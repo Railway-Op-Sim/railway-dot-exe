@@ -229,7 +229,7 @@ class MetadataReader {
 		};
 		MetadataReader(
             const std::map<std::string, std::string> file_directories,
-			const std::filesystem::path& output_dir
+			const std::filesystem::path output_dir
 		) : output_directory_(output_dir), file_directories_(file_directories) {}
 		ValidationResult validate() const;
 		void clear() {reader_.clear();}
@@ -242,7 +242,10 @@ class MetadataReader {
             const std::vector<std::string> tokens_{get_list_from_delimited(value)};
 			reader_.insert<std::vector<std::string>>(key, tokens_);
         }
-		SimulationMetadata read_metadata_from_file(const std::filesystem::path& metadata_file, bool verbose = false);
+		SimulationMetadata read_metadata_from_file(
+			const std::filesystem::path& metadata_file,
+			bool verbose = false
+		);
 		std::map<std::string, SimulationMetadata> get_metadata() const {
 			return current_metadata_;
 		}
