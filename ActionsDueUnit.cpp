@@ -45,6 +45,7 @@ void __fastcall TActionsDueForm::FormCreate(TObject *Sender)
     Interface->MasterClock->Enabled = true;  //moved here (last form to be constructed - see railway.cpp) from the
                                              //TInterface constructor after v2.23.4.  Don't want timer running before
                                              //all forms have been created and initialised.
+                                             //Note that this executes AFTER the constructor.
 }
 //---------------------------------------------------------------------------
 void __fastcall TActionsDueForm::ActionsDueListBoxMouseDown(TObject *Sender, TMouseButton Button,

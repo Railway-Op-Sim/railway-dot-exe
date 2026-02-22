@@ -19,6 +19,9 @@ The structure is as follows:-
 
 1) Future change suggestions from users:
 
+#126 from Krizar via discord on 22/02/26
+Have an autosave function for session files say every 5 minutes, but allow users to switch it on or off.
+
 #125 from Krizar via discord 11/01/26
 Have a timetable command that stops the simulation at a specific time, e.g. END 22:00'.  This would be useful when continuing the simulation would have (say) several shuttles piling up at a terminal station that didn't have the capacity for them.
 
