@@ -9512,12 +9512,12 @@ bool TTrain::CheckOneSessionTrain(std::ifstream &InFile)
         return(false); // ForwardHeadCode
 
     }
-    if(!Utilities->CheckFileInt(InFile, 0, 10000))
+    if(!Utilities->CheckFileInt(InFile, 0, 20000)) //raised to 20000 after v2.23.4 because of JasonB's M25 railway
     {
         return(false); // TrainDataEntryValue
 
     }
-    if(!Utilities->CheckFileInt(InFile, 0, 10000))
+    if(!Utilities->CheckFileInt(InFile, 0, 20000)) //raised to 20000 after v2.23.4 because of JasonB's M25 railway
     {
         return(false); // ActionVectorEntryValue
 
