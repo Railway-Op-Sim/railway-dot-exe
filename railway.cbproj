@@ -6,7 +6,7 @@
         <AppType>Application</AppType>
         <MainSource>railway.cpp</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <ProjectName Condition="'$(ProjectName)'==''">railway</ProjectName>
@@ -268,9 +268,9 @@
             <BuildOrder>10</BuildOrder>
         </CppCompile>
         <FormResources Include="PerfLogUnit.dfm"/>
+        <FormResources Include="ActionsDueUnit.dfm"/>
         <FormResources Include="AboutUnit.dfm"/>
         <FormResources Include="InterfaceUnit.dfm"/>
-        <FormResources Include="ActionsDueUnit.dfm"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
