@@ -28,10 +28,15 @@
 #include <deque>
 #include <vcl.h>
 #include <fstream>
+#include <string>
 #include <locale.h> //to check local decimal point character, added at v2.4.0
 #include <windows.h>            //needed for 64 bit compilation
 
 // ---------------------------------------------------------------------------
+
+extern struct SessionCache {
+	TColor previous_color = clWhite;  // original colour is as loaded at start white
+} Cache;
 
 enum TDelayMode //added at v2.13.0.  Here so DelayMode retains value when ClearEverything called
 {
@@ -42,6 +47,7 @@ enum TFailureMode //added at v2.14.0.  Here so FailureMode retains value when Cl
 {
     FNil, FMinor, FModerate, FMajor
 };
+///< pops the last entry off the call stack, throws an error if called when empty
 
 class TUtilities // single object incorporating general purpose data & functions for all units to access
 {
@@ -121,7 +127,8 @@ public:
     AnsiString TimeStamp();
     ///< creates a string of the form 'hh:mm:ss' for use in call & event logging
     TColor clTransparent;
-    ///< the display background colour, can be white, black or dark blue
+	///< the display background colour, can be white, black or dark blue
+
     TDelayMode DelayMode;
     ///< specifies whether no delays or minor, moderate or major random delays are to be applied (added at v2.13.0)
     TFailureMode FailureMode;

@@ -6,8 +6,8 @@
         <AppType>Application</AppType>
         <MainSource>railway.cpp</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Config Condition="'$(Config)'==''">Release</Config>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <ProjectName Condition="'$(ProjectName)'==''">railway</ProjectName>
     </PropertyGroup>
@@ -161,12 +161,11 @@
         <VerInfo_Release>4</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <LinkPackageImports>rtl.bpi;vcl.bpi;vclimg.bpi;IndySystem.bpi;IndyCore.bpi</LinkPackageImports>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Icon_MainIcon>..\..\GitHub Current Version\railway-dot-exe\Railway.ico</Icon_MainIcon>
+        <Icon_MainIcon>Railway.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64x)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -209,7 +208,7 @@
             <Form>ActionsDueForm</Form>
             <FormType>dfm</FormType>
             <DependentOn>ActionsDueUnit.h</DependentOn>
-            <BuildOrder>14</BuildOrder>
+            <BuildOrder>15</BuildOrder>
         </CppCompile>
         <CppCompile Include="API.cpp">
             <DependentOn>API.h</DependentOn>
@@ -231,6 +230,10 @@
             <FormType>dfm</FormType>
             <DependentOn>InterfaceUnit.h</DependentOn>
             <BuildOrder>6</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Modding.cpp">
+            <DependentOn>Modding.h</DependentOn>
+            <BuildOrder>15</BuildOrder>
         </CppCompile>
         <CppCompile Include="PerfLogUnit.cpp">
             <Form>PerfLogForm</Form>
@@ -478,6 +481,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName=".\Win64\Debug\railway.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\Win64\Debug\railway.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>railway.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName=".\Win64\Release\railway.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName=".\Win64\Release\railway.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
@@ -488,6 +497,12 @@
                 <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Borland.res" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -508,6 +523,12 @@
                 <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="railway.res" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>

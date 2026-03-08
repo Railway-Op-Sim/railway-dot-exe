@@ -4035,13 +4035,13 @@ void TTrack::WriteTrackAndTextToImage(int Caller, Graphics::TBitmap *Bitmap) //a
 {
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",WriteTrackAndTextToImage");
 // need to change graphics back to black on white if have a dark background
-    TColor OldTransparentColour = Utilities->clTransparent;
+    Cache.previous_color = Utilities->clTransparent;
 
     if(Utilities->clTransparent != clB5G5R5)
     {
         Utilities->clTransparent = TColor(0xFFFFFF); // white
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, OldTransparentColour);
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+        RailGraphics->ChangeAllTransparentColours();
+        RailGraphics->SetUpAllDerivativeGraphics();
     }
     TTrackElement Next;
 
@@ -4299,11 +4299,12 @@ void TTrack::WriteTrackAndTextToImage(int Caller, Graphics::TBitmap *Bitmap) //a
             }
         }
     }
-    if(OldTransparentColour != clB5G5R5)
-    {
-        Utilities->clTransparent = OldTransparentColour; // restore
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, clB5G5R5);
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+    if(Cache.previous_color != clB5G5R5)
+	{
+		Utilities->clTransparent = Cache.previous_color; // restore
+		Cache.previous_color = clB5G5R5;
+		RailGraphics->ChangeAllTransparentColours();
+        RailGraphics->SetUpAllDerivativeGraphics();
     }
     Utilities->CallLogPop(1533);
 }
@@ -4340,13 +4341,13 @@ void TTrack::WriteOperatingTrackAndTextToImage(int Caller, Graphics::TBitmap *Bi
 {
     Utilities->CallLog.push_back(Utilities->TimeStamp() + "," + AnsiString(Caller) + ",WriteOperatingTrackAndTextToImage");
 // need to change graphics back to black on white if have a dark background
-    TColor OldTransparentColour = Utilities->clTransparent;
+    Cache.previous_color = Utilities->clTransparent;
 
     if(Utilities->clTransparent != clB5G5R5)
     {
         Utilities->clTransparent = TColor(0xFFFFFF); // white
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, OldTransparentColour);
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+        RailGraphics->ChangeAllTransparentColours();
+        RailGraphics->SetUpAllDerivativeGraphics();
     }
     TTrackElement Next;
 
@@ -4614,11 +4615,12 @@ void TTrack::WriteOperatingTrackAndTextToImage(int Caller, Graphics::TBitmap *Bi
             }
         }
     }
-    if(OldTransparentColour != clB5G5R5)
+    if(Cache.previous_color != clB5G5R5)
     {
-        Utilities->clTransparent = OldTransparentColour; // restore
-        RailGraphics->ChangeAllTransparentColours(Utilities->clTransparent, clB5G5R5);
-        RailGraphics->SetUpAllDerivitiveGraphics(Utilities->clTransparent);
+		Utilities->clTransparent = Cache.previous_color; // restore
+		Cache.previous_color = clB5G5R5;
+		RailGraphics->ChangeAllTransparentColours();
+		RailGraphics->SetUpAllDerivativeGraphics();
     }
     Utilities->CallLogPop(1701);
 }
