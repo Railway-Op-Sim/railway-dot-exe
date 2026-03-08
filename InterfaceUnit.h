@@ -1454,6 +1454,8 @@ showing.  See DevHistory.txt for the version at v2.5.0 for details. */
     int PointFlashVectorPosition, DivergingPointVectorPosition;
     int SelectBitmapHLoc;
 ///< the original (prior to moving & after finished moving) HLoc value of Edit->Select & Edit->Reselect
+    int InitialisationCount;
+///< used to detect initialisation to prevent ZoomOut graphic showing too soon in ClearandRebuildRailway
 
 
 //    int TestFunctionCount; //used only in test function

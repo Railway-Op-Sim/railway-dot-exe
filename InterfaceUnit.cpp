@@ -264,6 +264,7 @@ void TInterface::loadGraphicsSet() {
 	Modifier->load_graphic(ScreenLeftButton->Glyph, "BlackArrowLeft");
 	Modifier->load_graphic(ScreenRightButton->Glyph, "BlackArrowRight");
 	Modifier->load_graphic(ScreenUpButton->Glyph, "BlackArrowUp");
+    Modifier->load_graphic(ZoomButton->Glyph, "ZoomOut");  //added here as missed earlier - was in ClearandRebuildRailway so only matters with slower startup in v3,x,x
 	Modifier->load_graphic(SetGapsButton->Glyph, "ConnectGaps");
 	Modifier->load_graphic(SetLengthsButton->Glyph, "SetDists");
 	Modifier->load_graphic(ShowHideTTButton->Glyph, "Hide");
@@ -391,7 +392,7 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
         // initial setup
         // MasterClock->Enabled = false;//keep this stopped until all set up (no effect here as form not yet created, made false in object insp)
         // Visible = false; //keep the Interface form invisible until all set up (no effect here as form not yet created, made false in object insp)
-        ProgramVersion = "RailOS32 " + GetVersion();
+        ProgramVersion = "RailOS64-v3.0.0_alpha"; // + GetVersion();
         // use GNU Major/Minor/Patch version numbering system, change for each published modification, Dev x = interim internal
         // development stages (don't show on published versions)
 
@@ -583,7 +584,8 @@ __fastcall TInterface::TInterface(TComponent* Owner) : TForm(Owner)
 		loadModdedContent();
 
         // =====================================================================
-
+        InitialisationCount = 0; //used to detect initialisation to prevent ZoomOut graphic showing too soon in ClearandRebuildRailway
+                                   //has to come before ResetAll as that calls ClearandRebuildRailway which is called twice before fully set up
         ResetAll(0);
 
         TempTTFileName = "";
@@ -18340,8 +18342,12 @@ void TInterface::ClearandRebuildRailway(int Caller) // now uses HiddenScreen to 
         TrainController->ReplotTrains(0, HiddenDisplay);
     }
     Display->ZoomOutFlag = false;
-    Modifier->load_graphic(ZoomButton->Glyph, "ZoomOut");
+    if(InitialisationCount > 1) //used to detect initialisation to prevent ZoomOut graphic showing too soon in ClearandRebuildRailway
+    {
+        Modifier->load_graphic(ZoomButton->Glyph, "ZoomOut");
+    }
     MainScreen->Picture->Bitmap->Assign(HiddenScreen->Picture->Bitmap);
+    InitialisationCount++;
     Display->Update(); // resurrected when Update() dropped from PlotOutput etc
     Utilities->Clock2Stopped = ClockState;
     Utilities->CallLogPop(91);
