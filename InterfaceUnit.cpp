@@ -14798,10 +14798,14 @@ void __fastcall TInterface::ReminderListBoxMouseUp(TObject *Sender, TMouseButton
 {
     try
     {
-        TrainController->LogEvent("ReminderListBoxMouseUp, " + AnsiString(X) + ',' + AnsiString(Y));
-        Utilities->CallLog.push_back(Utilities->TimeStamp() + ",ReminderListBoxMouseUp");
-        TTrain &Train = TrainController->TrainVectorAtIdent(71, SelectedTrainID); //Train.ActionVectorPtr not advanced here But keep for consistency
-        if(ReminderListBox->Items->Text != "") //not empty
+		TrainController->LogEvent("ReminderListBoxMouseUp, " + AnsiString(X) + ',' + AnsiString(Y));
+		if(Button == mbRight)   //added after v2.23.4 as a result of AEggs error (sent on ticket 117 on discord) where investigation showed that a right click caused the error
+		{
+			return;   //no need for CallLogPop as before the push_back
+		}
+		Utilities->CallLog.push_back(Utilities->TimeStamp() + ",ReminderListBoxMouseUp");
+		TTrain &Train = TrainController->TrainVectorAtIdent(71, SelectedTrainID); //Train.ActionVectorPtr not advanced here But keep for consistency
+		if(ReminderListBox->Items->Text != "") //not empty
         {
             Train.SelReminderString = ReminderListBox->Items->Strings[ReminderListBox->ItemIndex]; //ItemIndex is the index of the selected item
         }                                                                                          //index starts at 0
