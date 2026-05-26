@@ -19,6 +19,44 @@ The structure is as follows:-
 
 1) Future change suggestions from users:
 
+#127 from Mohan via discord on 23/05/26
+for the program: a timetable test mode which simulates trains running along set service patterns without regard for signals or other trains. In situations where full working timetables are not available or for fictional timetables/maps, this would allow creators to easily see conflicts when and where they occur and make appropriate adjustments to the timetable without having to spend a month on test runs to catch most of the bugs. Users would set paths for each train to move through the map and trains' positions would be calculated based on the last scheduled event for that train. I know that there is already a textual conflict catcher, but that does not account for stations with many platforms or direction differences. A test mode would massively speed up project development and likely increase project quality without needing external tools and extensive translation between timetable formats. 
+
+Albert — 23/05/2026 08:07
+This would be superb - a real game changer for timetable development. I have thought long and hard about how to recognise timetable conflicts, and speeding up operation automatically as you suggest would make life so much easier. There are many problems involved sadly, and the best I could come up with was the conflict analyser, which is a bit cumbersome and takes a while to become familiar with, but it can help, I have used it successfully many times.
+
+Mohan — 23/05/2026 18:39
+Sorry, I don't think you are understanding what I'm asking for. In essence, I'm asking for a way to operate a railway such that each train can move independently of signals or other trains. 
+
+Albert — 24/05/2026 14:35
+I thought you wanted to run a timetable automatically so that conflicts would show up quickly, but it seems I was wrong. I'm struggling to understand how a train can move independently of signals or other trains. Perhaps you mean that a train should ignore all signals and operate as the only train on the railway? 
+
+Mohan — 24/05/2026 17:27
+yes, something like that, but all the trains would be visible on the screen. It’s ok if the user needs to set routes for each train. 
+
+Albert — 25/05/26 06:38
+I think I see what you mean. This won't help to identify conflicts but it helps determine individual train timings and I've used it for that purpose. I don't think signals matter because routes are being set, so all signals on the route should be off. 
+To run just one train put an asterisk in front of all timetable services that aren't required, changing them into comments so they will be ignored. I'd strongly recommend doing this on a copy of the timetable, and using Notepad++, which keeps all the NUL characters and is much quicker than doing it with the inbuilt timetable editor.
+
+KR/ZAR — 25/05/26 07:15
+I guess they are asking for a button that would do that for you
+So you could toggle it on and off
+
+Albert — 25/05/26 08:03
+I'm increasingly wary of adding new mods because of unwanted side effects that have plagued earlier mods (the program is now a patchwork with as much modification code as original). So anything that can be done reasonably easily using existing features I prefer to leave alone. I recognise that it's a bit more inconvenient for the user but a feature like this isn't needed often and with a bit of forethought can be done when the timetable is being built up one service at a time.
+
+Mohan — 25/05/26 15:45
+rather than running one train at a time, im suggesting that all trains should run but each one behaves as if it is the only one on the railway.
+
+Albert — 25/05/26 18:46
+What happens when two trains occupy the same track at the same time? Do they just pass through each other without colliding?
+
+Mohan — 26/05/26 01:06
+yes.
+
+Albert — 26/05/26 06:45
+Ok, I see now why there can't be any signals. The whole system of operation and routing would need to be redesigned to allow for such a regime which would require months of intensive work and be highly likely to cause many unwanted effects. I'll add your request to the wish list but I don't have the will power or stamina to tackle such a mammoth task - sorry. Apart from that I'm not convinced that it would be a good way to reveal timetabling errors because the operating environment would be very different to a simulated real environment. 
+
 #126 from Krizar via discord on 22/02/26
 Have an autosave function for session files say every 5 minutes, but allow users to switch it on or off.
 

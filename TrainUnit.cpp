@@ -1637,6 +1637,18 @@ void TTrain::UpdateTrain(int Caller)
 
     // HERE WHEN READY FOR NEXT MOVE
 
+/* used to help diagnose Mohan's error reported 29/04/26 via discord - ticket 118 -program hanged when right clicking a train that was in course of changing position
+if(Straddle == LeadMidLag)
+{
+ShowMessage(HeadCode + " Moving onto full elements");
+}
+else
+{
+ShowMessage(HeadCode + " Moving onto half elements");
+}
+Utilities->Pause(2000);
+*/
+
     //added at v2.10.0 to set SPADFlag if red signal immediately ahead (as it will be if in a locked route)
     //check if due to run past a red signal & if so set SPADFlag (SetTrainMovementValues & its SPAD check only called when arrive fully on 2 elements)
     if(Straddle == LeadMid) //fully on 2 elements
